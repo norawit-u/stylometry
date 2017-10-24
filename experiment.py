@@ -1,21 +1,20 @@
 
 print(__doc__)
-import time
-import numpy as np
-#from sklearn import preprocessing
-#from sklearn.datasets.samples_generator import make_blobs
-from collections import defaultdict
-import math
-import random
-import multiprocessing
-from numpy import genfromtxt
-from numpy import loadtxt
-import linecache
-import heapq
-from scipy.spatial.distance import euclidean
-import csv
 import os
 import sys
+import time
+import math
+import random
+import csv
+import multiprocessing
+import linecache
+import heapq
+import numpy as np
+from numpy import genfromtxt
+from numpy import loadtxt
+from scipy.spatial.distance import euclidean
+from collections import defaultdict
+
 
 
 INF = 999999
