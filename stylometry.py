@@ -14,19 +14,6 @@ from scipy.spatial.distance import euclidean
 from collections import defaultdict
 INF = 999999
 
-output_dir = 'out_max1000'
-csv_dir = 'max1000'
-syn_name = ''
-fragment_total = 1000 # total number of fragment =  number papers * author number
-if len(sys.argv) >= 1:
-    syn_name = sys.argv[1]
-    fragment_total = int(sys.argv[2])
-directory = output_dir+'/'+syn_name
-
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-if not os.path.exists(directory):
-    os.makedirs(directory)
 
 def npLoad(fileStr):
     temp = np.loadtxt(fileStr, delimiter=',')
