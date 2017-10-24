@@ -24,7 +24,7 @@ output_dir = 'out_max1000'
 csv_dir = 'max1000'
 syn_name = ''
 fragment_total = 1000 # total number of fragment =  number papers * author number
-if len(sys.argv) >=1:
+if len(sys.argv) >= 1:
     syn_name = sys.argv[1]
     fragment_total = int(sys.argv[2])
 directory = output_dir+'/'+syn_name
@@ -73,10 +73,10 @@ def NormalizeDataset(dataset):
                 for j in range(len(dataset[i])):
                         #if j == 0:
                                 #continue
-                        if maxnum[j]==minnum[j]:
+                        if maxnum[j] == minnum[j]:
                                 dataset[i][j] = 0
                         else:
-                                dataset[i][j] = (float(dataset[i][j])-minnum[j])/(maxnum[j]-minnum[j])
+                                dataset[i][j] = (float(dataset[i][j]) - minnum[j]) / (maxnum[j] - minnum[j])
 
         return dataset
 
@@ -90,28 +90,28 @@ def SplitDataset(dataset):
         i = j
     return SplittedDataset
 
-def generateA(hash_num,D):
+def generateA(hash_num, D):
         a = [0 for x in range(hash_num)]
         for i in range(hash_num):
-                a[i]=np.random.normal(0.5,0.5,D)
+                a[i]=np.random.normal(0.5, 0.5, D)
         return a
 
-def generateA_new(hash_num,K,D):
+def generateA_new(hash_num, K, D):
     a = [[0 for x in range(K)] for y in range(hash_num)]
     for i in range(hash_num):
         for j in range(K):
-            a[i][j]=np.random.normal(0.5,0.5,D)
+            a[i][j]=np.random.normal(0.5, 0.5, D)
             for d in range(D):
                 a[i][j][d] = abs(a[i][j][d])
     return a
 
 
-def generateB(hash_num,W):
+def generateB(hash_num, W):
         b = [0 for i in range(hash_num)]
         #ard = [0 for i in range(hash_num)]
         for i in range(hash_num):
-                b[i] = np.random.uniform(0,W)
-                #ard[i] =  np.random.randint(0,MAX_HASH_RND)
+                b[i] = np.random.uniform(0, W)
+                #ard[i] =  np.random.randint(0, MAX_HASH_RND)
         return b
 
 def combinedata(result):
@@ -121,7 +121,7 @@ def combinedata(result):
             CombinedHash.append(result[i][j])
     return CombinedHash
 
-def genDisSmallerThenRSet(query,dataset, paraIndex):
+def genDisSmallerThenRSet(query, dataset, paraIndex):
     q_dis_smaller_R = dict()
     for q in query:
         q_dis_smaller_R[q] = []
@@ -130,7 +130,7 @@ def genDisSmallerThenRSet(query,dataset, paraIndex):
                 q_dis_smaller_R[q].append(IndexPara[d])
     return q_dis_smaller_R
 
-def getHitAboveT(query,hitTable,hitparaIndex,IndexPara):
+def getHitAboveT(query, hitTable, hitparaIndex, IndexPara):
     q_hit_above_T = dict()
     for q in query: #query is the #8 point
         q_hit_above_T[q] = []
@@ -139,7 +139,7 @@ def getHitAboveT(query,hitTable,hitparaIndex,IndexPara):
                 q_hit_above_T[q].append(IndexPara[j])
     return q_hit_above_T
 
-def getHitAboveTWithFilter(query,hitTable,dataset,paraIndex,IndexPara,hitparaIndex):
+def getHitAboveTWithFilter(query, hitTable, dataset, paraIndex, IndexPara, hitparaIndex):
     q_hit_above_T = dict()
     for q in query: #query is the #8 point
         q_hit_above_T[q] = []
@@ -151,7 +151,7 @@ def getHitAboveTWithFilter(query,hitTable,dataset,paraIndex,IndexPara,hitparaInd
 def convertPointToDoc(point):
     return para_to_doc_dict[point];
 
-def convertQdicttoDocdict(query,Qdict):
+def convertQdicttoDocdict(query, Qdict):
     queryWithSelectedDoc = dict()
     for q in query:
         selectedDoc = list()
@@ -160,7 +160,7 @@ def convertQdicttoDocdict(query,Qdict):
         queryWithSelectedDoc[q]=list(set(selectedDoc))
     return queryWithSelectedDoc
 
-def getAllDoc(query,Qdict):
+def getAllDoc(query, Qdict):
     result = Qdict[query[0]]
     for q in query:
         result = list(set(result).union(set(Qdict[q])))
@@ -172,10 +172,10 @@ def getSHDPrunedDoc(query, Qdict):
         result = list(set(result).intersection(set(Qdict[q])) )
     return result
 
-def getLSHMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,precent):
+def getLSHMHD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, precent):
     docMins = []
     for query_point in query:
-        minium = getMHDbyqLSH(query_point,doc,hitTable, dataset, paraIndex,hitparaIndex)
+        minium = getMHDbyqLSH(query_point, doc, hitTable, dataset, paraIndex, hitparaIndex)
         docMins.append(minium)
     docMins.sort(reverse = True)
     topN = math.ceil(len(docMins)*(1-precent))
@@ -186,10 +186,10 @@ def getLSHMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,precent):
         MHDTotal+=docMins[i]
     return MHDTotal/topN
 
-def getLSHM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,begin, end):
+def getLSHM2HD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, begin, end):
     docMins = []
     for query_point in query:
-        minium = getMHDbyqLSH(query_point,doc,hitTable, dataset, paraIndex,hitparaIndex)
+        minium = getMHDbyqLSH(query_point, doc, hitTable, dataset, paraIndex, hitparaIndex)
         docMins.append(minium)
     docMins.sort(reverse = True)
     start=math.ceil(len(docMins)*begin)
@@ -201,10 +201,10 @@ def getLSHM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,begin, end):
     return MHDTotal/num
 
 
-def getBFMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,precent):
+def getBFMHD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, precent):
     docMins = []
     for query_point in query:
-        minium = getMHDbyqBF(query_point,doc,dataset,paraIndex)
+        minium = getMHDbyqBF(query_point, doc, dataset, paraIndex)
         docMins.append(minium)
     docMins.sort(reverse = True)
     topN = math.ceil(len(docMins)*(1-precent))
@@ -213,10 +213,10 @@ def getBFMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,precent):
         MHDTotal+=docMins[i]
     return MHDTotal/topN
 
-def getBFM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,begin, end):
+def getBFM2HD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, begin, end):
     docMins = []
     for query_point in query:
-        minium = getMHDbyqBF(query_point,doc,dataset,paraIndex)
+        minium = getMHDbyqBF(query_point, doc, dataset, paraIndex)
         docMins.append(minium)
     docMins.sort(reverse = True)
     start=math.ceil(len(docMins)*begin)
@@ -230,12 +230,12 @@ def getBFM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,begin, end):
 
 
 
-def getMHDbyqLSH(q,doc, hitTable, dataset, paraIndex,hitparaIndex): #Computer the MHD bound matrix
+def getMHDbyqLSH(q, doc, hitTable, dataset, paraIndex, hitparaIndex): #Computer the MHD bound matrix
     hitValueofDoc=[]
     for p in doc_to_para_dict[doc]:
         if paraIndex[p]>=NP:
             continue
-        hitValueofDoc.append((p,hitTable[hitparaIndex[q]][paraIndex[p]]))
+        hitValueofDoc.append((p, hitTable[hitparaIndex[q]][paraIndex[p]]))
     hitValueofDoc.sort(key=lambda tup: tup[1],reverse=True)
     top5hits = [x[0] for x in hitValueofDoc][:5]   #here set as 5
     minium = INF
@@ -246,7 +246,7 @@ def getMHDbyqLSH(q,doc, hitTable, dataset, paraIndex,hitparaIndex): #Computer th
             minium = dis
     return minium
 
-def getMHDbyqBF(q,doc,dataset, paraIndex):
+def getMHDbyqBF(q, doc, dataset, paraIndex):
     minium = INF
     for p in doc_to_para_dict[doc]:
         if paraIndex[p]>=NP:
@@ -257,16 +257,16 @@ def getMHDbyqBF(q,doc,dataset, paraIndex):
     return minium
 
 #queryDic: the ininal dic generate before Prun
-def MHDPrunList(query, docList, hitTable,dataset, paraIndex, R,hitparaIndex,queryDic,method,precent):
+def MHDPrunList(query, docList, hitTable, dataset, paraIndex, R, hitparaIndex, queryDic, method, precent):
     disList = []
     for doc in docList:
         dist = []
         for q in query:
             if doc in queryDic[q]:
                 if method == "lsh":
-                    dist.append(getMHDbyqLSH(q,doc,hitTable,dataset,paraIndex,hitparaIndex))
+                    dist.append(getMHDbyqLSH(q, doc, hitTable, dataset, paraIndex, hitparaIndex))
                 else:
-                    dist.append(getMHDbyqBF(q,doc,dataset,paraIndex))
+                    dist.append(getMHDbyqBF(q, doc, dataset, paraIndex))
             else:
                 dist.append(R)
         dist.sort(reverse=True) # sort MHD bound matrix from large to small
@@ -284,16 +284,16 @@ def MHDPrunList(query, docList, hitTable,dataset, paraIndex, R,hitparaIndex,quer
 
 
 #queryDic: the ininal dic generate before Prun (M2HD)
-def M2HDPrunList(query, docList, hitTable,dataset, paraIndex, R,hitparaIndex,queryDic,method, begin, end):
+def M2HDPrunList(query, docList, hitTable, dataset, paraIndex, R, hitparaIndex, queryDic, method, begin, end):
     disList = []
     for doc in docList:
         dist = []
         for q in query:
             if doc in queryDic[q]:
                 if method == "lsh":
-                    dist.append(getMHDbyqLSH(q,doc,hitTable,dataset,paraIndex,hitparaIndex))
+                    dist.append(getMHDbyqLSH(q, doc, hitTable, dataset ,paraIndex, hitparaIndex))
                 else:
-                    dist.append(getMHDbyqBF(q,doc,dataset,paraIndex))
+                    dist.append(getMHDbyqBF(q, doc, dataset, paraIndex))
             else:
                 dist.append(R)
         dist.sort(reverse=True) # sort MHD bound matrix from large to small
@@ -309,7 +309,7 @@ def M2HDPrunList(query, docList, hitTable,dataset, paraIndex, R,hitparaIndex,que
     return sortedDocList
 
 
-def geneMHDPrun(docList, query,hitTable, topN,flagNum, dataset, paraIndex,hitparaIndex,precent,method):
+def geneMHDPrun(docList, query, hitTable, topN, flagNum, dataset, paraIndex, hitparaIndex, precent, method):
     resultList = []
     stopFlag = 0
     count=0
@@ -317,26 +317,26 @@ def geneMHDPrun(docList, query,hitTable, topN,flagNum, dataset, paraIndex,hitpar
         if stopFlag>=flagNum:
             break
         if method == "lsh":
-            MHDDis = getLSHMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex, precent)
+            MHDDis = getLSHMHD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, precent)
         elif method == "bf" :
-            MHDDis = getBFMHD(query,doc, hitTable, dataset, paraIndex,hitparaIndex, precent)
+            MHDDis = getBFMHD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, precent)
         count+=1
         if len(resultList)<topN:
-            resultList.append((MHDDis,doc))
+            resultList.append((MHDDis, doc))
         else:
             resultList.sort(key=lambda tup: tup[0],reverse=True)
             topDis = resultList[0][0]
             if topDis>MHDDis:
-                resultList[0] = (MHDDis,doc)
+                resultList[0] = (MHDDis, doc)
                 stopFlag = 0
             else:
                 stopFlag +=1
     resultList.sort(key=lambda tup: tup[0])
     result = [x[1] for x in resultList]
-    return (count,result), resultList
+    return (count, result), resultList
 
 
-def geneM2HDPrun(docList, query,hitTable, topN,flagNum, dataset, paraIndex,hitparaIndex,method,begin, end):
+def geneM2HDPrun(docList, query, hitTable, topN, flagNum, dataset, paraIndex, hitparaIndex, method, begin, end):
     resultList = []
     stopFlag = 0
     count=0
@@ -344,37 +344,37 @@ def geneM2HDPrun(docList, query,hitTable, topN,flagNum, dataset, paraIndex,hitpa
         if stopFlag>=flagNum:
             break
         if method == "lsh":
-            MHDDis = getLSHM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex,begin,end)
+            MHDDis = getLSHM2HD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, begin, end)
         elif method == "bf" :
-            MHDDis = getBFM2HD(query,doc, hitTable, dataset, paraIndex,hitparaIndex, begin, end)
+            MHDDis = getBFM2HD(query, doc, hitTable, dataset, paraIndex, hitparaIndex, begin, end)
         count+=1
         if len(resultList)<topN:
-            resultList.append((MHDDis,doc))
+            resultList.append((MHDDis, doc))
         else:
             resultList.sort(key=lambda tup: tup[0],reverse=True)
             topDis = resultList[0][0]
             if topDis>MHDDis:
-                resultList[0] = (MHDDis,doc)
+                resultList[0] = (MHDDis, doc)
                 stopFlag = 0
             else:
                 stopFlag +=1
     resultList.sort(key=lambda tup: tup[0])
 
     result = [x[1] for x in resultList]
-    return (count,result), resultList
+    return (count, result), resultList
 
 
 
 
 
-def getLSHSHD(query, doc, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaIndex):
+def getLSHSHD(query, doc, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex):
     docMins = []
     for query_point in query:
         hitValueofDoc=[]
         for p in doc_to_para_dict[doc]:
-            if paraIndex[p]>=NP:
+            if paraIndex[p] >= NP:
                 continue
-            hitValueofDoc.append((p,hitTable[hitparaIndex[query_point]][paraIndex[p]]))
+            hitValueofDoc.append((p, hitTable[hitparaIndex[query_point]][paraIndex[p]]))
         hitValueofDoc.sort(key=lambda tup: tup[1],reverse = True)
         top5hits = [x[0] for x in hitValueofDoc][:5]   #here set as 5
         minium = INF
@@ -389,7 +389,7 @@ def getLSHSHD(query, doc, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaI
             maxium = minDist
     return maxium
 
-def getBFSHD(query, doc, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaIndex):
+def getBFSHD(query, doc, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex):
     docMins = []
     for query_point in query:
         minium = INF
@@ -406,33 +406,33 @@ def getBFSHD(query, doc, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaIn
             maxium = minDist
     return maxium
 
-def getSHDTop5Doc(listOfdoc, query, doc_to_para_dict,shdTopN, hitTable,dataset, paraIndex,hitparaIndex,method):
+def getSHDTop5Doc(listOfdoc, query, doc_to_para_dict, shdTopN, hitTable, dataset, paraIndex, hitparaIndex, method):
     shdValues = []
     for d in listOfdoc:
         if method == "lsh":
-            shdValues.append((d,getLSHSHD(query,d, doc_to_para_dict, hitTable,dataset,paraIndex,hitparaIndex)))
+            shdValues.append((d, getLSHSHD(query, d, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex)))
         else:
-            shdValues.append((d,getBFSHD(query,d, doc_to_para_dict, hitTable,dataset,paraIndex,hitparaIndex)))
+            shdValues.append((d, getBFSHD(query, d, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex)))
     shdValues.sort(key=lambda tup: tup[1])
     top5Doc = [x[0] for x in shdValues][:shdTopN]
     return top5Doc, shdValues
 
 
-def PKNN (query, candiList, disFunc, weiFunc,k,beta, hitTable, topN, dataset, paraIndex):
+def PKNN (query, candiList, disFunc, weiFunc, k, beta, hitTable, topN, dataset, paraIndex):
     distList = []
     for c in candiList:
         if disFunc == "BF_SHD":
-            dist = getBFSHD(query, c, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaIndex)
+            dist = getBFSHD(query, c, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex)
         elif disFunc == "BF_MHD":
-            dist = getBFMHD(query,c, hitTable, dataset, paraIndex,hitparaIndex,MHDRatio)
+            dist = getBFMHD(query, c, hitTable, dataset, paraIndex, hitparaIndex, MHDRatio)
         elif disFunc == "BF_M2HD":
-            dist = getBFM2HD(query,c, hitTable, dataset, paraIndex,hitparaIndex,startp, endp)
+            dist = getBFM2HD(query, c, hitTable, dataset, paraIndex, hitparaIndex, startp, endp)
         elif disFunc == "LSH_SHD":
-            dist = getLSHSHD(query, c, doc_to_para_dict, hitTable,dataset, paraIndex,hitparaIndex)
+            dist = getLSHSHD(query, c, doc_to_para_dict, hitTable, dataset, paraIndex, hitparaIndex)
         elif disFunc == "LSH_MHD":
-            dist = getLSHMHD(query,c, hitTable, dataset, paraIndex,hitparaIndex,MHDRatio)
+            dist = getLSHMHD(query, c, hitTable, dataset, paraIndex, hitparaIndex, MHDRatio)
         elif disFunc == "LSH_M2HD":
-            dist = getLSHM2HD(query,c, hitTable, dataset, paraIndex,hitparaIndex,startp, endp)
+            dist = getLSHM2HD(query, c, hitTable, dataset, paraIndex, hitparaIndex, startp, endp)
         distList.append((c, dist))
     distList.sort(key=lambda tup: tup[1])
     topKList = distList[:k]
@@ -449,7 +449,7 @@ def PKNN (query, candiList, disFunc, weiFunc,k,beta, hitTable, topN, dataset, pa
         au = doc_to_au_dict[tup[0]]
         prob = tup[1]/sumofrDis
         probList[au] = probList[au] + prob
-    probList = sorted(probList.items(), key = lambda x:x[1], reverse=True)
+    probList = sorted(probList.items(), key=lambda x:x[1], reverse=True)
     return probList
 
 def multiprocessLoad(folerStr):
@@ -458,7 +458,7 @@ def multiprocessLoad(folerStr):
     dirString = folerStr+"/"
     fileNameList = [dirString + s  for s in fileNameList]
     if __name__ == "__main__":
-        pool_size=multiprocessing.cpu_count()
+        pool_size = multiprocessing.cpu_count()
         pool = multiprocessing.Pool(pool_size)
         results = pool.map(npLoad, fileNameList,)
         pool.close()
@@ -526,7 +526,7 @@ flagNum = 3 #MHD TopN flag for pruning method(after flag times, stop..)
 #     for j in range(len(doc[i])):
 #         doc[i][j]= int(doc[i][j])
 #         querySet.append(doc[i][j])
-querySet = [x for x in range(1,fragment_total+1)]
+querySet = [x for x in range(1, fragment_total+1)]
 print (querySet)
 
 
@@ -539,9 +539,9 @@ para_id = my_data[:,2] # chunk id
 dataset = my_data[:,3:] # full features
 
 #generate Indexes
-para_to_doc_dict = dict(list(zip(para_id,doc_id)))
-doc_to_au_dict = dict(list(zip(doc_id,author_id)))
-para_to_au_dict = dict(list(zip(para_id,author_id)))
+para_to_doc_dict = dict(list(zip(para_id, doc_id)))
+doc_to_au_dict = dict(list(zip(doc_id, author_id)))
+para_to_au_dict = dict(list(zip(para_id, author_id)))
 paraIndex = dict()
 IndexPara = dict()
 for i in range(len(para_id)):
@@ -595,11 +595,11 @@ for doc in querySet:
 
 
 import _LSH as lsh
-l = lsh.new_LSH(len(datasetP),len(datasetQ),D,L,K,W,T)
+l = lsh.new_LSH(len(datasetP),len(datasetQ),D, L, K, W, T)
 print ("move setN")
-lsh.LSH_setSetN(l,datasetP)
+lsh.LSH_setSetN(l, datasetP)
 print ("move setQ")
-lsh.LSH_setSetQ(l,datasetQ)
+lsh.LSH_setSetQ(l, datasetQ)
 lsh.LSH_setThreadMode(l, 3)
 print((lsh.LSH_reportStatus(l)))
 print ("start collision counting")
@@ -628,8 +628,8 @@ def queryExp(q):
     try:
 #         #LSH Pruning SHD
 #         start = time.time()
-#         q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP,hitparaIndex, IndexPara)
-#         doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList,q_hit_above_T)
+#         q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP, hitparaIndex, IndexPara)
+#         doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList, q_hit_above_T)
 #         LSHLongListTime = time.time()-start
 #         print "Time to generate long doc_list (LSH+SHD) ",LSHLongListTime
 # #        data+= (str(LSHLongListTime) + "\n")
@@ -639,7 +639,7 @@ def queryExp(q):
 #         print "Pruning Time (LSH+SHD): ",LSHSHDPrunListTime
 # #        data+= (str(LSHSHDPrunListTime) + "\n")
 #         start = time.time()
-#         LSH_SHD_list, LSH_SHD_values = getSHDTop5Doc(ListLSH_SHDPrun, queryParaList, doc_to_para_dict, shdTopN,combinedhitQP, datasetP, paraIndex, hitparaIndex,"lsh")
+#         LSH_SHD_list, LSH_SHD_values = getSHDTop5Doc(ListLSH_SHDPrun, queryParaList, doc_to_para_dict, shdTopN, combinedhitQP, datasetP, paraIndex, hitparaIndex,"lsh")
 #         LSH_SHDTop5ListTime = time.time() - start
 
 #         print "Time to return topk doclist (LSH+SHD):",LSH_SHDTop5ListTime
@@ -647,16 +647,16 @@ def queryExp(q):
 
         #LSH Pruning MHD
         start = time.time()
-        q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP,hitparaIndex, IndexPara)
-        doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList,q_hit_above_T)
-        ListLSH_ALL = getAllDoc(queryParaList,doc_hit_above_T_dict)
+        q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP, hitparaIndex, IndexPara)
+        doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList, q_hit_above_T)
+        ListLSH_ALL = getAllDoc(queryParaList, doc_hit_above_T_dict)
         LSHMHDLongListTime = time.time()-start
         print(("Time to generate long doc_list (LSH+MHD) ",LSHMHDLongListTime))
 #        data+= (str(LSHMHDLongListTime) + "\n")
         start = time.time()
-        sortedListLSH = MHDPrunList(queryParaList,ListLSH_ALL,combinedhitQP, datasetm,paraIndex,R,hitparaIndex,doc_hit_above_T_dict,"lsh",MHDRatio)
+        sortedListLSH = MHDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R, hitparaIndex, doc_hit_above_T_dict,"lsh",MHDRatio)
         print(("MHDPrunList %s"%(time.time()-start)))
-        LSH_MHD_Result, LSH_MHD_values = geneMHDPrun(sortedListLSH,queryParaList,combinedhitQP,topknn, flagNum, datasetm, paraIndex, hitparaIndex, MHDRatio,"lsh")
+        LSH_MHD_Result, LSH_MHD_values = geneMHDPrun(sortedListLSH, queryParaList, combinedhitQP, topknn, flagNum, datasetm, paraIndex, hitparaIndex, MHDRatio,"lsh")
         print(("geneMHDPrun %s"%(time.time()-start)))
         LSH_MHD_len = LSH_MHD_Result[0]
         LSH_MHD_list = LSH_MHD_Result[1]
@@ -666,15 +666,15 @@ def queryExp(q):
 
 #         #LSH Pruning M2HD
 #         start = time.time()
-#         q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP,hitparaIndex, IndexPara)
-#         doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList,q_hit_above_T)
-#         ListLSH_ALL = getAllDoc(queryParaList,doc_hit_above_T_dict)
+#         q_hit_above_T = getHitAboveT(queryParaList, combinedhitQP, hitparaIndex, IndexPara)
+#         doc_hit_above_T_dict = convertQdicttoDocdict(queryParaList, q_hit_above_T)
+#         ListLSH_ALL = getAllDoc(queryParaList, doc_hit_above_T_dict)
 #         LSHMHDLongListTime = time.time()-start
 #         print "Time to generate long doc_list (LSH+M2HD) ",LSHMHDLongListTime
 # #        data+= (str(LSHMHDLongListTime) + "\n")
 #         start = time.time()
-#         sortedListLSH = M2HDPrunList(queryParaList,ListLSH_ALL,combinedhitQP, datasetm,paraIndex,R,hitparaIndex,doc_hit_above_T_dict,"lsh",startp, endp)
-#         LSH_M2HD_Result, LSH_M2HD_values = geneM2HDPrun(sortedListLSH,queryParaList,combinedhitQP,topknn, flagNum, datasetm, paraIndex, hitparaIndex, "lsh", startp, endp)
+#         sortedListLSH = M2HDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R, hitparaIndex, doc_hit_above_T_dict,"lsh",startp, endp)
+#         LSH_M2HD_Result, LSH_M2HD_values = geneM2HDPrun(sortedListLSH, queryParaList, combinedhitQP, topknn, flagNum, datasetm, paraIndex, hitparaIndex, "lsh", startp, endp)
 #         LSH_M2HD_len = LSH_M2HD_Result[0]
 #         LSH_M2HD_list = LSH_M2HD_Result[1]
 
@@ -711,22 +711,22 @@ def queryExp(q):
 #        data+= (str(doc_to_au_dict[q]) + "\n")
 
 
-#         LSH_SHD_PKNN = PKNN(queryParaList,LSH_SHD_list, "LSH_SHD","",20,0,combinedhitQP, 5, datasetP,paraIndex )
+#         LSH_SHD_PKNN = PKNN(queryParaList, LSH_SHD_list, "LSH_SHD","",20, 0, combinedhitQP, 5, datasetP, paraIndex )
 #         print "LSH_SHD PKNN: ",LSH_SHD_PKNN
 # #        data+= (str(LSH_SHD_PKNN) + "\n")
 
-        # LSH_MHD_PKNN = PKNN(queryParaList,LSH_MHD_list, "LSH_MHD","",20,0,combinedhitQP, 5, datasetP,paraIndex )
+        # LSH_MHD_PKNN = PKNN(queryParaList, LSH_MHD_list, "LSH_MHD","",20, 0, combinedhitQP, 5, datasetP, paraIndex )
         # print "LSH_MHD PKNN: ",LSH_MHD_PKNN
 #        data+= (str(LSH_MHD_PKNN) + "\n") # PMF of the results
         data+=(str(LSH_MHD_values)+ "\n") # distance and segment id (0.5, 554.0)
-        # LSH_M2HD_PKNN = PKNN(queryParaList,LSH_MHD_list, "LSH_M2HD","",20,0,combinedhitQP, 5, datasetP,paraIndex )
+        # LSH_M2HD_PKNN = PKNN(queryParaList, LSH_MHD_list, "LSH_M2HD","",20, 0, combinedhitQP, 5, datasetP, paraIndex )
         # print "LSH_M2HD PKNN: ",LSH_M2HD_PKNN
   #      data+= (str(LSH_M2HD_PKNN) + "\n")
 
         def changeDocTODocAuTuple(docList):
             result = []
             for doc in docList:
-                result.append((doc,doc_to_au_dict[doc]))
+                result.append((doc, doc_to_au_dict[doc]))
             return result
 
         fileNameString = "./"+output_dir+'/'+syn_name+"/" + str(q)
@@ -744,7 +744,7 @@ if __name__=='__main__':
     processNum = 12#input("please input processors num")
     print ("start pooling")
     pool = multiprocessing.Pool(processes=processNum,)
-    temp= pool.map(queryExp,querySet,)
+    temp= pool.map(queryExp, querySet,)
     pool.close()
     pool.join()
     endtime = time.time() - start_time
