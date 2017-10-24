@@ -37,7 +37,8 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-      - name: Install System Dependencies
+      - run:
+          name: Install System Dependencies
           command: apt-get update -qq && apt-get install -y build-essential postgresql libpq-dev
       # run tests!
       - run:
