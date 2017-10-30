@@ -14,7 +14,7 @@ con = None # use only one connection
 
 
 def connect_database(db_name):
-    '''
+    """
         connecting to a database
 
         Args: 
@@ -23,14 +23,14 @@ def connect_database(db_name):
         Returns:
             con: database connection
             cur = cursor of the connetion
-    '''
+    """
     if not con:
         con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
     cur = con.cursor()
     return con,cur
 
 def is_fragmentable(fragment_size, offset, chunk_size):
-    '''
+    """
         function for checking is it possible to create a fragment of this size.
 
         Args:
@@ -40,11 +40,11 @@ def is_fragmentable(fragment_size, offset, chunk_size):
         Returns:
             True: if it is able to create a fragment with this parameter.
             False: else
-    '''
+    """
     return ((chunk_size - fragment_size) / offset) % 1 == 0
 
 def get_fragments(fragment_size, offset, chunk_size):
-    '''
+    """
         get all the aviarable number of fragment from the parameter.
 
         Args:
@@ -54,7 +54,7 @@ def get_fragments(fragment_size, offset, chunk_size):
         Returns:
             List of aviarable number of fragment from the parameter.
 
-    '''
+    """
     if is_fragmentable(fragment_size, offset, chunk_size):
             return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
 
