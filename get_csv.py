@@ -40,9 +40,9 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
             chunk_count -= fragment_size
             for k in range(chunk_count, chunk_count+fragment_size):
                 list_feature = []
-                list_feature.append(str(j))
-                list_feature.append(str(i+1))
-                list_feature.append(str(chunk_number))
+                list_feature.append(str(j)) # fragment id
+                list_feature.append(str(i+1)) # paper id 
+                list_feature.append(str(chunk_number)) # chunk id
                 cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i+1, k])
                 temp = cur.fetchall()
                 for l in range(0, len(temp)):
