@@ -1,11 +1,10 @@
-
-print(__doc__)
 import os
 import sys
 import time
 import math
 import random
 import csv
+import argparse
 import multiprocessing
 import linecache
 import heapq
@@ -16,8 +15,11 @@ from numpy import loadtxt
 from scipy.spatial.distance import euclidean
 from collections import defaultdict
 
-
-
+parser = argparse.ArgumentParser(description='Runing the experiment')
+parser.add_argument('--input', type=str, help='path of the csv')
+parser.add_argument('--output_path', type=str, help='output path after running experiment')
+parser.add_argument('--author_num', type=str, help='Input directory of the csv')
+arg = parser.parse_args() # get argparse argument
 INF = 999999
 
 output_dir = 'out'
@@ -33,8 +35,6 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 if not os.path.exists(directory):
     os.makedirs(directory)
-
-
 
 print("reading file")
 start = time.time()

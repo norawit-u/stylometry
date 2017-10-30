@@ -12,7 +12,6 @@ def get_syn(db_name, paper_num, chunk_size, author_number):
   cur = con.cursor()
   print(db_name+" "+str(chunk_size)+" "+str(author_number))
   list_return = [] # list of the feature,
-
   chunk_num = 1
   for i in range(0, paper_num):   #number papers
     for j in range(0, chunk_size):  #number chunks per paper (token_size/chunk_size)
