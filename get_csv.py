@@ -59,23 +59,51 @@ def get_fragments(fragment_size, offset, chunk_size):
             return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
 
 def get_num_fragment(fragment_size, offset, chunk_size):
+    """
+        get the number of fragment from parameter
+        
+        Args:
+            fragment_size: number of chuncks in a fragment
+            offset: number of chucks between n and n+1 fragment
+            chunk_size: number of chunks
+        Return:
+            number of fragment
+    """
     return (chunk_size - fragment_size) / offset +1
 
-def save_to_csv(list_return):
+def save_to_csv(list_return, name):
+    """
+        save data to csv file
+
+        Args:
+            list_return: a list of that we want to write to a csv file
+            name: name of a csv file
+    """
     with open('./syn_a2_sw600.csv', 'w') as csvfile:
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
 
 def get_features(num_paper, fragment_size, offset, num_fragment):
-    list_return = []
-    fragment_count = 1
-    chunk_count = 1 + fragment_size
-    chunk_number = 1
-    con, cur = connect_database("")
-    for i in range(0, num_paper):
-        for j in range(fragment_count, fragment_count+num_fragment):
-            chunk_count -= fragment_size
+    """
+        get the feature from the database
+
+        Args:
+            num_paper: number of paper
+            fragment_size: number of chuncks in a fragment
+            offset: number of chucks between n and n+1 fragment
+            num_fragment: number of fragment in a section
+        Returns:
+            List of features
+    """
+    list_return = []        # for storing features that will return
+    fragment_count = 1      # number of fragment(counter)
+    chunk_count = 1 + fragment_size         # number of chunk(counter)
+    chunk_number = 1        # chunk id
+    con, cur = connect_database("")         # database connection and cursor
+    for i in range(0, num_paper):           # loop for number of paper
+        for j in range(fragment_count, fragment_count+num_fragment):        # loop from current fragment to current fragment + number of fragment
+            chunk_count -= fragment_size    
             for k in range(chunk_count, chunk_count+fragment_size):
                 list_feature = []
                 list_feature.append(str(j)) # fragment id
