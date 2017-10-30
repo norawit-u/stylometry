@@ -360,3 +360,4 @@ class Paragraph:
         stylo_list.append(self.get_freq_of_sen_terminator())
         stylo_list.append(self.get_freq_of_symbol())
         return stylo_list
+    
