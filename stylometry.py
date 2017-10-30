@@ -438,21 +438,19 @@ def multiprocessLoad(folerStr):
     fileNameList.sort()
     dirString = folerStr+"/"
     fileNameList = [dirString + s  for s in fileNameList]
-    if __name__ == "__main__":
-        pool_size = multiprocessing.cpu_count()
-        pool = multiprocessing.Pool(pool_size)
-        results = pool.map(npLoad, fileNameList,)
-        pool.close()
-        pool.join()
+    pool_size = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(pool_size)
+    results = pool.map(npLoad, fileNameList,)
+    pool.close()
+    pool.join()
     my_data = combinedata(results)
     return my_data
 
 def multiprocessNorm(dataset):
-    if __name__ == "__main__":
-        pool_size = multiprocessing.cpu_count()
-        pool = multiprocessing.Pool(pool_size)
-        results = pool.map(NormalizeOneDem, dataset.T,)
-        pool.close()
-        pool.join()
-#       normData = combinedata(results)
+    pool_size = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(pool_size)
+    results = pool.map(NormalizeOneDem, dataset.T,)
+    pool.close()
+    pool.join()
+#   normData = combinedata(results)
     return np.asarray(results).T

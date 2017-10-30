@@ -17,7 +17,7 @@ def get_syn(db_name, paper_num, chunk_size, author_number):
   for i in range(0, paper_num):   #number papers
     for j in range(0, chunk_size):  #number chunks per paper (token_size/chunk_size)
       # section_id, fragment_id, chunck_id, author_id, 57 features ...
-      list_feature = []
+      list_feature = [] # list of this row
       list_feature.append(str(((j/(chunk_size/author_number))+1)+(author_number*i))) #first number is chunk per fragment, and the last number is number of authors (aka a2)
       #list_feature.append(str(((j/10)+1)+(3*i)))
       print(str(j/10+1))
