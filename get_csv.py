@@ -3,7 +3,7 @@ import getpass
 import argparse
 import psycopg2
 USER = getpass.getuser() # database username
-con = None # use only one connection
+CON = None # use only one connection
 
 """
     fragment_size: number of chuncks in a fragment
@@ -21,10 +21,10 @@ def connect_database(db_name):
             con: database connection
             cur = cursor of the connetion
     """
-    if not con:
-        con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name, USER))
-    cur = con.cursor()
-    return con, cur
+    if not CON:
+        CON = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name, USER))
+    cur = CON.cursor()
+    return CON, cur
 def is_fragmentable(fragment_size, offset, chunk_size):
     """
         function for checking is it possible to create a fragment of this size.
@@ -49,7 +49,7 @@ def get_fragments(fragment_size, offset, chunk_size):
             List of aviarable number of fragment from the parameter.
     """
     if is_fragmentable(fragment_size, offset, chunk_size):
-            return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
+        return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
 def get_num_fragment(fragment_size, offset, chunk_size):
     """
         get the number of fragment from parameter
@@ -89,10 +89,10 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
     fragment_count = 1      # number of fragment(counter)
     chunk_count = 1 + fragment_size         # number of chunk(counter)
     chunk_number = 1        # chunk id
-    con, cur = connect_database(db_name)         # database connection and cursor
+    _, cur = connect_database(db_name)         # database connection and cursor
     for i in range(0, num_paper):           # loop for number of paper
         for j in range(fragment_count, fragment_count+num_fragment):        # loop from current fragment to current fragment + number of fragment
-            chunk_count -= fragment_size   
+            chunk_count -= fragment_size
             for k in range(chunk_count, chunk_count+fragment_size):
                 list_feature = []
                 list_feature.append(str(j)) # fragment id
@@ -108,6 +108,7 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
             chunk_count += offset
         chunk_count += fragment_size - offset
         fragment_count += num_fragment
+    return list_return
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
