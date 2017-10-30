@@ -4,3 +4,4 @@ scipy>-0.19.1
 setuptools>=36.4.0
 pylint>=1.7.4
 coverage>=4.4.1
+psycopg2>=2.7.3.2
