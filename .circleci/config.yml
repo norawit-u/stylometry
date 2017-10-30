@@ -45,11 +45,9 @@ jobs:
       # run tests!
       - run:
           name: run tests
-         
           command: |
             . venv/bin/activate
-            python manage.py test
-
+            find . -iname "*.py" | xargs pylint
       - store_artifacts:
           path: test-reports
           destination: test-reports
