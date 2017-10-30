@@ -14,12 +14,32 @@ con = None # use only one connection
 
 
 def connect_database(db_name):
+    '''
+        connecting to a database
+
+        Args: 
+            db_name: database name
+        
+        Returns:
+            con: database connection
+            cur = cursor of the connetion
+    '''
     if not con:
         con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
     cur = con.cursor()
     return con,cur
 
 def is_fragmentable(fragment_size, offset, chunk_size):
+    '''
+        function for checking is it possible to create a fragment of this size.
+
+        Args:
+            fragment_size: 
+            offset:
+            chunk_size;
+        Returns:
+            True: if it is able to create a fragment with this parameter.
+    '''
     return ((chunk_size - fragment_size) / offset) % 1 == 0
 
 def get_fragments(fragment_size, offset, chunk_size):
@@ -62,10 +82,15 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
-    parser.add_argument('--fragment_size', type=int, help='number of fragment in a section')
+    parser.add_argument('--fragment_size', type=int, help='number of chunks in a fragment')
+    parser.add_argument('--num_fragment', type=int, help='number of fragment in a section')
+
     parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
+    parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
+    parser.add_argument('--num_chunk_per_section', type=int, help='number of chunk in a section')
+    
     parser.add_argument('--num_paper', type=int, help='number of paper')
-    parser.add_argument('--offset', type=int, help="offset off chunksize between each fragment")
+    parser.add_argument('--offset', type=int, help="number of chucks between n and n+1 fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, nargs='*', help="output path", default='.')
     return parser.parse_args()
