@@ -68,7 +68,7 @@ def parser_args():
     parser.add_argument('--offset', type=int, help="offset off chunksize between each fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, nargs='*', help="output path", default='.')
-
+    return parser.parse_args()
 if __name__ == '__main__':
     fragment_size = 10
     offset = 2

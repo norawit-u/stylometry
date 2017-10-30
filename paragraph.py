@@ -73,8 +73,8 @@ class Paragraph:
     def get_K_vocabulary_richness(self):
         try:
             total = 0
-        for val in self.word_occurrence.values():
-            total += val * val
+            for val in self.word_occurrence.values():
+                total += val * val
         return float(math.pow(10, 4) * (total - self.get_total_no_of_words())) / float(math.pow(self.get_total_no_of_words(), 2))
             except ZeroDivisionError as e:
         return -1
