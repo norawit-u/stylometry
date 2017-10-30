@@ -2,79 +2,69 @@ import csv
 import getpass
 import argparse
 import psycopg2
-
 USER = getpass.getuser() # database username
 con = None # use only one connection
 
 """
     fragment_size: number of chuncks in a fragment
-    offset: number of chucks between n and n+1 fragment
+    offset: number of chunks between n and n+1 fragment
     chunk_size: number of chunks
 """
-
 
 def connect_database(db_name):
     """
         connecting to a database
-
-        Args: 
+        Args:
             db_name: database name
-        
+
         Returns:
             con: database connection
             cur = cursor of the connetion
     """
     if not con:
-        con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name, USER))
     cur = con.cursor()
-    return con,cur
-
+    return con, cur
 def is_fragmentable(fragment_size, offset, chunk_size):
     """
         function for checking is it possible to create a fragment of this size.
-
         Args:
             fragment_size: number of chuncks in a fragment
-            offset: number of chucks between n and n+1 fragment
+            offset: number of chunks between n and n+1 fragment
             chunk_size: number of chunks
         Returns:
             True: if it is able to create a fragment with this parameter.
             False: else
     """
     return ((chunk_size - fragment_size) / offset) % 1 == 0
-
 def get_fragments(fragment_size, offset, chunk_size):
     """
         get all the aviarable number of fragment from the parameter.
-
         Args:
             fragment_size: number of chuncks in a fragment
-            offset: number of chucks between n and n+1 fragment
+            offset: number of chuks between n and n+1 fragment
             chunk_size: number of chunks
+
         Returns:
             List of aviarable number of fragment from the parameter.
-
     """
     if is_fragmentable(fragment_size, offset, chunk_size):
             return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
-
 def get_num_fragment(fragment_size, offset, chunk_size):
     """
         get the number of fragment from parameter
-        
+
         Args:
             fragment_size: number of chuncks in a fragment
-            offset: number of chucks between n and n+1 fragment
+            offset: number of chunks between n and n+1 fragment
             chunk_size: number of chunks
         Return:
             number of fragment
     """
     return (chunk_size - fragment_size) / offset +1
-
 def save_to_csv(list_return, name):
     """
         save data to csv file
-
         Args:
             list_return: a list of that we want to write to a csv file
             name: name of a csv file
@@ -83,16 +73,15 @@ def save_to_csv(list_return, name):
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
-
-def get_features(num_paper, fragment_size, offset, num_fragment):
+def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
     """
         get the feature from the database
-
         Args:
             num_paper: number of paper
             fragment_size: number of chuncks in a fragment
-            offset: number of chucks between n and n+1 fragment
+            offset: number of chunks between n and n+1 fragment
             num_fragment: number of fragment in a section
+            db_name: database name
         Returns:
             List of features
     """
@@ -100,14 +89,14 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
     fragment_count = 1      # number of fragment(counter)
     chunk_count = 1 + fragment_size         # number of chunk(counter)
     chunk_number = 1        # chunk id
-    con, cur = connect_database("")         # database connection and cursor
+    con, cur = connect_database(db_name)         # database connection and cursor
     for i in range(0, num_paper):           # loop for number of paper
         for j in range(fragment_count, fragment_count+num_fragment):        # loop from current fragment to current fragment + number of fragment
-            chunk_count -= fragment_size    
+            chunk_count -= fragment_size   
             for k in range(chunk_count, chunk_count+fragment_size):
                 list_feature = []
                 list_feature.append(str(j)) # fragment id
-                list_feature.append(str(i+1)) # paper id 
+                list_feature.append(str(i+1)) # paper id
                 list_feature.append(str(chunk_number)) # chunk id
                 cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i+1, k])
                 temp = cur.fetchall()
@@ -124,26 +113,18 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--fragment_size', type=int, help='number of chunks in a fragment')
     parser.add_argument('--num_fragment', type=int, help='number of fragment in a section')
-
     parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_chunk_per_section', type=int, help='number of chunk in a section')
-    
+
     parser.add_argument('--num_paper', type=int, help='number of paper')
-    parser.add_argument('--offset', type=int, help="number of chucks between n and n+1 fragment")
+    parser.add_argument('--offset', type=int, help="number of chunks between n and n+1 fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, nargs='*', help="output path", default='.')
     return parser.parse_args()
 if __name__ == '__main__':
-    fragment_size = 10
-    offset = 2
-    chunk_size = 20
-    num_paper = 500
-    if is_fragmentable(fragment_size, offset, chunk_size):
-        num_fragment = get_num_fragment(fragment_size, offset, chunk_size)
-        list_return = get_features(num_paper, fragment_size, offset, num_fragment)
-        save_to_csv(list_return)
-
-
- 
-
+    arg = parser_args()
+    if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
+        num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
+        list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name)
+        save_to_csv(list_return, arg.db_name)
