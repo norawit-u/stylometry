@@ -49,8 +49,8 @@ class Paragraph:
         word = []
         no_of_occurrence = []
         for item in sorted(set(self.low_case_words_list)):
-        word.append(item)
-        no_of_occurrence.append(self.low_case_words_list.count(item))
+            word.append(item)
+            no_of_occurrence.append(self.low_case_words_list.count(item))
         return dict(zip(word, no_of_occurrence))
 
     def get_total_no_of_words(self):
