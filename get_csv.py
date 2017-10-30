@@ -1,8 +1,10 @@
 import csv
 import getpass
+import argparse
 import psycopg2
 
 USER = getpass.getuser() # database username
+con = None # use only one connection
 
 """
     fragment_size: number of chuncks in a fragment
@@ -10,9 +12,10 @@ USER = getpass.getuser() # database username
     chunk_size: number of chunks
 """
 
-def connect_database():
-    db_name = "syn_eng_c600_t12000_a2_al5_sw600"
-    con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
+
+def connect_database(db_name):
+    if not con:
+        con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
     cur = con.cursor()
     return con,cur
 
@@ -37,6 +40,7 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
     fragment_count = 1
     chunk_count = 1 + fragment_size
     chunk_number = 1
+    con, cur = connect_database("")
     for i in range(0, num_paper):
         for j in range(fragment_count, fragment_count+num_fragment):
             chunk_count -= fragment_size
@@ -55,7 +59,14 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
             chunk_count += offset
         chunk_count += fragment_size - offset
         fragment_count += num_fragment
-
+        
+def parser_args():
+    parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
+    parser.add_argument('--fragment_size', type=int, help='number of fragment in a section')
+    parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
+    parser.add_argument('--num_paper', type=int, help='number of paper')
+    parser.add_argument('--offset',type=int,"offset off chunksize between each fragment")
+            
 if __name__ == '__main__':
     fragment_size = 10
     offset = 2
