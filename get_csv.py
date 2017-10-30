@@ -34,15 +34,27 @@ def is_fragmentable(fragment_size, offset, chunk_size):
         function for checking is it possible to create a fragment of this size.
 
         Args:
-            fragment_size: 
-            offset:
-            chunk_size;
+            fragment_size: number of chuncks in a fragment
+            offset: number of chucks between n and n+1 fragment
+            chunk_size: number of chunks
         Returns:
             True: if it is able to create a fragment with this parameter.
+            False: else
     '''
     return ((chunk_size - fragment_size) / offset) % 1 == 0
 
 def get_fragments(fragment_size, offset, chunk_size):
+    '''
+        get all the aviarable number of fragment from the parameter.
+
+        Args:
+            fragment_size: number of chuncks in a fragment
+            offset: number of chucks between n and n+1 fragment
+            chunk_size: number of chunks
+        Returns:
+            List of aviarable number of fragment from the parameter.
+
+    '''
     if is_fragmentable(fragment_size, offset, chunk_size):
             return [tokens[x:x + fragment_size] for x in xrange(0, len(chunk_size), offset)]
 
