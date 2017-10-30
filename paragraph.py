@@ -141,12 +141,12 @@ class Paragraph:
             return -1
 
     def get_average_word_length(self):
-    try:
-        return float(sum(self.words_length)) / float(len(self.words_length))
-    except ZeroDivisionError as e:
-        return -1
-    except ValueError as e:
-        return -1
+        try:
+            return float(sum(self.words_length)) / float(len(self.words_length))
+        except ZeroDivisionError as e:
+            return -1
+        except ValueError as e:
+            return -1
 
     def get_stddev_of_word_length(self):
         mean = self.get_average_word_length()
