@@ -59,14 +59,16 @@ def get_features(num_paper, fragment_size, offset, num_fragment):
             chunk_count += offset
         chunk_count += fragment_size - offset
         fragment_count += num_fragment
-        
+
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--fragment_size', type=int, help='number of fragment in a section')
     parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_paper', type=int, help='number of paper')
-    parser.add_argument('--offset',type=int,"offset off chunksize between each fragment")
-            
+    parser.add_argument('--offset', type=int, help="offset off chunksize between each fragment")
+    parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
+    parser.add_argument('--out_path', type=str, nargs='*', help="output path", default='.')
+
 if __name__ == '__main__':
     fragment_size = 10
     offset = 2
