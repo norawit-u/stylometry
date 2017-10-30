@@ -20,8 +20,8 @@ from collections import defaultdict
 
 INF = 999999
 
-output_dir = 'out_max1000'
-csv_dir = 'max1000'
+output_dir = 'out'
+csv_dir = 'csv'
 syn_name = ''
 fragment_total = 1000 # total number of fragment =  number papers * author number
 if len(sys.argv) >= 1:
