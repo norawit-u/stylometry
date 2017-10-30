@@ -4,16 +4,18 @@ import psycopg2
 
 USER = getpass.getuser() # database username
 
-#db_name = "syn_c500_t15000_a3_al5"
-db_name = "syn_eng_c600_t12000_a2_al5_sw600"
-con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
-cur = con.cursor()
-
 """
     fragment_size: number of chuncks in a fragment
     offset: number of chucks between n and n+1 fragment
     chunk_size: number of chunks
 """
+
+def connect_database():
+    db_name = "syn_eng_c600_t12000_a2_al5_sw600"
+    con = psycopg2.connect("dbname ='%s' user='%s' host=local" %(db_name,USER))
+    cur = con.cursor()
+    return con,cur
+
 def is_fragmentable(fragment_size, offset, chunk_size):
     return ((chunk_size - fragment_size) / offset) % 1 == 0
 
