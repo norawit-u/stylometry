@@ -18,7 +18,6 @@
 ```
 
 get_csv.py
-
 ```bash
 usage: get_csv.py [-h] [--fragment_size FRAGMENT_SIZE]
                   [--num_fragment NUM_FRAGMENT] [--chunk_size CHUNK_SIZE]
