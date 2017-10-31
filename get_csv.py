@@ -144,6 +144,5 @@ if __name__ == '__main__':
     arg = parser_args()
     if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
         num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
-        print(num_fragment)
         list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name[0])
         save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0])
