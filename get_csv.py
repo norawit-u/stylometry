@@ -115,7 +115,6 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
                 list_feature.append(str(j))  # fragment id
                 list_feature.append(str(i + 1))  # paper id
                 list_feature.append(str(chunk_number))  # chunk id
-                list_feature.append(k)
                 cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, k])
                 temp = cur.fetchall()
                 for l in range(0, len(temp)):
@@ -151,4 +150,4 @@ if __name__ == '__main__':
     if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
         num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
         list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name[0])
-        save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0], field_names)
+        save_to_csv(list_return, arg.out_path+"/"+arg.fragment_size+'/'+arg.db_name[0], field_names)
