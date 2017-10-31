@@ -82,7 +82,9 @@ def save_to_csv(list_return, name, fieldnames):
             fieldnames: field names of the csv file (header)
     """
     with open(name+'.csv', 'w') as csvfile:
-        write = csv.writer(csvfile, delimiter=',', fieldnames=fieldnames)
+        for name in fieldnames:
+            csvfile.write(name+',')
+        write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
 
