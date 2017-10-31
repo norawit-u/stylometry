@@ -73,15 +73,16 @@ def get_num_fragment(fragment_size, offset, chunk_size):
     return int((chunk_size - fragment_size) / offset + 1)
 
 
-def save_to_csv(list_return, name):
+def save_to_csv(list_return, name, fieldnames):
     """
         save data to csv file
         Args:
             list_return: a list of that we want to write to a csv file
             name: name of a csv file
+            fieldnames: field names of the csv file (header)
     """
     with open(name+'.csv', 'w') as csvfile:
-        write = csv.writer(csvfile, delimiter=',')
+        write = csv.writer(csvfile, delimiter=',',fieldnames=fieldnames)
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
 
@@ -141,8 +142,9 @@ def parser_args():
 
 
 if __name__ == '__main__':
+    field_names = ['fragment_id','paper_id','chunk_id']
     arg = parser_args()
     if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
         num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
         list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name[0])
-        save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0])
+        save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0], field_names)
