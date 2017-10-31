@@ -144,7 +144,7 @@ def parser_args():
 
 
 if __name__ == '__main__':
-    field_names = ['paper_id', 'section_id', 'fragment_id', 'chunk_id']
+    field_names = ['fragment_id', 'paper_id','chunk_id']
     field_names.extend(['fragment_' + str(i) for i in range(1, 58)])
     arg = parser_args()
     if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
