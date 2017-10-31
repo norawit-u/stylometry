@@ -64,3 +64,6 @@ gat_csv.py
 ## Diagram
 
 
+||||  Generate Database(gendb_english.py) |||
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|number of paper  |	chunk size  |	token size  |	author  | 	author list |	sliding window  |
