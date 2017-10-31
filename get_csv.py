@@ -7,7 +7,7 @@ USER = getpass.getuser()  # database username
 CON = None  # use only one connection
 
 """
-    fragment_size: number of chuncks in a fragment
+    fragment_size: number of chunks in a fragment
     offset: number of chunks between n and n+1 fragment
     chunk_size: number of chunks
 """
@@ -21,7 +21,7 @@ def connect_database(db_name):
 
         Returns:
             con: database connection
-            cur = cursor of the connetion
+            cur = cursor of the connection
     """
     global CON
     if not CON:
@@ -34,7 +34,7 @@ def is_fragmentable(fragment_size, offset, chunk_size):
     """
         function for checking is it possible to create a fragment of this size.
         Args:
-            fragment_size: number of chuncks in a fragment
+            fragment_size: number of chunks in a fragment
             offset: number of chunks between n and n+1 fragment
             chunk_size: number of chunks
         Returns:
@@ -48,8 +48,8 @@ def get_fragments(fragment_size, offset, chunk_size):
     """
         get all the aviarable number of fragment from the parameter.
         Args:
-            fragment_size: number of chuncks in a fragment
-            offset: number of chuks between n and n+1 fragment
+            fragment_size: number of chunks in a fragment
+            offset: number of chunks between n and n+1 fragment
             chunk_size: number of chunks
 
         Returns:
@@ -89,12 +89,12 @@ def save_to_csv(list_return, name, fieldnames):
             write.writerow(list_return[x])
 
 
-def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
+def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_name):
     """
         get the feature from the database
         Args:
             num_paper: number of paper
-            fragment_size: number of chuncks in a fragment
+            num_chunk_per_fragment: number of chunks in a fragment
             offset: number of chunks between n and n+1 fragment
             num_fragment: number of fragment in a section
             db_name: database name
@@ -102,16 +102,16 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
             List of features
     """
     section_count = 2
-    num_section = 5
+    num_section_per_paper = 5
     list_return = []  # for storing features that will return
     fragment_count = 1  # number of fragment(counter)
-    chunk_count = 1 + fragment_size  # number of chunk(counter)
+    chunk_count = 1 + num_chunk_per_fragment  # number of chunk(counter)
     chunk_number = 1  # chunk id
     _, cur = connect_database(db_name)  # database connection and cursor
     for i in range(0, num_paper):  # loop for number of paper
-        for j in range(section_count, section_count+num_section):
+        for j in range(section_count, section_count+num_section_per_paper):
             for k in range(fragment_count, fragment_count+num_fragment):
-                for l in range(chunk_count, chunk_count+fragment_size):
+                for l in range(chunk_count, chunk_count+num_chunk_per_fragment):
                     row = []
                     row.append(i+1)     # paper id
                     row.append(j)       # section id
@@ -125,7 +125,7 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
                     list_return.append(row)
                     chunk_number += 1
                 chunk_count += offset
-            chunk_count += fragment_size - offset
+            chunk_count += num_chunk_per_fragment - offset
             fragment_count += num_fragment
     return list_return
 
