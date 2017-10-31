@@ -80,7 +80,7 @@ def save_to_csv(list_return, name):
             list_return: a list of that we want to write to a csv file
             name: name of a csv file
     """
-    with open('./syn_a2_sw600.csv', 'w') as csvfile:
+    with open(name+'.csv', 'w') as csvfile:
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
@@ -146,4 +146,4 @@ if __name__ == '__main__':
         num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
         print(num_fragment)
         list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name[0])
-        save_to_csv(list_return, arg.db_name[0])
+        save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0])
