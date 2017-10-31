@@ -136,7 +136,7 @@ def parser_args():
     parser.add_argument('--num_paper', type=int, help='number of paper')
     parser.add_argument('--offset', type=int, help="number of chunks between n and n+1 fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
-    parser.add_argument('--out_path', type=str, default='./', help="output path", default='.')
+    parser.add_argument('--out_path', type=str, help="output path", default='.')
     return parser.parse_args()
 
 
