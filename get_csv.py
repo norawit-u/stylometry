@@ -82,7 +82,7 @@ def save_to_csv(list_return, name, fieldnames):
             fieldnames: field names of the csv file (header)
     """
     with open(name+'.csv', 'w') as csvfile:
-        write = csv.writer(csvfile, delimiter=',',fieldnames=fieldnames)
+        write = csv.writer(csvfile, delimiter=',', fieldnames=fieldnames)
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
 
@@ -142,7 +142,7 @@ def parser_args():
 
 
 if __name__ == '__main__':
-    field_names = ['fragment_id','paper_id','chunk_id']
+    field_names = ['fragment_id', 'paper_id', 'chunk_id']
     arg = parser_args()
     if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
         num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
