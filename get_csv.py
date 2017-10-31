@@ -70,7 +70,7 @@ def get_num_fragment(fragment_size, offset, chunk_size):
         Return:
             number of fragment
     """
-    return (chunk_size - fragment_size) / offset + 1
+    return int((chunk_size - fragment_size) / offset + 1)
 
 
 def save_to_csv(list_return, name):
