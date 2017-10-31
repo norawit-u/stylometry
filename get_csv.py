@@ -25,7 +25,7 @@ def connect_database(db_name):
     """
     global CON
     if not CON:
-        CON = psycopg2.connect("dbname ='%s' user='%s' host=local" % (db_name, USER))
+        CON = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (db_name, USER))
     cur = CON.cursor()
     return CON, cur
 
