@@ -116,6 +116,7 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
                     row.append(j)       # section id
                     row.append(k)       # fragment id
                     row.append(chunk_number)       # chunk id
+                    row.append(l)
                     cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, l])
                     temp = cur.fetchall()
                     for m in range(0, len(temp)):
