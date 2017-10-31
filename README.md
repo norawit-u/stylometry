@@ -64,6 +64,18 @@ gat_csv.py
 ## Diagram
 
 
-||||  Generate Database(gendb_english.py) ||||
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+||||  Generate Database(gendb_english.py) |||
+|:-:|:-:|:-:|:-:|:-:|:-:|
 |number of paper  |	chunk size  |	token size  |	author  | 	author list |	sliding window  | |
+
+
+|||| Database ||||
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|| paper ||| chunk  ||
+
+## Calculation
+
+  number_of_chunk = number_of_paper x token_size / sliding_window
+  number_of_chunk = number_of_features / 57
+
+  
