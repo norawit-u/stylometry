@@ -104,12 +104,13 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
     section = 2
     list_return = []  # for storing features that will return
     fragment_count = 1  # number of fragment(counter)
-    chunk_count = 1   # number of chunk(counter)
+    chunk_count = 1 + fragment_size  # number of chunk(counter)
     chunk_number = 1  # chunk id
     _, cur = connect_database(db_name)  # database connection and cursor
     for i in range(0, num_paper):  # loop for number of paper
         for j in range(0, section):
             for k in range(fragment_count, fragment_count+num_fragment):
+                chunk_count -= fragment_size
                 for l in range(chunk_count, chunk_count+fragment_size):
                     row = []
                     row.append(i+1)     # paper id
@@ -124,6 +125,7 @@ def get_features(num_paper, fragment_size, offset, num_fragment, db_name):
                     list_return.append(row)
                     chunk_number += 1
                 chunk_count += offset
+            chunk_count += fragment_size - offset
             fragment_count += num_fragment
     return list_return
 
