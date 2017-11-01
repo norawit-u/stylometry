@@ -79,9 +79,10 @@ doc_to_au_dict = dict(list(zip(doc_id, author_id)))
 para_to_au_dict = dict(list(zip(para_id, author_id)))
 paraIndex = dict()
 IndexPara = dict()
+
+
 for i in range(len(para_id)):
     paraIndex[para_id[i]] = i
-
 for i in range(len(para_id)):
     IndexPara[i] = para_id[i]
 
@@ -172,6 +173,7 @@ def queryExp(q):
         LSHLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+SHD) ", LSHLongListTime
 #        data += (str(LSHLongListTime) + "\n")
+
 
         start = time.time()
         ListLSH_SHDPrun = getSHDPrunedDoc(queryParaList, doc_hit_above_T_dict)
@@ -282,7 +284,7 @@ def queryExp(q):
         f.close()
         print("I am gonna write the result in the directory please check it whether it is okaaaaaaaaaaay")
     except:
-        return
+        raise 
 
 
 if __name__ == '__main__':
@@ -294,4 +296,5 @@ if __name__ == '__main__':
     temp = pool.map(queryExp, querySet, )
     pool.close()
     pool.join()
-    endtime = time.time() - start_time
+    end_time = time.time() - start_time
+    print(end_time)
