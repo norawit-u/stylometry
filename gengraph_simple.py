@@ -66,7 +66,7 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        print(frag_probs)
+        #print(frag_probs)
         for entry in similar_fragments:
             p_id, f_id = int(entry[0]), int(entry[1])
             pmf = frag_probs[p_id][f_id]

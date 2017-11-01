@@ -79,4 +79,11 @@ gat_csv.py
   number_of_chunk = number_of_paper x token_size / sliding_window
   number_of_chunk = number_of_features / 57
 
-  
+run experiment
+```bash
+python experiments_simple_min_p3.py 10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 4000
+```
+run gengraph
+```bash
+python2 gengraph2_simple.py --num_authors 2  --num_authors_list 2 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200/
+```
