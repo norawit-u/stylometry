@@ -38,26 +38,16 @@ if not os.path.exists(directory):
 
 print("reading file")
 start = time.time()
-# my_data = []
-# with open("../../dataset.csv") as f:
-#       for line in f:
-#               sliceline = line.replace("\n", "").replace("\r", "").split(",")
-#              my_data.append(sliceline)
-# my_data = genfromtxt('../../dataset.csv', delimiter=',')
 print(('./' + csv_dir + '/' + syn_name + '.csv'))
 my_data = loadtxt('./' + csv_dir + '/' + syn_name + '.csv', delimiter=',')  # input dataset
-# my_data = np.asarray(multiprocessLoad("../../splitedFiles1000000"))
 print((time.time() - start, "used to read file"))
+
 # parameters
 D = 56  # dimensions
 L = 334  # the number of group hash
 K = 1  # the number of hash functions in each group hash
-# N = 30000 # the size of dataset
-# N = 4259934 # the size of dataset
 N = len(my_data)  # the size of dataset
 NP = len(my_data)  # the size of data used for QP
-# NP = 4259934 #the size of data used for QP
-# NP = 30000 #the size of data used for QP
 NDocQ = 5
 R = 0.12 * math.sqrt(D)  # query range
 W = 1  # the width of bucket
@@ -72,18 +62,6 @@ topknn = 21  # MHD TopN list length
 shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
-# load query documents: fragment_id  to query
-# doc=[]
-# line = linecache.getlines("./fragment5000.csv")
-# for i in range(len(line)):
-#         sliceline = line[i].replace("\n", "").replace("\r", "").split(",")
-#         doc.append(sliceline)
-
-# querySet=[]
-# for i in range(len(doc)):
-#     for j in range(len(doc[i])):
-#         doc[i][j]= int(doc[i][j])
-#         querySet.append(doc[i][j])
 querySet = [x for x in range(1, fragment_total + 1)]
 print(querySet)
 
