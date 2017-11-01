@@ -185,6 +185,7 @@ def queryExp(q):
     #    data += (str(q) + "\n")
 
     try:
+
         """
         #LSH Pruning SHD
         start = time.time()
@@ -193,17 +194,19 @@ def queryExp(q):
         LSHLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+SHD) ", LSHLongListTime
 #        data += (str(LSHLongListTime) + "\n")
+
         start = time.time()
         ListLSH_SHDPrun = getSHDPrunedDoc(queryParaList, doc_hit_above_T_dict)
         LSHSHDPrunListTime = time.time()-start
         print "Pruning Time (LSH+SHD): ", LSHSHDPrunListTime
 #        data += (str(LSHSHDPrunListTime) + "\n")
+
         start = time.time()
         LSH_SHD_list, LSH_SHD_values = getSHDTop5Doc(ListLSH_SHDPrun, queryParaList, doc_to_para_dict, shdTopN, combinedhitQP, datasetP, paraIndex, hitparaIndex, "lsh")
         LSH_SHDTop5ListTime = time.time() - start
-
         print "Time to return topk doclist (LSH+SHD):", LSH_SHDTop5ListTime
 #        data += (str(LSH_SHDTop5ListTime) + "\n")
+
         """
         # LSH Pruning MHD
         start = time.time()
@@ -213,6 +216,7 @@ def queryExp(q):
         LSHMHDLongListTime = time.time() - start
         print(("Time to generate long doc_list (LSH+MHD) ", LSHMHDLongListTime))
         #        data += (str(LSHMHDLongListTime) + "\n")
+
         start = time.time()
         sortedListLSH = stylometry.MHDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R,
                                                hitparaIndex, doc_hit_above_T_dict, "lsh", MHDRatio)
@@ -221,6 +225,7 @@ def queryExp(q):
                                                                 flagNum, datasetm, paraIndex, hitparaIndex, MHDRatio,
                                                                 "lsh")
         print(("geneMHDPrun %s" % (time.time() - start)))
+
         LSH_MHD_len = LSH_MHD_Result[0]
         LSH_MHD_list = LSH_MHD_Result[1]
         LSHMHDgenTop5ListTime = time.time() - start
@@ -235,12 +240,12 @@ def queryExp(q):
         LSHMHDLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+M2HD) ", LSHMHDLongListTime
 #        data += (str(LSHMHDLongListTime) + "\n")
+
         start = time.time()
         sortedListLSH = M2HDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R, hitparaIndex, doc_hit_above_T_dict, "lsh", startp, endp)
         LSH_M2HD_Result, LSH_M2HD_values = geneM2HDPrun(sortedListLSH, queryParaList, combinedhitQP, topknn, flagNum, datasetm, paraIndex, hitparaIndex, "lsh", startp, endp)
         LSH_M2HD_len = LSH_M2HD_Result[0]
         LSH_M2HD_list = LSH_M2HD_Result[1]
-
         LSHM2HDgenTop5ListTime = time.time() -start
         print "Time to return topk doclist (LSH+M2HD):", LSHM2HDgenTop5ListTime
  #       data += (str(LSHM2HDgenTop5ListTime) + "\n")
@@ -253,12 +258,10 @@ def queryExp(q):
         print "docList Length LSH_MHD: ", LSH_MHD_len
   #      data += (str(LSH_M2HD_len) + "\n")
         # print "docList Length LSH_M2HD: ", LSH_M2HD_len
-
   #      data += (str(len(ListLSH_ALL)/len(ListLSH_SHDPrun)) + "\n")
         print "prunRatio LSH_SHD: ", len(ListLSH_ALL)/len(ListLSH_SHDPrun)
  #       data += (str(len(ListLSH_ALL)/LSH_MHD_len) + "\n")
         print "prunRatio LSH_MHD: ", len(ListLSH_ALL)/LSH_MHD_len
-
  #       data += (str(len(ListLSH_ALL)/LSH_M2HD_len) + "\n")
         # print "prunRatio LSH_M2HD: ", len(ListLSH_ALL)/LSH_M2HD_len
 
@@ -271,7 +274,7 @@ def queryExp(q):
         print "///////////////////////////////////////////"
         print "use the top2 closet document to determine author_id:"
         print "Origin author: ", doc_to_au_dict[q]
-       data += (str(doc_to_au_dict[q]) + "\n")
+        data += (str(doc_to_au_dict[q]) + "\n")
 
 
         LSH_SHD_PKNN = PKNN(queryParaList, LSH_SHD_list, "LSH_SHD","", 20, 0, combinedhitQP, 5, datasetP, paraIndex )
