@@ -57,8 +57,8 @@ shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
 querySet = [x for x in range(1, int(fragment_total) + 1)]
-print(querySet)
-
+# print(querySet)
+print(my_data.shape)
 print("indexing")
 start = time.time()
 
