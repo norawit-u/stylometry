@@ -13,6 +13,7 @@ def save_to_csv(list_return, name, fieldnames):
     with open(name + '.csv', 'w') as csvfile:
         for name in fieldnames:
             csvfile.write(name + ',')
+        csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
