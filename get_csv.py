@@ -61,8 +61,6 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
-    parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_paper', type=int, help='number of paper')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
