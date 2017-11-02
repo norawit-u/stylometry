@@ -33,7 +33,7 @@ if not os.path.exists(directory):
 print("reading file")
 start = time.time()
 print((arg.input)
-my_data = loadtxt(arg.input, delimiter=',')  # input dataset
+my_data = stylometry.loadtxt(arg.input, delimiter=',')  # input dataset
 print((time.time() - start, "used to read file"))
 
 # parameters
