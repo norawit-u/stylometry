@@ -17,8 +17,8 @@ INF = 999999
 
 
 def npLoad(fileStr):
-    temp = np.genfromtxt(fileStr, delimiter=',', names=True)
-    return temp
+    temp = np.genfromtxt(fileStr, delimiter=',')
+    return np.delete(temp,0,0)
 
 
 def NormalizeOneDem(oneDemdata):
