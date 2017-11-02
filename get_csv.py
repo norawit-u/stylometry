@@ -46,8 +46,8 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
             list_feature.append(str((chunk_per_fragment + 1) + (
             author_number * i)))  # first number is chunk per fragment, and the last number is number of authors (aka a2)
             # list_feature.append(str(((j/10)+1)+(3*i)))
-            print(str(chunk_per_fragment))
-            print(str(chunk_per_fragment + 1) + " " + str(author_number * i))
+            # print(str(chunk_per_fragment))
+            # print(str(chunk_per_fragment + 1) + " " + str(author_number * i))
             list_feature.append(str(i + 1))
             list_feature.append(str(chunk_num))
             cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, chunk_num])
