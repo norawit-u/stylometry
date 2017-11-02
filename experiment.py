@@ -284,7 +284,7 @@ def queryExp(q):
         f.close()
         print("I am gonna write the result in the directory please check it whether it is okaaaaaaaaaaay")
     except:
-        raise 
+        raise
 
 
 if __name__ == '__main__':
