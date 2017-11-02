@@ -11,8 +11,7 @@ def save_to_csv(list_return, name, fieldnames):
             fieldnames: field names of the csv file (header)
     """
     with open(name + '.csv', 'w') as csvfile:
-        for name in fieldnames:
-            csvfile.write(name + ',')
+        csvfile.write(','.join(map(str, field_names)))
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
@@ -70,7 +69,7 @@ def parser_args():
 
 if __name__ == '__main__':
     field_names = ['fragment_id', 'paper_id', 'chunk_id']
-    field_names.extend(['fragment_' + str(i) for i in range(1, 58)])
+    field_names.extend(['fragment_' + str(i) for i in range(1, 57)])
     arg = parser_args()
     for db_name in arg.db_name:
         list_return = get_syn(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
