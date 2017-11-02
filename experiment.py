@@ -33,7 +33,7 @@ if not os.path.exists(directory):
 print("reading file")
 start = time.time()
 print(arg.input)
-my_data = stylometry.loadtxt(arg.input)  # input dataset
+my_data = stylometry.npLoad(arg.input)  # input dataset
 print((time.time() - start, "used to read file"))
 
 # parameters
