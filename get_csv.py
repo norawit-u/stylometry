@@ -40,7 +40,7 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
             list_feature = []
             chunk_per_fragment = 0
             try:
-                chunk_per_fragment = (j / (chunk_size / author_number))
+                chunk_per_fragment = int(j / (chunk_size / author_number))
             except ZeroDivisionError:
                 print('error: didided by 0')
             list_feature.append(str((chunk_per_fragment + 1) + (
