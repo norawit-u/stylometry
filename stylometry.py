@@ -17,7 +17,7 @@ INF = 999999
 
 
 def npLoad(fileStr):
-    temp = np.loadtxt(fileStr, delimiter=',', names=True)
+    temp = np.genfromtxt(fileStr, delimiter=',', names=True)
     return temp
 
 
