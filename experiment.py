@@ -18,28 +18,22 @@ from collections import defaultdict
 parser = argparse.ArgumentParser(description='Runing the experiment')
 parser.add_argument('--input', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
-parser.add_argument('--author_num', type=str, help='Input directory of the csv')
+parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
-csv_dir = 'csv'
-syn_name = ''
-fragment_total = 1000  # total number of fragment =  number papers * author number
-if len(sys.argv) >= 1:
-    syn_name = sys.argv[1]
-    fragment_total = int(sys.argv[2])
-directory = output_dir + '/' + syn_name
+syn_name = arg.input
+fragment_total = arg.num_fragment
+directory = arg.output_path + '/' + syn_name
 
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
 if not os.path.exists(directory):
     os.makedirs(directory)
 
 print("reading file")
 start = time.time()
-print(('./' + csv_dir + '/' + syn_name + '.csv'))
-my_data = loadtxt('./' + csv_dir + '/' + syn_name + '.csv', delimiter=',')  # input dataset
+print(arg.input)
+my_data = stylometry.npLoad(arg.input)  # input dataset
 print((time.time() - start, "used to read file"))
 
 # parameters
@@ -62,9 +56,9 @@ topknn = 21  # MHD TopN list length
 shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
-querySet = [x for x in range(1, fragment_total + 1)]
-print(querySet)
-
+querySet = [x for x in range(1, int(fragment_total) + 1)]
+# print(querySet)
+print(my_data.shape)
 print("indexing")
 start = time.time()
 
@@ -79,9 +73,10 @@ doc_to_au_dict = dict(list(zip(doc_id, author_id)))
 para_to_au_dict = dict(list(zip(para_id, author_id)))
 paraIndex = dict()
 IndexPara = dict()
+
+
 for i in range(len(para_id)):
     paraIndex[para_id[i]] = i
-
 for i in range(len(para_id)):
     IndexPara[i] = para_id[i]
 
@@ -172,6 +167,7 @@ def queryExp(q):
         LSHLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+SHD) ", LSHLongListTime
 #        data += (str(LSHLongListTime) + "\n")
+
 
         start = time.time()
         ListLSH_SHDPrun = getSHDPrunedDoc(queryParaList, doc_hit_above_T_dict)
@@ -282,7 +278,7 @@ def queryExp(q):
         f.close()
         print("I am gonna write the result in the directory please check it whether it is okaaaaaaaaaaay")
     except:
-        return
+        raise
 
 
 if __name__ == '__main__':
@@ -294,4 +290,5 @@ if __name__ == '__main__':
     temp = pool.map(queryExp, querySet, )
     pool.close()
     pool.join()
-    endtime = time.time() - start_time
+    end_time = time.time() - start_time
+    print(end_time)
