@@ -56,7 +56,7 @@ topknn = 21  # MHD TopN list length
 shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
-querySet = [x for x in range(1, fragment_total + 1)]
+querySet = [x for x in range(1, int(fragment_total) + 1)]
 print(querySet)
 
 print("indexing")
