@@ -71,8 +71,9 @@ if __name__ == '__main__':
     field_names = ['fragment_id', 'paper_id', 'chunk_id']
     field_names.extend(['fragment_' + str(i) for i in range(1, 58)])
     arg = parser_args()
-    list_return = get_syn(arg.db_name, int(arg.db_name.split('_')[-4].split('t')[-1]) / int(
-        arg.db_name.split('_')[-1].split('sw')[-1]),
-                          int(arg.db_name.split('_')[-3].split('a')[-1]),
-                          int(arg.db_name.split('_')[-6].split('np')[-1]))
+    for db_name in arg.db_name
+        list_return = get_syn(db_name, int(db_name.split('_')[-4].split('t')[-1]) / int(
+            db_name.split('_')[-1].split('sw')[-1]),
+                              int(db_name.split('_')[-3].split('a')[-1]),
+                              int(db_name.split('_')[-6].split('np')[-1]))
     save_to_csv(list_return, arg.out_path + "/" + str(arg.fragment_size) + '_' + arg.db_name[0], field_names)
