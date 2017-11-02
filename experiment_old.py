@@ -28,7 +28,7 @@ INF = 999999
 
 output_dir = 'out'
 syn_name = arg.input
-fragment_total = arg.num_fragment
+fragment_total = int(arg.num_fragment)
 directory = arg.output_path + '/' + syn_name
 
 if not os.path.exists(directory):
