@@ -55,11 +55,13 @@ optional arguments:
 gat_csv.py
 
 ```bash
-> python get_csv.py --fragment_size 10 --chunk_size 20 --num_paper 1000 --offset 10 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw400 --out_path .
+> python get_csv.py --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path csv --num_paper 1000
+```
 
-> python get_csv.py --fragment_size 20 --chunk_size 40 --num_paper 1000 --offset 20 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path .
+experiment.py
 
->  python get_csv.py --fragment_size 10 --chunk_size 40 --num_paper 1000 --offset 10 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path csv
+```bash
+python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
 ```
 
 ## Diagram
