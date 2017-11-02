@@ -18,28 +18,22 @@ from collections import defaultdict
 parser = argparse.ArgumentParser(description='Runing the experiment')
 parser.add_argument('--input', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
-parser.add_argument('--author_num', type=str, help='Input directory of the csv')
+parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
-csv_dir = 'csv'
-syn_name = ''
-fragment_total = 1000  # total number of fragment =  number papers * author number
-if len(sys.argv) >= 1:
-    syn_name = sys.argv[1]
-    fragment_total = int(sys.argv[2])
-directory = output_dir + '/' + syn_name
+syn_name = arg.input
+fragment_total = arg.num_fragment
+directory = arg.output_path + '/' + syn_name
 
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
 if not os.path.exists(directory):
     os.makedirs(directory)
 
 print("reading file")
 start = time.time()
-print(('./' + csv_dir + '/' + syn_name + '.csv'))
-my_data = loadtxt('./' + csv_dir + '/' + syn_name + '.csv', delimiter=',')  # input dataset
+print((arg.input)
+my_data = loadtxt(arg.input, delimiter=',')  # input dataset
 print((time.time() - start, "used to read file"))
 
 # parameters
