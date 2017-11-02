@@ -76,4 +76,4 @@ if __name__ == '__main__':
             db_name.split('_')[-1].split('sw')[-1])),
                               int(db_name.split('_')[-3].split('a')[-1]),
                               int(db_name.split('_')[-6].split('np')[-1]))
-    save_to_csv(list_return, arg.out_path + "/" + str(arg.fragment_size) + '_' + arg.db_name[0], field_names)
+    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0], field_names)
