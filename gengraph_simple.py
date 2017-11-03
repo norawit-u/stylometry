@@ -56,7 +56,7 @@ class Gengraph:
         exec("x=%s" % content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
-            print(fragment_id2, self.num_authors)
+            #print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1000):
+    for i in range(0, 10):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         print(i)
