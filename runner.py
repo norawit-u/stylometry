@@ -24,7 +24,7 @@ def gen_fold(num_paper, n_fold):
 
 
 def execute(command):
-    subprocess.run(command, shell=True)
+    subprocess.check_output(command, shell=True)
 
 
 def cross(db_name, path, num_paper, n_fold):
