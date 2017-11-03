@@ -570,7 +570,7 @@ doc_to_para_dict = defaultdict(list)
 for key, value in sorted(para_to_doc_dict.items()):
     doc_to_para_dict[value].append(key)
 doc_to_para_dict = dict(doc_to_para_dict)
-
+print(doc_to_para_dict)
 print(doc_to_para_dict)
 au_to_para_dict = defaultdict(list)
 for key, value in sorted(para_to_au_dict.items()):
