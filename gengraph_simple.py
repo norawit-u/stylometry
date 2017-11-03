@@ -5,10 +5,10 @@ import psycopg2
 
 
 class Gengraph:
-    def __init__(self, num_authors, num_authors_list, papers, db_name, fname):
+    def __init__(self, num_authors, num_authors_list, num_papers, db_name, fname):
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
-        self.num_papers = papers
+        self.num_papers = num_papers
         self.db_name = db_name
         self.fname = fname
 
@@ -53,12 +53,10 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        print(content)
         exec("x=%s" % content)
-        print(x)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
-            # print(fragment_id2, self.num_authors)
+            print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
@@ -68,7 +66,7 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        # print(frag_probs)
+        #print(frag_probs)
         for entry in similar_fragments:
             p_id, f_id = int(entry[0]), int(entry[1])
             pmf = frag_probs[p_id][f_id]
@@ -140,7 +138,7 @@ class Gengraph:
                     sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
             sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
             sorted_prob = sorted(sum_prob[i + 1].iteritems(), key=operator.itemgetter(1), reverse=True)
-            # print("paper %s prob %s" % (i + 1, sorted_prob))
+            print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
         entropy = {}
@@ -158,13 +156,11 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
     parser.add_argument('--num_authors', type=int,
-                        help='number of rea l authors')
+                        help='number of real authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
-    parser.add_argument('--papers', type=int, nargs='*',
-                        help='papers id')
     parser.add_argument('--num_paper', type=int,
-                        help='number of paper')
+                        help='number of a paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
@@ -178,7 +174,7 @@ if __name__ == "__main__":
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 100):
+    for i in range(0, 1000):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         print(i)
