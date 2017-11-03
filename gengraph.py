@@ -98,7 +98,7 @@ class Gengraph:
         sum_prob = {}
         for x in papers:
             sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * self.num_authors]}
-            for y in frag_probs[x + 1].keys():
+            for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][(x) * self.num_authors]}
