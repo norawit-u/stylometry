@@ -65,6 +65,7 @@ def parser_args():
     parser.add_argument('--papers', type=int, nargs='*', help='list of paper that wanted to get')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
+    parser.add_argument('--note', type=str, help="note for output file name")
     return parser.parse_args()
 
 
@@ -77,4 +78,4 @@ if __name__ == '__main__':
             db_name.split('_')[-1].split('sw')[-1])),
                               int(db_name.split('_')[-3].split('a')[-1]),
                               arg.papers)
-    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0], field_names)
+    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0]+arg.note, field_names)
