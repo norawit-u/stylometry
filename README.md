@@ -64,6 +64,12 @@ experiment.py
 > python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
 ```
 
+gengraph.py
+
+```bash
+python2 gengraph_simple.py --num_authors 2  --num_authors_list 3 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200/
+```
+```
 ## Diagram
 
 
