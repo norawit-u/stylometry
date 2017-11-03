@@ -752,7 +752,7 @@ def queryExp(q):
                 result.append((doc, doc_to_au_dict[doc]))
             return result
 
-        fileNameString = "./" + output_dir + "/" + str(q)
+        fileNameString = "./" + output_dir + "/" + str(int(q))
         f = open(fileNameString, 'w')
         f.write(data)
         f.close()
