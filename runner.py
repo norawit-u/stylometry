@@ -36,7 +36,7 @@ def get_author_number(db_name):
     return int(db_name.split('_')[-3].split('a')[-1])
 
 def cross(db_name, path, num_paper, n_fold):
-    # folds = gen_fold(num_paper, n_fold)
+    folds = gen_fold(num_paper, n_fold)
     # # print(folds)
     # for key, fold in enumerate(folds):
     #     # print(folds)
