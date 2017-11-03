@@ -18,14 +18,14 @@ def save_to_csv(list_return, name, fieldnames):
             write.writerow(list_return[x])
 
 
-def get_syn(db_name, chunk_size, author_number, num_paper):
+def get_syn(db_name, chunk_size, author_number, papers):
     """
         get the feature from the database
         Args:
             db_name: database name
             chunk_size: number of chunk in a fragment
             author_number: number of author in paper
-            num_paper: number of paper
+            papers: list of paper that wanted to get
         Returns:
             List of features
     """
@@ -35,7 +35,7 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
     list_return = []
 
     chunk_num = 1
-    for i in range(0, num_paper):  # number papers
+    for i in papers:  # number papers
         for j in range(0, chunk_size):  # number chunks per paper (token_size/chunk_size)
             list_feature = []
             chunk_per_fragment = 0
@@ -61,7 +61,7 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--num_paper', type=int, help='number of paper')
+    parser.add_argument('--papers', type=int, nargs='*', help='list of paper that wanted to get')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
     return parser.parse_args()
@@ -75,5 +75,5 @@ if __name__ == '__main__':
         list_return = get_syn(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
             db_name.split('_')[-1].split('sw')[-1])),
                               int(db_name.split('_')[-3].split('a')[-1]),
-                              int(db_name.split('_')[-6].split('np')[-1]))
+                              arg.papers)
     save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0], field_names)
