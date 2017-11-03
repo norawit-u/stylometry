@@ -55,6 +55,7 @@ class Gengraph:
             content = f.read().replace('\n', '')
         print(content)
         exec("x=%s" % content)
+        print(x)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             # print(fragment_id2, self.num_authors)
@@ -157,7 +158,7 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
     parser.add_argument('--num_authors', type=int,
-                        help='number of real authors')
+                        help='number of rea l authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
     parser.add_argument('--papers', type=int, nargs='*',
