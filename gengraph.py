@@ -138,7 +138,7 @@ class Gengraph:
                 for y in frag_probs[i + 1][x].keys():
                     sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
             sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
-            sorted_prob = sorted(sum_prob[i + 1].iteritems(), key=operator.itemgetter(1), reverse=True)
+            sorted_prob = sorted(sum_prob[i + 1].items(), key=operator.itemgetter(1), reverse=True)
             # print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
@@ -149,7 +149,7 @@ class Gengraph:
                 if frag_probs[paper_id][i][j] != 0:
                     tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
             entropy[i] = tmp_entropy
-        max_entropy = max(entropy.iteritems(), key=operator.itemgetter(1))[0]
+        max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
 
 
