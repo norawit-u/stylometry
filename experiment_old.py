@@ -34,6 +34,7 @@ directory = arg.output_path + '/' + syn_name.split('/')[-1].split('.')[0]
 if not os.path.exists(directory):
     os.makedirs(directory)
 
+output_dir = directory
 
 def npLoad(fileStr):
     temp = np.genfromtxt(fileStr, delimiter=',')
