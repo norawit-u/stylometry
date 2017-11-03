@@ -96,12 +96,12 @@ class Gengraph:
     def checking_accuracy_fragments(self, papers, frag_probs):
         list_check = []
         sum_prob = {}
-        for x in range(0, len(papers)):
-            sum_prob[x + 1] = {k: 0 for k in frag_probs[x + 1][(x + 1) * self.num_authors]}
+        for x in papers:
+            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * self.num_authors]}
             for y in frag_probs[x + 1].keys():
-                sum_prob[x + 1] = {k: sum_prob[x + 1][k] + v for k, v in frag_probs[x + 1][y].items()}
-            sum_prob[x + 1] = {k: sum_prob[x + 1][k] / self.num_authors for k in
-                               frag_probs[x + 1][(x + 1) * self.num_authors]}
+                sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
+            sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
+                               frag_probs[x][(x) * self.num_authors]}
         for z in sum_prob:
             list_check.append(
                 sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
@@ -132,7 +132,7 @@ class Gengraph:
                 for k in frag_probs[i][j].keys():
                     if k not in authors_interest:
                         authors_interest.append(k)
-            sum_prob[is] = {k: 0 for k in authors_interest}
+            sum_prob[i] = {k: 0 for k in authors_interest}
 
             for x in frag_probs[i].keys():
                 for y in frag_probs[i][x].keys():
