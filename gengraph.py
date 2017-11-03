@@ -104,7 +104,7 @@ class Gengraph:
                                frag_probs[x + 1][(x + 1) * self.num_authors]}
         for z in sum_prob:
             list_check.append(
-                sorted(sum_prob[z].iteritems(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
+                sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
         count_all = 0
         count = 0
         count_least_1 = 0
