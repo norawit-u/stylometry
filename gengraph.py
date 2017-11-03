@@ -94,7 +94,7 @@ class Gengraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
-        list_check = []
+        list_check = {}
         sum_prob = {}
         for x in papers:
             sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * self.num_authors]}
@@ -102,9 +102,8 @@ class Gengraph:
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][(x) * self.num_authors]}
-        for z in sum_prob:
-            list_check.append(
-                sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
+        for key, z in enumerate(sum_prob):
+            list_check[papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors]
         count_all = 0
         count = 0
         count_least_1 = 0
@@ -112,8 +111,8 @@ class Gengraph:
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
                 author_id = papers[i]['fragments'][j]
-                for k in range(0, len(list_check[i - 1])):
-                    if author_id == list_check[i - 1][k][0]:
+                for k in range(0, len(list_check[i])):
+                    if author_id == list_check[i][k][0]:
                         count += 1
                         count_tmp += 1
             if count_tmp == self.num_authors:
