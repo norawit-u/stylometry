@@ -537,13 +537,14 @@ flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 # for i in range(len(line)):
 #         sliceline = line[i].replace("\n", "").replace("\r", "").split(",")
 #         doc.append(sliceline)
-
+#
 # querySet=[]
 # for i in range(len(doc)):
 #     for j in range(len(doc[i])):
 #         doc[i][j]= int(doc[i][j])
 #         querySet.append(doc[i][j])
-querySet = [x for x in range(1, fragment_total + 1)]
+
+querySet =  list(set(my_data[:, 0]))
 print(querySet)
 
 print("indexing")
