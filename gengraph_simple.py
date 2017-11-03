@@ -148,9 +148,27 @@ class Gengraph:
         max_entropy = max(entropy.iteritems(), key=operator.itemgetter(1))[0]
         return max_entropy
 
+def parser_args():
+    parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
+
+    parser.add_argument('--num_authors', type=int,
+                        help='number of rea l authors')
+    parser.add_argument('--num_authors_list', type=int,
+                        help='number of authors including generated one')
+    parser.add_argument('--papers', type=int, nargs='*',
+                        help='papers id')
+    parser.add_argument('--num_paper', type=int,
+                        help='number of paper')
+    parser.add_argument('--db_name', type=str,
+                        help='database basename')
+    parser.add_argument('--dir_path', type=str,
+                        help='path to the directory')
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    gengraph = Gengraph(2, 5, 500, "syn_eng_c600_t12000_a2_al5_sw600", "/home/stylometry/expResultEnglishNewDatabase/")
+    arg = parser_args()
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
