@@ -12,7 +12,7 @@ class Gengraph:
         self.fname = fname
 
     def get_authors_list(self, paper_id):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host/tmp/" % (self.db_name.lower()))
+        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
         get_list = cur.fetchall()
