@@ -607,7 +607,7 @@ for doc in querySet:
             hitparaIndex[para] = (len(datasetQ) - 1)
             hitIndexPara[(len(datasetQ) - 1)] = para
     except KeyError:
-        continue
+        raise
 
 import _LSH as lsh
 
