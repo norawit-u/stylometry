@@ -174,7 +174,7 @@ if __name__ == "__main__":
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1000):
+    for i in range(0, 100):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         print(i)
