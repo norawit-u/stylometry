@@ -2,6 +2,7 @@ import csv
 import argparse
 import psycopg2
 
+
 def save_to_csv(list_return, name, fieldnames):
     """
         save data to csv file
@@ -36,7 +37,7 @@ def get_syn(db_name, chunk_size, author_number, papers):
 
     for i in papers:  # number papers
         for j in range(0, chunk_size):  # number chunks per paper (token_size/chunk_size)
-            chunk_num = i*chunk_size + j +1
+            chunk_num = i * chunk_size + j + 1
             list_feature = []
             chunk_per_fragment = 0
             try:
@@ -44,7 +45,7 @@ def get_syn(db_name, chunk_size, author_number, papers):
             except ZeroDivisionError:
                 print('error: didided by 0')
             list_feature.append(str((chunk_per_fragment + 1) + (
-            author_number * i)))  # first number is chunk per fragment, and the last number is number of authors (aka a2)
+                author_number * i)))  # first number is chunk per fragment, and the last number is number of authors (aka a2)
             # list_feature.append(str(((j/10)+1)+(3*i)))
             # print(str(chunk_per_fragment))
             # print(str(chunk_per_fragment + 1) + " " + str(author_number * i))
