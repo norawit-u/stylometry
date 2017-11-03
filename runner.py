@@ -14,8 +14,9 @@ def command_experiment(input, output_path, num_fragment):
     return "python experiment_old.py --input %s --output_path %s --num_fragment %s" % (input, output_path, int(num_fragment))
 
 
-def command_gen_graph():
-    return ""
+def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
+    return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
+           "--db_name %s  --dir_path %s" % (num_author, num_authors_list, papers, db_name, dir_path)
 
 
 def gen_fold(num_paper, n_fold, shuffle=False):

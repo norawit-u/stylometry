@@ -61,7 +61,8 @@ gat_csv.py
 experiment.py
 
 ```bash
-> python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --input test/csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n3.csv --output_path test/out --num_fragment 400
 ```
 
 gengraph.py
@@ -73,9 +74,9 @@ gengraph.py
 runner.py
 
 ```bash
-> 
+> python runner.py --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --path test --n_fold 5
 ```
-```
+
 ## Diagram
 
 

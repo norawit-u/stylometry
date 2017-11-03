@@ -5,10 +5,10 @@ import psycopg2
 
 
 class Gengraph:
-    def __init__(self, num_authors, num_authors_list, num_papers, db_name, fname):
+    def __init__(self, num_authors, num_authors_list, papers, db_name, fname):
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
-        self.num_papers = num_papers
+        self.num_papers = papers
         self.db_name = db_name
         self.fname = fname
 
@@ -53,6 +53,7 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
+        print(content)
         exec("x=%s" % content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
@@ -159,7 +160,7 @@ def parser_args():
                         help='number of real authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
-    parser.add_argument('--num_paper', type=int,
+    parser.add_argument('--papers', type=int,
                         help='number of a paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
@@ -170,7 +171,7 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
