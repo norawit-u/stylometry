@@ -1,3 +1,4 @@
+import ast
 import operator
 import math
 import argparse
@@ -53,7 +54,8 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        exec("x=%s" % content, globals(), locals())
+        namespace = {}
+        x = ast.literal_eval(content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             print(fragment_id2, self.num_authors)
