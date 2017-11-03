@@ -126,7 +126,7 @@ class Gengraph:
 
     def sum_prob(self, papers, frag_probs):
         sum_prob = {}
-        for i in range(0, len(frag_probs)):
+        for i in frag_probs.keys():
             authors_interest = []
             for j in frag_probs[i + 1].keys():
                 for k in frag_probs[i + 1][j].keys():
