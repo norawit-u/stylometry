@@ -1,9 +1,9 @@
 import ast
+
+import psycopg2
 import operator
 import math
 import argparse
-import psycopg2
-
 
 class Gengraph:
     def __init__(self, num_authors, num_authors_list, num_papers, db_name, fname):
@@ -54,11 +54,9 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        namespace = {}
-        x = ast.literal_eval(content)
+        exec("x=%s" % content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
-            print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
@@ -68,9 +66,8 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        #print(frag_probs)
         for entry in similar_fragments:
-            p_id, f_id = int(entry[0]), int(entry[1])
+            p_id, f_id = entry[0], entry[1]
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -153,16 +150,17 @@ class Gengraph:
         max_entropy = max(entropy.iteritems(), key=operator.itemgetter(1))[0]
         return max_entropy
 
-
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
     parser.add_argument('--num_authors', type=int,
-                        help='number of real authors')
+                        help='number of rea l authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
+    parser.add_argument('--papers', type=int, nargs='*',
+                        help='papers id')
     parser.add_argument('--num_paper', type=int,
-                        help='number of a paper')
+                        help='number of paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
@@ -176,7 +174,7 @@ if __name__ == "__main__":
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1000):
+    for i in range(0, 10):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         print(i)
