@@ -162,7 +162,7 @@ def parser_args():
                         help='number of authors including generated one')
     parser.add_argument('--papers', type=int, nargs='*',
                         help='papers id')
-    parser.add_argument('--num_paper', type=str,
+    parser.add_argument('--num_paper', type=int,
                         help='number of paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
