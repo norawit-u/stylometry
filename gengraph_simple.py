@@ -53,7 +53,7 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        exec("x=%s" % content, locals())
+        exec("x=%s" % content, globals(), locals())
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             print(fragment_id2, self.num_authors)
