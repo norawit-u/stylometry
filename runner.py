@@ -5,7 +5,7 @@ from subprocess import call
 
 
 def command_get_csv(db_name, out_path, papers, note):
-    return "python get_csv.py --db_name %s --out_path %s --num_paper  %s --note %s" % (
+    return "python get_csv.py --db_name %s --out_path %s --papers  %s --note %s" % (
         db_name, out_path, ' '.join(map(str, papers)), note)
 
 
