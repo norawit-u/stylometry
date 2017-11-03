@@ -1,5 +1,3 @@
-import argparse
-import ast
 import psycopg2
 import operator
 import math
@@ -14,7 +12,7 @@ class Gengraph:
         self.fname = fname
 
     def get_authors_list(self, paper_id):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
+        con = psycopg2.connect("dbname ='%s' user='stylometry'" % (self.db_name.lower()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
         get_list = cur.fetchall()
@@ -54,7 +52,7 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-            x = ast.literal_eval(content)
+        exec("x=%s" % content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
@@ -101,7 +99,8 @@ class Gengraph:
             sum_prob[x + 1] = {k: sum_prob[x + 1][k] / self.num_authors for k in
                                frag_probs[x + 1][(x + 1) * self.num_authors]}
         for z in sum_prob:
-            list_check.append(sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
+            list_check.append(
+                sorted(sum_prob[z].iteritems(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
         count_all = 0
         count = 0
         count_least_1 = 0
@@ -135,7 +134,7 @@ class Gengraph:
                 for y in frag_probs[i + 1][x].keys():
                     sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
             sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
-            sorted_prob = sorted(sum_prob[i + 1].items(), key=operator.itemgetter(1), reverse=True)
+            sorted_prob = sorted(sum_prob[i + 1].iteritems(), key=operator.itemgetter(1), reverse=True)
             print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
@@ -146,31 +145,12 @@ class Gengraph:
                 if frag_probs[paper_id][i][j] != 0:
                     tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
             entropy[i] = tmp_entropy
-        max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
+        max_entropy = max(entropy.iteritems(), key=operator.itemgetter(1))[0]
         return max_entropy
 
 
-def parser_args():
-    parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
-
-    parser.add_argument('--num_authors', type=int,
-                        help='number of rea l authors')
-    parser.add_argument('--num_authors_list', type=int,
-                        help='number of authors including generated one')
-    parser.add_argument('--papers', type=int, nargs='*',
-                        help='papers id')
-    parser.add_argument('--num_paper', type=int,
-                        help='number of paper')
-    parser.add_argument('--db_name', type=str,
-                        help='database basename')
-    parser.add_argument('--dir_path', type=str,
-                        help='path to the directory')
-    return parser.parse_args()
-
-
 if __name__ == "__main__":
-    arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(2, 5, 500, "syn_eng_c600_t12000_a2_al5_sw600", "/home/stylometry/expResultEnglishNewDatabase/")
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
