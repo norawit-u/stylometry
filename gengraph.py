@@ -128,17 +128,17 @@ class Gengraph:
         sum_prob = {}
         for i in frag_probs.keys():
             authors_interest = []
-            for j in frag_probs[i + 1].keys():
-                for k in frag_probs[i + 1][j].keys():
+            for j in frag_probs[i].keys():
+                for k in frag_probs[i][j].keys():
                     if k not in authors_interest:
                         authors_interest.append(k)
-            sum_prob[i + 1] = {k: 0 for k in authors_interest}
+            sum_prob[is] = {k: 0 for k in authors_interest}
 
-            for x in frag_probs[i + 1].keys():
-                for y in frag_probs[i + 1][x].keys():
-                    sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
-            sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
-            sorted_prob = sorted(sum_prob[i + 1].items(), key=operator.itemgetter(1), reverse=True)
+            for x in frag_probs[i].keys():
+                for y in frag_probs[i][x].keys():
+                    sum_prob[i][y] = sum_prob[i][y] + frag_probs[i][x][y]
+            sum_prob[i] = {key: sum_prob[i][key] / self.num_authors for key in authors_interest}
+            sorted_prob = sorted(sum_prob[i].items(), key=operator.itemgetter(1), reverse=True)
             # print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
