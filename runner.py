@@ -18,10 +18,11 @@ def command_gen_graph():
     return ""
 
 
-def gen_fold(num_paper, n_fold):
-    list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
-    np.random.shuffle(list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
-    return np.split(list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
+def gen_fold(num_paper, n_fold, shuffle=False):
+    doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
+    if shuffle:
+        np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
+    return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
 
 
 def execute(command):
