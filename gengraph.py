@@ -108,7 +108,7 @@ class Gengraph:
         count_all = 0
         count = 0
         count_least_1 = 0
-        for i in range(1, len(papers) + 1):
+        for i in papers:
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
                 author_id = papers[i]['fragments'][j]
