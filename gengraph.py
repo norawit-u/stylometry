@@ -103,7 +103,7 @@ class Gengraph:
             sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][(x) * self.num_authors]}
         for key, z in enumerate(sum_prob):
-            list_check[papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors]
+            list_check[papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)
         count_all = 0
         count = 0
         count_least_1 = 0
