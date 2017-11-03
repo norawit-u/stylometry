@@ -61,7 +61,7 @@ gat_csv.py
 experiment.py
 
 ```bash
-python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
 ```
 
 ## Diagram
