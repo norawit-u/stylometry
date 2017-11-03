@@ -48,4 +48,5 @@ def parser_args():
 
 if __name__ == '__main__':
     arg = parser_args()
-    cross(arg.db_name, arg.path, arg.num_paper, arg.n_fold)
+    for db_name in arg.db_name:
+        cross(arg.db_name, arg.path, arg.num_paper, arg.n_fold)
