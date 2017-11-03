@@ -36,7 +36,7 @@ def get_syn(db_name, chunk_size, author_number, papers):
 
     for i in papers:  # number papers
         for j in range(0, chunk_size):  # number chunks per paper (token_size/chunk_size)
-            chunk_num = i*chunk_size + j
+            chunk_num = i*chunk_size + j +1
             list_feature = []
             chunk_per_fragment = 0
             try:
