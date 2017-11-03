@@ -56,7 +56,7 @@ class Gengraph:
         exec("x=%s" % content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
-            print(fragment_id2, self.num_authors)
+            # print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
@@ -66,7 +66,7 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        #print(frag_probs)
+        # print(frag_probs)
         for entry in similar_fragments:
             p_id, f_id = int(entry[0]), int(entry[1])
             pmf = frag_probs[p_id][f_id]
@@ -138,7 +138,7 @@ class Gengraph:
                     sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
             sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
             sorted_prob = sorted(sum_prob[i + 1].iteritems(), key=operator.itemgetter(1), reverse=True)
-            print("paper %s prob %s" % (i + 1, sorted_prob))
+            # print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
         entropy = {}
