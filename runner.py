@@ -52,7 +52,7 @@ def cross(db_name, path, num_paper, n_fold):
     for root, dirs, _ in os.walk(path + '/out'):
         for key, dir_path in enumerate(dirs):
             dir_path = root + '/' + dir_path
-            gengraph = command_gen_graph(2, 3, folds[key], db_name, dir_path)
+            gengraph = command_gen_graph(2, 2, folds[key], db_name, dir_path)
             print(gengraph)
 
 def parser_args():
