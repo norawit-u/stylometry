@@ -173,6 +173,8 @@ def parser_args():
 
 
 if __name__ == "__main__":
+    exec('a=1')
+    print(a)
     arg = parser_args()
     gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
