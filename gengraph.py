@@ -9,7 +9,7 @@ class Gengraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname):
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
-        self.num_papers = papers
+        self.papers = papers
         self.db_name = db_name
         self.fname = fname
 
@@ -25,7 +25,7 @@ class Gengraph:
 
     def generate_paper(self):
         papers = {}
-        for j in range(0, self.num_papers):
+        for j in self.papers:
             paper_id = j + 1
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
@@ -173,7 +173,7 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
