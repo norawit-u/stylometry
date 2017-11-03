@@ -53,6 +53,7 @@ def cross(db_name, path, num_paper, n_fold):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(2, 2, fold, db_name, dir_path)
         print(gengraph)
+        execute(gengraph)
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
