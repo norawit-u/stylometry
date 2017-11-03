@@ -16,7 +16,7 @@ def command_experiment(input, output_path, num_fragment):
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
     return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
-           "--db_name %s  --dir_path %s" % (num_author, num_authors_list, papers, db_name, dir_path)
+           "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
 
 
 def gen_fold(num_paper, n_fold, shuffle=False):
@@ -43,12 +43,17 @@ def cross(db_name, path, num_paper, n_fold):
         get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
         print(get_csv)
         execute(get_csv)
-    for root, dirs, files in os.walk(path + '/csv'):
+    for root, _, files in os.walk(path + '/csv'):
         for file in files:
             file_path = root + '/' + file
             experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
             print(experiment)
             execute(experiment)
+    for root, dirs, _ in os.walk(path + '/out'):
+        for key, dir_path in enumerate(dirs):
+            dir_path = root + '/' + dir
+            gengraph = command_gen_graph(2, 3, folds[key], db_name, dir_path)
+            print(gengraph)
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
