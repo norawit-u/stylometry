@@ -1,3 +1,4 @@
+import os
 import csv
 import argparse
 import psycopg2
@@ -11,6 +12,7 @@ def save_to_csv(list_return, name, fieldnames):
             name: name of a csv file
             fieldnames: field names of the csv file (header)
     """
+    os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
     with open(name + '.csv', 'w') as csvfile:
         csvfile.write(','.join(map(str, field_names)))
         csvfile.write('\n')
