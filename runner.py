@@ -35,7 +35,7 @@ def get_author_number(db_name):
 
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
-    print(folds)
+    # print(folds)
     for key, fold in zip([i for i in range(0,len(folds))], folds):
         # print(folds)
         get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))

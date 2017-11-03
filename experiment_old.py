@@ -29,7 +29,7 @@ INF = 999999
 output_dir = 'out'
 syn_name = arg.input
 fragment_total = int(arg.num_fragment)
-directory = arg.output_path + '/' + syn_name
+directory = arg.output_path + '/' + syn_name.split('/')[-1].split('.')[0]
 
 if not os.path.exists(directory):
     os.makedirs(directory)
