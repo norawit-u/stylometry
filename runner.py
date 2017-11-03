@@ -29,7 +29,9 @@ def execute(command):
 
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
+    print(folds)
     for key, fold in zip([i for i in range(0,len(folds))], folds):
+        print(fold)
         get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
 
 
