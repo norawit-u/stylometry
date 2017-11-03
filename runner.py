@@ -1,3 +1,4 @@
+import os
 import argparse
 import subprocess
 import numpy as np
@@ -24,8 +25,13 @@ def gen_fold(num_paper, n_fold):
 
 
 def execute(command):
-    subprocess.check_output(command, shell=True)
+    try:
+        subprocess.check_output(command, shell=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
 
+def get_author_number(db_name):
+    return int(db_name.split('_')[-3].split('a')[-1])
 
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
@@ -35,7 +41,11 @@ def cross(db_name, path, num_paper, n_fold):
         get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
         print(get_csv)
         execute(get_csv)
-
+    for root, dirs, files in os.walk(path + '/csv'):
+        for file in files:
+            file_path = root + '/' + file
+            experiment = command_experiment(file_path, path+'out', get_author_number(db_name)*num_paper/len(folds))
+            execute(experiment)
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
