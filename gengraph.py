@@ -160,8 +160,10 @@ def parser_args():
                         help='number of real authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
-    parser.add_argument('--papers', type=int,
-                        help='number of a paper')
+    parser.add_argument('--papers', type=int, nargs='*',
+                        help='papers id')
+    parser.add_argument('--num_paper', type=str,
+                        help='number of paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
@@ -171,7 +173,7 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
