@@ -50,7 +50,7 @@ def cross(db_name, path, num_paper, n_fold):
     #         print(experiment)
     #         execute(experiment)
     for key, fold in enumerate(folds):
-        dir_path = path + '/' + db_name + '_n' + str(key) + '/'
+        dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(2, 2, fold, db_name, dir_path)
         print(gengraph)
 
