@@ -196,10 +196,10 @@ class Syntactic:
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
-                tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
+                tokens = nltk.word_tokenize(raw_novel_text)
                 tokens_sum += tokens[0:self.token_size / self.num_authors]
 
-                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section, \
+                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
                                                                            raw_novel_text, novel_id,
                                                                            list_authors[i][j]])
                 num_section += 1
@@ -219,8 +219,7 @@ class Syntactic:
                         value = stylo_list[y]
                     except:
                         value = 0
-                    cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % \
-                                (i + 1, chunk_id, feature_id, value))
+                    cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % (i + 1, chunk_id, feature_id, value))
                 chunk_id += 1
 
             con.commit()
