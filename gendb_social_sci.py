@@ -144,7 +144,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
-            cur.execute("INSERT INTO author VALUES(%s, %s)", [str(list_authors_id[i]), str(list_authors_name[i]]))
+            cur.execute("INSERT INTO author VALUES(%s, %s)", [str(list_authors_id[i]), str(list_authors_name[i])])
         con.commit()
         con.close()
         cur.close()
