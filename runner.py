@@ -26,7 +26,8 @@ def command_experiment(csv_path, output_path, num_fragment):
     :param num_fragment: number of fragment normally: author number * number of paper
     :return: command for running experiment.py
     """
-    return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (input, output_path, int(num_fragment))
+    return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (
+    input, output_path, int(num_fragment))
 
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
@@ -50,7 +51,8 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False):
     if append:
         tmp = np.array([])
         for i in range(1, n_fold):
-            tmp[i] = doc_id_list[0:int(len(doc_id_list)/n_fold*i)] # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]
+            print(int(len(doc_id_list)/n_fold*i))
+            tmp[i] = doc_id_list[0:int(len(doc_id_list) / n_fold * i)]  # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]
         return tmp
     else:
         return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
@@ -62,32 +64,38 @@ def execute(command):
     except subprocess.CalledProcessError as e:
         print(e.output)
 
+
 def get_author_number(db_name):
     return int(db_name.split('_')[-3].split('a')[-1])
 
+
 def get_author_list_number(db_name):
     return int(db_name.split('_')[-2].split('al')[-1])
+
 
 def cross(db_name, path, num_paper, n_fold, shuffle, append):
     folds = gen_fold(num_paper, n_fold, shuffle, append)
     print(folds)
     for key, fold in enumerate(folds):
         # print(folds)
-        get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
+        get_csv = command_get_csv(db_name, path + '/csv', fold, '_n' + str(key))
         print(get_csv)
         execute(get_csv)
     for root, _, files in os.walk(path + '/csv'):
         for file in files:
             if db_name in file:
                 file_path = root + '/' + file
-                experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
+                experiment = command_experiment(file_path, path + '/out',
+                                                get_author_number(db_name) * num_paper / len(folds))
                 print(experiment)
                 execute(experiment)
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
-        gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name, dir_path)
+        gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name,
+                                     dir_path)
         print(gengraph)
         print(execute(gengraph))
+
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
