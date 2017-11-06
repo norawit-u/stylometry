@@ -15,6 +15,7 @@ class Syntactic:
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.sliding_window = sliding_window
+        self.copus_db_name = 'social_sci_paper'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
         chunk_size, token_size, num_authors, num_authors_list, sliding_window)
         self.num_paper = num_paper
@@ -53,7 +54,7 @@ class Syntactic:
         cur.close()
 
     def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -65,7 +66,7 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()) )
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()) )
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id_200:
@@ -85,7 +86,7 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -113,7 +114,7 @@ class Syntactic:
         return list_return
 
     def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         list_return = []
         cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
@@ -125,7 +126,7 @@ class Syntactic:
         return list_return
 
     def get_raw_text(self, novel_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
         raw_text = cur.fetchall()[0][0]
