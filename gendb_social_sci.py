@@ -23,14 +23,14 @@ class Syntactic:
         self.num_paper = num_paper
 
     def create_db_table(self):
-        con = psycopg2.connect("dbname ='postgres' user='%s' host='/tmp/'" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='postgres' user='%s' host=/tmp/" % (getpass.getuser()))
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
         cur.execute("DROP DATABASE IF EXISTS " + self.db_name)
         cur.execute("CREATE DATABASE " + self.db_name)
         con.close()
         cur.close()
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         cur.execute("DROP TABLE IF EXISTS author CASCADE")
@@ -47,16 +47,16 @@ class Syntactic:
         cur.execute(
             "CREATE TABLE section (paper_id VARCHAR(20), section_id SERIAL, raw_text TEXT, novel_id VARCHAR(20), author_id VARCHAR(20), CONSTRAINT section_pkey PRIMARY KEY (paper_id,section_id))")
         cur.execute(
-            "CREATE TABLE chunk (paper_id VARCHAR(20), start_sec VARCHAR(20), end_sec VARCHAR(20), chunk_id VARCHAR(20), CONSTRAINT chunk_pkey PRIMARY KEY (paper_id,chunk_id))")
+            "CREATE TABLE chunk (paper_id VARCHAR(20), start_sec VARCHAR(20), end_sec VARCHAR(20), chunk_id VARCHAR(20), CONSTRAINT chunk_pkey PRIMARY KEY (paper_id, chunk_id))")
         cur.execute(
-            "CREATE TABLE features (paper_id VARCHAR(20), chunk_id VARCHAR(20), feature_id SERIAL, value VARCHAR(50),CONSTRAINT feature_pkey PRIMARY KEY (paper_id,chunk_id,feature_id))")
+            "CREATE TABLE features (paper_id VARCHAR(20), chunk_id VARCHAR(20), feature_id SERIAL, value VARCHAR(50),CONSTRAINT feature_pkey PRIMARY KEY (paper_id, chunk_id, feature_id))")
 
         con.commit()
         con.close()
         cur.close()
 
     def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -68,7 +68,7 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id_200:
@@ -88,35 +88,46 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
+        cur = con.cursor()
+        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_top_200 = []
-
-        for i in range(0, 200):
+        list_top_200_max = []
+        for i in range(len(list_all)):
             list_top_200.append(list_all[i][0])
-
+            list_top_200_max.append(list_all[i][1])
+        list_top_200_max = dict(zip(list_top_200, list_top_200_max))
         list_return = []
         dict_check = {k: 0 for k in list_top_200}
 
-        for j in range(0, self.num_paper):
+        j = 0
+        print([value for key, value in list_top_200_max.items()])
+        while j < self.num_paper:
             list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
             list_temp = []
             for x in range(0, len(list_return[j][0:self.num_authors])):
                 dict_check[list_return[j][x]] += 1
-                if dict_check[list_return[j][x]] > max_paper:
+                if dict_check[list_return[j][x]] > list_top_200_max[list_return[j][x]]:
                     try:
                         list_top_200.remove(list_return[j][x])
-                    except:
-                        continue
-
+                        for y in range(0, x):
+                            dict_check[list_return[j][y]] -= 1
+                        list_return.remove(list_return[-1])
+                        j -= 1
+                        break
+                    except ValueError:
+                        break
+            j += 1
+        print([list_top_200_max[key] - value for key, value in dict_check.items()])
         con.close()
         cur.close()
         return list_return
 
     def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         list_return = []
         cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
@@ -128,7 +139,7 @@ class Syntactic:
         return list_return
 
     def get_raw_text(self, novel_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
         raw_text = cur.fetchall()[0][0]
@@ -144,7 +155,7 @@ class Syntactic:
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
             cur.execute("INSERT INTO author VALUES(%s, %s)", [str(list_authors_id[i]), str(list_authors_name[i])])
@@ -153,7 +164,7 @@ class Syntactic:
         cur.close()
 
     def save_papers_to_db(self):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             name = "paper_number_%s" % (i + 1)
@@ -163,7 +174,7 @@ class Syntactic:
         cur.close()
 
     def save_writes_hidden_to_db(self, list_authors_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             for j in range(0, len(list_authors_id[i])):
@@ -173,7 +184,7 @@ class Syntactic:
         cur.close()
 
     def save_section_features_to_db(self, list_authors, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         index = {}

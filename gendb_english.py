@@ -55,7 +55,7 @@ class Syntactic:
         cur.close()
 
     def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -67,7 +67,7 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         list_authors_name = []
         for author in list_authors_id_200:
@@ -86,7 +86,7 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -123,7 +123,7 @@ class Syntactic:
         return list_return
 
     def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         list_return = []
         cur.execute("SELECT doc_id FROM document_english WHERE author_id = '%s'" % (author_id))
@@ -135,7 +135,7 @@ class Syntactic:
         return list_return
 
     def get_raw_text(self, novel_id):
-        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT doc_content FROM document_english WHERE doc_id = '%s'" % (novel_id))
         raw_text = cur.fetchall()[0][0]
