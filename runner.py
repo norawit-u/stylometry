@@ -19,11 +19,16 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
            "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
 
 
-def gen_fold(num_paper, n_fold, shuffle=False):
+def gen_fold(num_paper, n_fold, shuffle=False, append=False):
     doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
     if shuffle:
         np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
-    return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
+    if append:
+        tmp = np.array([])
+        for i in range(1, n_fold):
+            tmp[i] = doc_id_list[0:int(len(doc_id_list)/n_fold*i)] # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]
+    else:
+        return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
 
 
 def execute(command):
@@ -37,18 +42,18 @@ def get_author_number(db_name):
 
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
-    print(folds)
-    for key, fold in enumerate(folds):
-        # print(folds)
-        get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
-        print(get_csv)
-        execute(get_csv)
-    for root, _, files in os.walk(path + '/csv'):
-        for file in files:
-            file_path = root + '/' + file
-            experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
-            print(experiment)
-            execute(experiment)
+    # print(folds)
+    # for key, fold in enumerate(folds):
+    #     # print(folds)
+    #     get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
+    #     print(get_csv)
+    #     execute(get_csv)
+    # for root, _, files in os.walk(path + '/csv'):
+    #     for file in files:
+    #         file_path = root + '/' + file
+    #         experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
+    #         print(experiment)
+    #         execute(experiment)
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(2, 2, fold, db_name, dir_path)
