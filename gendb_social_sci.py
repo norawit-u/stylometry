@@ -135,6 +135,7 @@ class Syntactic:
         return raw_text
 
     def get_novel_id(self, author_id, index=0):
+        print(author_id,index)
         novel_id = self.get_novel_list(author_id=author_id)[index]
         return novel_id
 
