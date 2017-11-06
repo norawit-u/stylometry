@@ -164,7 +164,7 @@ class Syntactic:
         cur = con.cursor()
         for i in range(0, self.num_paper):
             for j in range(0, len(list_authors_id[i])):
-                cur.execute("INSERT INTO writes_hidden VALUES(%s,%s,%s)", [list_authors_id[i][j], i + 1, j + 1])
+                cur.execute("INSERT INTO writes_hidden VALUES(%s,%s,%s)", [int(list_authors_id[i][j]), i + 1, j + 1])
         con.commit()
         con.close()
         cur.close()
