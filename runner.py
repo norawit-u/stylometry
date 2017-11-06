@@ -73,8 +73,10 @@ def get_author_number(db_name):
 def get_author_list_number(db_name):
     return int(db_name.split('_')[-2].split('al')[-1])
 
+def clean(path):
+    execute('rm '+path)
 
-def cross(db_name, path, num_paper, n_fold, shuffle, append):
+def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
     folds = gen_fold(num_paper, n_fold, shuffle, append)
     print(folds)
     for key, fold in enumerate(folds):
@@ -97,7 +99,8 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append):
         print(gengraph)
         print(execute(gengraph))
         print("============")
-
+    if clean:
+        clean(path)
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
@@ -107,10 +110,11 @@ def parser_args():
     parser.add_argument('--n_fold', type=int, help="number of fold in cross validation")
     parser.add_argument('-shuffle', type=bool, default=False, help='shuffle a cross validation')
     parser.add_argument('-append', type=bool, default=False, help='append the fold')
+    parser.add_argument('-clean', type=bool, default=False, help='clean after finish running')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     arg = parser_args()
     for db_name in arg.db_name:
-        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.shuffle, arg.append)
+        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.shuffle, arg.append, arg.clean)
