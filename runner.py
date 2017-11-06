@@ -46,18 +46,18 @@ def get_author_list_number(db_name):
 
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
-    # print(folds)
-    # for key, fold in enumerate(folds):
-    #     # print(folds)
-    #     get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
-    #     print(get_csv)
-    #     execute(get_csv)
-    # for root, _, files in os.walk(path + '/csv'):
-    #     for file in files:
-    #         file_path = root + '/' + file
-    #         experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
-    #         print(experiment)
-    #         execute(experiment)
+    print(folds)
+    for key, fold in enumerate(folds):
+        # print(folds)
+        get_csv = command_get_csv(db_name, path + '/csv', fold, '_n'+str(key))
+        print(get_csv)
+        execute(get_csv)
+    for root, _, files in os.walk(path + '/csv'):
+        for file in files:
+            file_path = root + '/' + file
+            experiment = command_experiment(file_path, path+'/out', get_author_number(db_name)*num_paper/len(folds))
+            print(experiment)
+            execute(experiment)
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name, dir_path)
