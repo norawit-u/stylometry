@@ -1,0 +1,161 @@
+import requests
+import re
+import psycopg2
+import lxml
+from tqdm import tqdm
+from os import walk
+from bs4 import BeautifulSoup
+import sys
+import time
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+
+def remove_ref_tag(text):
+        if text is None:
+                return ''
+        text = re.sub('<xref.{1,70}<\/xref>\n','',text.strip())
+        return re.sub('<xref.{1,70}<\/xref>','',text.strip())
+
+def get_file_path_list(path):
+        f = []
+        for (dirpath, dirnames, filenames) in walk(path):
+                f.extend([dirpath+'/' + s for s in filenames])
+                break
+        return f
+
+def parse_xml(string):
+        return BeautifulSoup(string, "xml")
+
+def get_file(file_path):
+        with open(file_path,'r') as f:
+                return f.read().encode('UTF-8')
+        f.close()
+
+def get_author(soup):
+        names =[]
+        contrib = soup.find('contrib-group')
+        author_count = 1
+        if contrib is None:
+                return None
+        for name in contrib.findAll('name'):
+                names.append((name.find('given-names').text,name.find('surname').text,author_count))
+                author_count+=1
+        return names
+
+def get_raw_text(root):
+        raw_text =""
+        body = root.find('body')
+        if body is None:
+                return None
+        for sec in body.findAll('sec'):
+                if "Cite this paper" in sec.find('title').text:
+                        continue
+                raw_text += sec.find('title').text+'\n'
+                for p in sec.findAll('p'):
+                                raw_text+=p.text+'\n'
+        return raw_text.encode("utf-8")
+
+def get_title(root):
+        if root.find("article-title") is None:
+                return None
+        return root.find("article-title").text
+
+def get_categories(root):
+        categories = []
+        article_categories = root.find("article-categories")
+        if article_categories is None:
+                return None
+        for categore in article_categories.findAll('subject'):
+                categories.append(categore.text)
+        return categories
+
+def get_con_cur(db_name):
+        con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" %(db_name))
+        return con,con.cursor()
+
+def drop_all_table(db_name):
+        con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/"%(db_name))
+        cur = con.cursor()
+        cur.execute("DROP TABLE author, paper, author_paper, paper_category")
+        con.commit()
+        con.close()
+
+def create_database(db_name):
+        con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/"%(db_name))
+        cur = con.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS author (author_id SERIAL PRIMARY KEY, name VARCHAR(200), surname VARCHAR(200))")
+        cur.execute("CREATE TABLE IF NOT EXISTS paper (paper_id SERIAL PRIMARY KEY,scirp_id INTEGER, paper_title VARCHAR(1000),raw_text TEXT)")
+        cur.execute("CREATE TABLE IF NOT EXISTS author_paper (author_id SERIAL REFERENCES author(author_id) ON UPDATE CASCADE, paper_id SERIAL REFERENCES paper(paper_id) ON UPDATE CASCADE, author_num INTEGER, CONSTRAINT author_paper_pk PRIMARY KEY (paper_id, author_id,author_num))")
+        cur.execute("CREATE TABLE IF NOT EXISTS paper_category (paper_id SERIAL REFERENCES paper(paper_id) ON UPDATE CASCADE, category VARCHAR(200) , CONSTRAINT paper_category_pk PRIMARY KEY (paper_id, category))")
+        con.commit()
+        con.close()
+
+def insert_author(cur,name,surname):
+        cur.execute( "INSERT INTO author (name,surname) SELECT %s,%s WHERE NOT EXISTS (SELECT name,surname FROM author WHERE name =%s AND surname = %s )",(name,surname,name,surname))
+def get_author_id(cur,name,surname):
+        cur.execute("SELECT author_id FROM author WHERE name = %s AND surname = %s" ,(name,surname))
+
+def get_paper_id(cur,scirp_id):
+        cur.execute("SELECT paper_id FROM paper WHERE scirp_id = %s",(scirp_id,))
+
+def insert_paper(cur,paper_id,paper_title,raw_text):
+        cur.execute( "INSERT INTO paper (scirp_id,paper_title, raw_text) VALUES(%s,%s,%s)",(paper_id,paper_title,raw_text))
+
+def insert_author_paper(cur,author_id,paper_id,author_num):
+        cur.execute( "INSERT INTO author_paper (author_id,paper_id,author_num) VALUES(%s,%s,%s)",(author_id, paper_id, author_num))
+
+def insert_paper_category(cur,paper_id,categorie):
+        cur.execute( "INSERT INTO paper_category (paper_id,category) VALUES(%s,%s)",(paper_id,categorie))
+
+def is_xml(string):
+        return "xmlns:mml" in string
+'M. Soliman','hmed'
+def execute(con,cur,title,authors,raw_text,categories,scirp_id):
+        author_ids = []
+        for author in authors:
+                insert_author(cur,author[0],author[1])
+                get_author_id(cur,author[0],author[1])
+                author_id = cur.fetchall()[0][0]
+                author_ids.append(author_id)
+
+        insert_paper(cur,scirp_id, title, raw_text)
+        get_paper_id(cur,scirp_id)
+        paper_id = cur.fetchall()[0][0]
+        for i, author_id in enumerate(author_ids):
+                insert_author_paper(cur,author_id,paper_id,authors[i][2])
+        for category in categories:
+                insert_paper_category(cur,paper_id,category)
+
+
+def run():
+        db_name = 'social_sci_paper'
+        con,cur = get_con_cur(db_name)
+        drop_all_table(db_name)
+        create_database(db_name)
+        for file_path in tqdm(get_file_path_list("paper")):
+                file = get_file(file_path)
+                if is_xml(file):
+                        tqdm.write(file_path)
+                        file = remove_ref_tag(file)
+                        xml = parse_xml(file)
+                        # tqdm.write(str(get_author(xml)))
+                        # tqdm.write(str(get_raw_text(xml)))
+                        # tqdm.write(str(get_categories(xml)))
+                        title = get_title(xml)
+                        authors = get_author(xml)
+                        raw_text = get_raw_text(xml)
+                        categories = get_categories(xml)
+                        if title and authors and raw_text and categories:
+                                # tqdm.write(str(title)+' '+str(authors)+' '+str(len(raw_text))+' '+str(categories)):
+                                execute(con,cur,title,authors,raw_text,categories,file_path[-9:-4])
+                                con.commit()
+        con.close()
+
+if __name__ == "__main__":
+        start = time.time()
+        run()
+        end = time.time()
+        print("time:")
+        print(end - start)
