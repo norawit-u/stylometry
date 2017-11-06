@@ -91,8 +91,6 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
-        cur = con.cursor()
-        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_top_200 = []
         list_top_200_max = []
