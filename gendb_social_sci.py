@@ -53,7 +53,7 @@ class Syntactic:
         cur.close()
 
     def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -65,7 +65,7 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (getpass.getuser(), getpass.getuser()) )
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()) )
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id_200:
@@ -85,7 +85,7 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
@@ -113,7 +113,7 @@ class Syntactic:
         return list_return
 
     def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         list_return = []
         cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
@@ -125,7 +125,7 @@ class Syntactic:
         return list_return
 
     def get_raw_text(self, novel_id):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
         raw_text = cur.fetchall()[0][0]
@@ -140,7 +140,7 @@ class Syntactic:
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
             cur.execute("INSERT INTO author VALUES(%s, %s)", [list_authors_id[i], list_authors_name[i]])
@@ -149,7 +149,7 @@ class Syntactic:
         cur.close()
 
     def save_papers_to_db(self):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             name = "paper_number_%s" % (i + 1)
@@ -159,7 +159,7 @@ class Syntactic:
         cur.close()
 
     def save_writes_hidden_to_db(self, list_authors_id):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             for j in range(0, len(list_authors_id[i])):
@@ -169,7 +169,7 @@ class Syntactic:
         cur.close()
 
     def save_section_features_to_db(self, list_authors, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         index = {}
