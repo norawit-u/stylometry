@@ -6,12 +6,27 @@ from subprocess import call
 
 
 def command_get_csv(db_name, out_path, papers, note):
+    """
+    generate a command for running get_csv.py
+    :param db_name: name of the database
+    :param out_path: the path to save csv
+    :param papers: list of paper ex: 1, 2, 3, 4, 5
+    :param note: ending note
+    :return: command for running get_csv.py
+    """
     return "python get_csv.py --db_name %s --out_path %s --papers  %s --note %s" % (
         db_name, out_path, ' '.join(map(str, papers)), note)
 
 
-def command_experiment(input, output_path, num_fragment):
-    return "python experiment_old.py --input %s --output_path %s --num_fragment %s" % (input, output_path, int(num_fragment))
+def command_experiment(csv_path, output_path, num_fragment):
+    """
+    generate a command for running experiment.py
+    :param csv_path: path to a csv file
+    :param output_path:
+    :param num_fragment:
+    :return:
+    """
+    return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (input, output_path, int(num_fragment))
 
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):

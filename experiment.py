@@ -16,14 +16,14 @@ from scipy.spatial.distance import euclidean
 from collections import defaultdict
 
 parser = argparse.ArgumentParser(description='Runing the experiment')
-parser.add_argument('--input', type=str, help='path of the csv')
+parser.add_argument('--csv_path', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
 parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
-syn_name = arg.input
+syn_name = arg.csv_path
 fragment_total = arg.num_fragment
 directory = arg.output_path + '/' + syn_name
 
@@ -32,8 +32,8 @@ if not os.path.exists(directory):
 
 print("reading file")
 start = time.time()
-print(arg.input)
-my_data = stylometry.npLoad(arg.input)  # input dataset
+print(arg.csv_path)
+my_data = stylometry.npLoad(arg.csv_path)  # input dataset
 print((time.time() - start, "used to read file"))
 
 # parameters

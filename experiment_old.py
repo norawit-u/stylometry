@@ -20,14 +20,14 @@ import sys
 INF = 999999
 
 parser = argparse.ArgumentParser(description='Runing the experiment')
-parser.add_argument('--input', type=str, help='path of the csv')
+parser.add_argument('--csv_path', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
 parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
-syn_name = arg.input
+syn_name = arg.csv_path
 fragment_total = int(arg.num_fragment)
 directory = arg.output_path + '/' + syn_name.split('/')[-1].split('.')[0]
 
@@ -504,7 +504,7 @@ start = time.time()
 #               sliceline = line.replace("\n", "").replace("\r", "").split(",")
 #              my_data.append(sliceline)
 # my_data = genfromtxt('../../dataset.csv', delimiter=',')
-my_data = npLoad(arg.input)  # input dataset
+my_data = npLoad(arg.csv_path)  # input dataset
 # my_data = np.asarray(multiprocessLoad("../../splitedFiles1000000"))
 print((time.time() - start, "used to read file"))
 # parameters
