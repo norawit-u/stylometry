@@ -70,7 +70,7 @@ class Syntactic:
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id_200:
-            cur.execute("SELECT name,lastname FROM author WHERE author_id = '%s'" % author)
+            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
             authors_names += temp[0][0] + temp[0][1]
         con.close()
