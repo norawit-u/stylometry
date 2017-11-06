@@ -79,7 +79,7 @@ class Syntactic:
 
     def get_num_paper_per_author(self, list_authors):
         list_temp = []
-        for i in rage(0, len(list_authors)):
+        for i in range(0, len(list_authors)):
             for j in range(0, len(list_authors[i][0:self.num_authors])):
                 list_temp.append(list_authors[i][j])
         author_paper_dict = dict(Counter(list_temp))

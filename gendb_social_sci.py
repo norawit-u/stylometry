@@ -61,7 +61,7 @@ class Syntactic:
         cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_authors_id_200 = []
-        for i in range(0, 200):
+        for i in range(0, len(list_all)):
             list_authors_id_200.append(list_all[i][0])
         con.close()
         cur.close()
