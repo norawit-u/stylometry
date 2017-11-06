@@ -17,7 +17,7 @@ class Syntactic:
         self.sliding_window = sliding_window
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
         chunk_size, token_size, num_authors, num_authors_list, sliding_window)
-        se lf.num_paper = num_paper
+        self.num_paper = num_paper
 
     def create_db_table(self):
         con = psycopg2.connect("dbname ='postgres' user='%s' host='/tmp/'" % (getpass.getuser()))
