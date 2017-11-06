@@ -72,7 +72,7 @@ class Syntactic:
         for author in list_authors_id_200:
             cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
-            authors_names += temp[0][0] + temp[0][1]
+            authors_names += temp[0][0].decode('utf8') + temp[0].decode('utf8')
         con.close()
         cur.close()
         return authors_names
