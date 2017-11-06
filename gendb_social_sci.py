@@ -27,7 +27,7 @@ class Syntactic:
         cur.execute("CREATE DATABASE " + self.db_name)
         con.close()
         cur.close()
-        con = psycopg2.connect("dbname ='%s' user='%s'" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         cur.execute("DROP TABLE IF EXISTS author CASCADE")
