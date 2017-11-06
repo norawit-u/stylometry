@@ -201,10 +201,15 @@ class Syntactic:
 
             for x in range(0, len(paragraphs)):
                 para = Paragraph("paper_id", para=paragraphs[x])
+                stylo_list = []
+                try:
+                    stylo_list = para.get_stylo_list()
+                except:
+                    print('error')
                 for y in range(0, 57):
                     feature_id = y + 1
                     try:
-                        value = para.get_stylo_list()[y]
+                        value = stylo_list[y]
                     except:
                         value = 0
                     cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % (i + 1, chunk_id, feature_id, value))
