@@ -7,6 +7,8 @@ import sys
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from collections import Counter
 
+from six.moves import xrange
+
 
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
@@ -17,7 +19,7 @@ class Syntactic:
         self.sliding_window = sliding_window
         self.copus_db_name = 'social_sci_paper'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
-        chunk_size, token_size, num_authors, num_authors_list, sliding_window)
+            chunk_size, token_size, num_authors, num_authors_list, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
@@ -66,20 +68,20 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()) )
+        con = psycopg2.connect("dbname ='%s' user='%s' host='/tmp/'" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id_200:
             cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
-            authors_names += temp[0][0].decode('utf8') + temp[0].decode('utf8')
+            authors_names += str(temp[0]).decode('utf8') + ' ' + str(temp[0]).decode('utf8')
         con.close()
         cur.close()
         return authors_names
 
     def get_num_paper_per_author(self, list_authors):
         list_temp = []
-        for i in rage(0, len(list_authors)):
+        for i in range(0, len(list_authors)):
             for j in range(0, len(list_authors[i][0:self.num_authors])):
                 list_temp.append(list_authors[i][j])
         author_paper_dict = dict(Counter(list_temp))
@@ -228,5 +230,4 @@ if __name__ == "__main__":
 
     syn_dataset.save_papers_to_db()
     syn_dataset.save_writes_hidden_to_db(list_authors)
-    syn_dataset.save_section_features_to_db(list_authors, list_authors_id_200)
     syn_dataset.save_section_features_to_db(list_authors, list_authors_id_200)
