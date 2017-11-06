@@ -95,6 +95,8 @@ def parser_args():
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--path', type=str, help="path running an experiment", default='.')
     parser.add_argument('--n_fold', type=int, help="number of fold in cross validation")
+    parser.add_argument('-shuffle', action='shuffle a cross validation')
+    parser.add_argument('-append', action='append the fold')
     return parser.parse_args()
 
 
