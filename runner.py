@@ -49,7 +49,7 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False):
     if shuffle:
         np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
     if append:
-        tmp = np.array([])
+        tmp = []
         for i in range(1, n_fold):
             print(int(len(doc_id_list)/n_fold*i))
             tmp[i] = doc_id_list[0:int(len(doc_id_list) / n_fold * i)]  # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]
