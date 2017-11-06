@@ -201,7 +201,7 @@ class Syntactic:
 
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
                                                                            raw_novel_text, novel_id,
-                                                                           int(list_authors[i][j]]))
+                                                                           int(list_authors[i][j])])
                 num_section += 1
 
             paragraphs = self.get_paragraphs(tokens_sum)
