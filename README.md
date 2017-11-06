@@ -51,7 +51,11 @@ optional arguments:
 ```
 
 ## Run example
+gendb.py
 
+```bash
+python3 gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 2 --sliding_window 200 --num_paper 1000 --num_authors 3
+```
 gat_csv.py
 
 ```bash

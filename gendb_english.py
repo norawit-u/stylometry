@@ -99,7 +99,7 @@ class Syntactic:
         dict_check = {k: 0 for k in list_top_200}
 
         j = 0
-        print([value for key, value in list_top_200_max.iteritems()])
+        print([value for key, value in list_top_200_max.items()])
         while j < self.num_paper:
             list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
             list_temp = []
@@ -116,7 +116,7 @@ class Syntactic:
                     except ValueError:
                         break
             j += 1
-        print([list_top_200_max[key] - value for key, value in dict_check.iteritems()])
+        print([list_top_200_max[key] - value for key, value in dict_check.items()])
         con.close()
         cur.close()
         return list_return
