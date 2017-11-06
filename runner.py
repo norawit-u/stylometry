@@ -41,6 +41,9 @@ def execute(command):
 def get_author_number(db_name):
     return int(db_name.split('_')[-3].split('a')[-1])
 
+def get_author_list_number(db_name):
+    return int(db_name.split('_')[-2].split('al')[-1])
+
 def cross(db_name, path, num_paper, n_fold):
     folds = gen_fold(num_paper, n_fold)
     # print(folds)
@@ -57,7 +60,7 @@ def cross(db_name, path, num_paper, n_fold):
     #         execute(experiment)
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
-        gengraph = command_gen_graph(2, 2, fold, db_name, dir_path)
+        gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name, dir_path)
         print(gengraph)
         print(execute(gengraph))
 
