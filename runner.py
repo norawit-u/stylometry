@@ -52,7 +52,8 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False):
         tmp = []
         for i in range(1, n_fold):
             print(int(len(doc_id_list)/n_fold*i))
-            tmp[i] = doc_id_list[0:int(len(doc_id_list) / n_fold * i)]  # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4, 5, 6]
+            tmp.append(doc_id_list[0:int(len(doc_id_list) / n_fold * i)])  # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4,
+            # 5, 6]
         return tmp
     else:
         return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
