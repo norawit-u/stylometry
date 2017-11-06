@@ -27,7 +27,7 @@ def command_experiment(csv_path, output_path, num_fragment):
     :return: command for running experiment.py
     """
     return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (
-    input, output_path, int(num_fragment))
+        csv_path, output_path, int(num_fragment))
 
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
@@ -84,7 +84,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append):
         execute(get_csv)
     for root, _, files in os.walk(path + '/csv'):
         for file in files:
-            if db_name in file:
+            if str(db_name) in str(file):
                 file_path = root + '/' + file
                 experiment = command_experiment(file_path, path + '/out',
                                                 get_author_number(db_name) * num_paper / len(folds))
