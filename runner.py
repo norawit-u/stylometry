@@ -22,14 +22,23 @@ def command_experiment(csv_path, output_path, num_fragment):
     """
     generate a command for running experiment.py
     :param csv_path: path to a csv file
-    :param output_path:
-    :param num_fragment:
-    :return:
+    :param output_path: path where the experiment will be save
+    :param num_fragment: number of fragment normally: author number * number of paper
+    :return: command for running experiment.py
     """
     return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (input, output_path, int(num_fragment))
 
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
+    """
+    generate a command for running gengraph.py
+    :param num_author:  number of author
+    :param num_authors_list:  number of overall author
+    :param papers: list of papers id
+    :param db_name: database name
+    :param dir_path: the output path of the experiment
+    :return: command for running gengraph.py
+    """
     return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
            "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
 
