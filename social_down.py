@@ -8,7 +8,9 @@ import sys
 
 reload(sys)
 sys.setdefaultencoding('utf8')
-
+"""
+NOT USED
+"""
 
 def remove_ref_tag(text):
         if text is None:

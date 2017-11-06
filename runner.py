@@ -96,6 +96,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append):
                                      dir_path)
         print(gengraph)
         print(execute(gengraph))
+        print("============")
 
 
 def parser_args():
