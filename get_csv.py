@@ -1,6 +1,8 @@
+import os
 import csv
 import argparse
 import psycopg2
+
 
 def save_to_csv(list_return, name, fieldnames):
     """
@@ -10,6 +12,7 @@ def save_to_csv(list_return, name, fieldnames):
             name: name of a csv file
             fieldnames: field names of the csv file (header)
     """
+    os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
     with open(name + '.csv', 'w') as csvfile:
         csvfile.write(','.join(map(str, field_names)))
         csvfile.write('\n')
@@ -18,14 +21,14 @@ def save_to_csv(list_return, name, fieldnames):
             write.writerow(list_return[x])
 
 
-def get_syn(db_name, chunk_size, author_number, num_paper):
+def get_syn(db_name, chunk_size, author_number, papers):
     """
         get the feature from the database
         Args:
             db_name: database name
             chunk_size: number of chunk in a fragment
             author_number: number of author in paper
-            num_paper: number of paper
+            papers: list of paper that wanted to get
         Returns:
             List of features
     """
@@ -34,9 +37,9 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
     print(db_name + " " + str(chunk_size) + " " + str(author_number))
     list_return = []
 
-    chunk_num = 1
-    for i in range(0, num_paper):  # number papers
+    for i in papers:  # number papers
         for j in range(0, chunk_size):  # number chunks per paper (token_size/chunk_size)
+            chunk_num = i * chunk_size + j + 1
             list_feature = []
             chunk_per_fragment = 0
             try:
@@ -44,7 +47,7 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
             except ZeroDivisionError:
                 print('error: didided by 0')
             list_feature.append(str((chunk_per_fragment + 1) + (
-            author_number * i)))  # first number is chunk per fragment, and the last number is number of authors (aka a2)
+                author_number * i)))  # first number is chunk per fragment, and the last number is number of authors (aka a2)
             # list_feature.append(str(((j/10)+1)+(3*i)))
             # print(str(chunk_per_fragment))
             # print(str(chunk_per_fragment + 1) + " " + str(author_number * i))
@@ -61,9 +64,10 @@ def get_syn(db_name, chunk_size, author_number, num_paper):
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--num_paper', type=int, help='number of paper')
+    parser.add_argument('--papers', type=int, nargs='*', help='list of paper that wanted to get')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
+    parser.add_argument('--note', type=str, help="note for output file name")
     return parser.parse_args()
 
 
@@ -75,5 +79,5 @@ if __name__ == '__main__':
         list_return = get_syn(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
             db_name.split('_')[-1].split('sw')[-1])),
                               int(db_name.split('_')[-3].split('a')[-1]),
-                              int(db_name.split('_')[-6].split('np')[-1]))
-    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0], field_names)
+                              arg.papers)
+    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0]+arg.note, field_names)

@@ -1,3 +1,4 @@
+import ast
 import operator
 import math
 import argparse
@@ -5,10 +6,10 @@ import psycopg2
 
 
 class Gengraph:
-    def __init__(self, num_authors, num_authors_list, num_papers, db_name, fname):
+    def __init__(self, num_authors, num_authors_list, papers, db_name, fname):
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
-        self.num_papers = num_papers
+        self.papers = papers
         self.db_name = db_name
         self.fname = fname
 
@@ -24,7 +25,7 @@ class Gengraph:
 
     def generate_paper(self):
         papers = {}
-        for j in range(0, self.num_papers):
+        for j in self.papers:
             paper_id = j + 1
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
@@ -53,10 +54,10 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        exec("x=%s" % content)
+        x = ast.literal_eval(content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
-            print(fragment_id2, self.num_authors)
+            # print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
@@ -66,7 +67,7 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        #print(frag_probs)
+        # print(frag_probs)
         for entry in similar_fragments:
             p_id, f_id = int(entry[0]), int(entry[1])
             pmf = frag_probs[p_id][f_id]
@@ -93,26 +94,25 @@ class Gengraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
-        list_check = []
+        list_check = {}
         sum_prob = {}
-        for x in range(0, len(papers)):
-            sum_prob[x + 1] = {k: 0 for k in frag_probs[x + 1][(x + 1) * self.num_authors]}
-            for y in frag_probs[x + 1].keys():
-                sum_prob[x + 1] = {k: sum_prob[x + 1][k] + v for k, v in frag_probs[x + 1][y].items()}
-            sum_prob[x + 1] = {k: sum_prob[x + 1][k] / self.num_authors for k in
-                               frag_probs[x + 1][(x + 1) * self.num_authors]}
-        for z in sum_prob:
-            list_check.append(
-                sorted(sum_prob[z].iteritems(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors])
+        for x in papers:
+            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * self.num_authors]}
+            for y in frag_probs[x].keys():
+                sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
+            sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
+                               frag_probs[x][(x) * self.num_authors]}
+        for key, z in enumerate(sum_prob):
+            list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors]
         count_all = 0
         count = 0
         count_least_1 = 0
-        for i in range(1, len(papers) + 1):
+        for i in papers.keys():
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
                 author_id = papers[i]['fragments'][j]
                 for k in range(0, len(list_check[i - 1])):
-                    if author_id == list_check[i - 1][k][0]:
+                    if author_id == list_check[i - 1                ][k][0]:
                         count += 1
                         count_tmp += 1
             if count_tmp == self.num_authors:
@@ -125,20 +125,20 @@ class Gengraph:
 
     def sum_prob(self, papers, frag_probs):
         sum_prob = {}
-        for i in range(0, len(frag_probs)):
+        for i in frag_probs.keys():
             authors_interest = []
-            for j in frag_probs[i + 1].keys():
-                for k in frag_probs[i + 1][j].keys():
+            for j in frag_probs[i].keys():
+                for k in frag_probs[i][j].keys():
                     if k not in authors_interest:
                         authors_interest.append(k)
-            sum_prob[i + 1] = {k: 0 for k in authors_interest}
+            sum_prob[i] = {k: 0 for k in authors_interest}
 
-            for x in frag_probs[i + 1].keys():
-                for y in frag_probs[i + 1][x].keys():
-                    sum_prob[i + 1][y] = sum_prob[i + 1][y] + frag_probs[i + 1][x][y]
-            sum_prob[i + 1] = {key: sum_prob[i + 1][key] / self.num_authors for key in authors_interest}
-            sorted_prob = sorted(sum_prob[i + 1].iteritems(), key=operator.itemgetter(1), reverse=True)
-            print("paper %s prob %s" % (i + 1, sorted_prob))
+            for x in frag_probs[i].keys():
+                for y in frag_probs[i][x].keys():
+                    sum_prob[i][y] = sum_prob[i][y] + frag_probs[i][x][y]
+            sum_prob[i] = {key: sum_prob[i][key] / self.num_authors for key in authors_interest}
+            sorted_prob = sorted(sum_prob[i].items(), key=operator.itemgetter(1), reverse=True)
+            # print("paper %s prob %s" % (i + 1, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
         entropy = {}
@@ -148,7 +148,7 @@ class Gengraph:
                 if frag_probs[paper_id][i][j] != 0:
                     tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
             entropy[i] = tmp_entropy
-        max_entropy = max(entropy.iteritems(), key=operator.itemgetter(1))[0]
+        max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
 
 
@@ -156,11 +156,13 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
     parser.add_argument('--num_authors', type=int,
-                        help='number of real authors')
+                        help='number of rea l authors')
     parser.add_argument('--num_authors_list', type=int,
                         help='number of authors including generated one')
+    parser.add_argument('--papers', type=int, nargs='*',
+                        help='papers id')
     parser.add_argument('--num_paper', type=int,
-                        help='number of a paper')
+                        help='number of paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
@@ -170,11 +172,11 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.num_paper, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1000):
+    for i in range(0, 10):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         print(i)

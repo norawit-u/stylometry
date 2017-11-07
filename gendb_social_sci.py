@@ -1,14 +1,16 @@
-import nltk
 import argparse
-import numpy as np
-import getpass
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+import numpy as np
+import psycopg2
 from paragraph import Paragraph
+import nltk
+import getpass
+import sys
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from collections import Counter
 
 from six.moves import xrange
+
 
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
@@ -17,8 +19,9 @@ class Syntactic:
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.sliding_window = sliding_window
-        self.db_name = "syn_eng_max_while_np%s_c%s_t%s_a%s_al%s_sw%s" % (
-            num_paper, chunk_size, token_size, num_authors, num_authors_list, sliding_window)
+        self.copus_db_name = 'social_sci_paper'
+        self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
+            chunk_size, token_size, num_authors, num_authors_list, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
@@ -40,24 +43,24 @@ class Syntactic:
         cur.execute("DROP TABLE IF EXISTS features CASCADE")
 
         cur.execute("CREATE TABLE author (author_id VARCHAR(20) PRIMARY KEY, author_name VARCHAR(1000))")
-        cur.execute("CREATE TABLE paper (paper_id SERIAL PRIMARY KEY, paper_title VARCHAR(1000), syn_author_id SERIAL)")
+        cur.execute("CREATE TABLE paper (paper_id SERIAL PRIMARY KEY, paper_title VARCHAR(1000),syn_author_id SERIAL)")
         cur.execute(
-            "CREATE TABLE writes_hidden (author_id VARCHAR(20), paper_id VARCHAR(20), author_num VARCHAR(20), CONSTRAINT writes_hidden_pkey PRIMARY KEY (author_id, paper_id))")
+            "CREATE TABLE writes_hidden (author_id VARCHAR(20), paper_id VARCHAR(20),author_num VARCHAR(20), CONSTRAINT writes_hidden_pkey PRIMARY KEY (author_id, paper_id))")
         cur.execute(
             "CREATE TABLE section (paper_id VARCHAR(20), section_id SERIAL, raw_text TEXT, novel_id VARCHAR(20), author_id VARCHAR(20), CONSTRAINT section_pkey PRIMARY KEY (paper_id,section_id))")
         cur.execute(
             "CREATE TABLE chunk (paper_id VARCHAR(20), start_sec VARCHAR(20), end_sec VARCHAR(20), chunk_id VARCHAR(20), CONSTRAINT chunk_pkey PRIMARY KEY (paper_id, chunk_id))")
         cur.execute(
-            "CREATE TABLE features (paper_id VARCHAR(20), chunk_id VARCHAR(20), feature_id SERIAL, value VARCHAR(50), CONSTRAINT feature_pkey PRIMARY KEY (paper_id, chunk_id, feature_id))")
+            "CREATE TABLE features (paper_id VARCHAR(20), chunk_id VARCHAR(20), feature_id SERIAL, value VARCHAR(50),CONSTRAINT feature_pkey PRIMARY KEY (paper_id, chunk_id, feature_id))")
 
         con.commit()
         con.close()
         cur.close()
 
     def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT author_id FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
+        cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_authors_id_200 = []
         for i in range(0, len(list_all)):
@@ -67,15 +70,16 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        list_authors_name = []
+        authors_names = []
         for author in list_authors_id_200:
-            cur.execute("SELECT author_name FROM author WHERE author_id = '%s'" % author)
-            list_authors_name += cur.fetchall()[0]
+            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
+            temp = cur.fetchall()
+            authors_names += str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip()
         con.close()
         cur.close()
-        return list_authors_name
+        return authors_names
 
     def get_num_paper_per_author(self, list_authors):
         list_temp = []
@@ -86,9 +90,9 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
+        cur.execute("SELECT author_id, count(*) FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_top_200 = []
         list_top_200_max = []
@@ -123,10 +127,10 @@ class Syntactic:
         return list_return
 
     def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         list_return = []
-        cur.execute("SELECT doc_id FROM document_english WHERE author_id = '%s'" % (author_id))
+        cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
         list_temp = cur.fetchall()
         for i in list_temp:
             list_return.append(i[0])
@@ -135,13 +139,14 @@ class Syntactic:
         return list_return
 
     def get_raw_text(self, novel_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT doc_content FROM document_english WHERE doc_id = '%s'" % (novel_id))
-        raw_text = cur.fetchall()[0][0]
+        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
+        raw_text = cur.fetchall()[0][0].strip()
         return raw_text
 
     def get_novel_id(self, author_id, index=0):
+        print(author_id,index)
         novel_id = self.get_novel_list(author_id=author_id)[index]
         return novel_id
 
@@ -153,7 +158,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
-            cur.execute("INSERT INTO author VALUES(%s, %s)", [list_authors_id[i], list_authors_name[i]])
+            cur.execute("INSERT INTO author VALUES(%s, %s)", [str(list_authors_id[i]), str(list_authors_name[i])])
         con.commit()
         con.close()
         cur.close()
@@ -197,12 +202,11 @@ class Syntactic:
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
-                tokens = nltk.word_tokenize(raw_novel_text)
-                tokens_sum += tokens[0:int(self.token_size / self.num_authors)]
+                tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
+                tokens_sum += tokens[0:self.token_size / self.num_authors]
 
-                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
-                                                                           raw_novel_text, novel_id,
-                                                                           int(list_authors[i][j])])
+                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)",
+                            [i + 1, num_section, raw_novel_text, novel_id, list_authors[i][j]])
                 num_section += 1
 
             paragraphs = self.get_paragraphs(tokens_sum)
@@ -228,8 +232,6 @@ class Syntactic:
 
         con.close()
         cur.close()
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
@@ -256,7 +258,6 @@ def parse_args():
 
     return parser.parse_args()
 
-
 if __name__ == "__main__":
     args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
@@ -269,8 +270,7 @@ if __name__ == "__main__":
     syn_dataset.save_authors_to_db(list_authors_id_200, list_authors_name)
 
     list_authors = syn_dataset.get_authors()
-    print(list_authors)
-    print(len(list_authors))
+
     syn_dataset.save_papers_to_db()
     syn_dataset.save_writes_hidden_to_db(list_authors)
     syn_dataset.save_section_features_to_db(list_authors, list_authors_id_200)

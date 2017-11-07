@@ -51,6 +51,16 @@ optional arguments:
 ```
 
 ## Run example
+gendb.py
+
+```bash
+python gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+```
+gendb_social_sci
+
+```bash
+python2 gendb_social_sci.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+```
 
 gat_csv.py
 
@@ -61,7 +71,20 @@ gat_csv.py
 experiment.py
 
 ```bash
-python experiment.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --input test/csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n3.csv --output_path test/out --num_fragment 400
+```
+
+gengraph.py
+
+```bash
+> python gengraph.py --num_authors 2  --num_authors_list 3 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200/
+```
+
+runner.py
+
+```bash
+> python runner.py --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --path test --n_fold 5
 ```
 
 ## Diagram
