@@ -238,7 +238,7 @@ if __name__ == "__main__":
     paper_ids = syn_dataset.get_paper_ids()
     author_ids = syn_dataset.get_authors(paper_ids)
     all_author_ids = np.concatenate(author_ids)
-    np.unique(all_author_ids)
+    all_author_ids = np.unique(all_author_ids)
     list_authors_name = syn_dataset.get_authors_name(all_author_ids)
     syn_dataset.save_authors_to_db(all_author_ids, list_authors_name)
 
