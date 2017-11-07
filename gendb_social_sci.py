@@ -11,9 +11,6 @@ from collections import Counter
 
 from six.moves import xrange
 
-from process_paper import get_paper_id
-
-
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
         self.chunk_size = chunk_size
