@@ -87,7 +87,7 @@ def get_con_cur(db_name):
 def drop_all_table(db_name):
     con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/" % (db_name))
     cur = con.cursor()
-    cur.execute("DROP TABLE author, paper, author_paper, paper_category")
+    cur.execute("DROP TABLE IF EXISTS author, paper, author_paper, paper_category")
     con.commit()
     con.close()
 

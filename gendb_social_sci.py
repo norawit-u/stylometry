@@ -11,6 +11,8 @@ from collections import Counter
 
 from six.moves import xrange
 
+from process_paper import get_paper_id
+
 
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
@@ -57,74 +59,17 @@ class Syntactic:
         con.close()
         cur.close()
 
-    def get_authors_id_200(self):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
-        cur = con.cursor()
-        cur.execute("SELECT author_id FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
-        list_all = cur.fetchall()
-        list_authors_id_200 = []
-        for i in range(0, len(list_all)):
-            list_authors_id_200.append(list_all[i][0])
-        con.close()
-        cur.close()
-        return list_authors_id_200
-
-    def get_authors_name(self, list_authors_id_200):
+    def get_authors_name(self, list_authors_id):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors_names = []
-        for author in list_authors_id_200:
+        for author in list_authors_id:
             cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
             authors_names += str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip()
         con.close()
         cur.close()
         return authors_names
-
-    def get_num_paper_per_author(self, list_authors):
-        list_temp = []
-        for i in range(0, len(list_authors)):
-            for j in range(0, len(list_authors[i][0:self.num_authors])):
-                list_temp.append(list_authors[i][j])
-        author_paper_dict = dict(Counter(list_temp))
-        print(author_paper_dict)
-
-    def get_authors(self, max_paper=15):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
-        cur = con.cursor()
-        cur.execute("SELECT author_id, count(*) FROM author_paper GROUP BY author_id ORDER BY count(*) DESC")
-        list_all = cur.fetchall()
-        list_top_200 = []
-        list_top_200_max = []
-        for i in range(len(list_all)):
-            list_top_200.append(list_all[i][0])
-            list_top_200_max.append(list_all[i][1])
-        list_top_200_max = dict(zip(list_top_200, list_top_200_max))
-        list_return = []
-        dict_check = {k: 0 for k in list_top_200}
-
-        j = 0
-        print([value for key, value in list_top_200_max.items()])
-        while j < self.num_paper:
-            list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
-            list_temp = []
-            for x in range(0, len(list_return[j][0:self.num_authors])):
-                dict_check[list_return[j][x]] += 1
-                if dict_check[list_return[j][x]] > list_top_200_max[list_return[j][x]]:
-                    try:
-                        list_top_200.remove(list_return[j][x])
-                        for y in range(0, x):
-                            dict_check[list_return[j][y]] -= 1
-                        list_return.remove(list_return[-1])
-                        j -= 1
-                        break
-                    except ValueError:
-                        break
-            j += 1
-        print([list_top_200_max[key] - value for key, value in dict_check.items()])
-        con.close()
-        cur.close()
-        return list_return
 
     def get_novel_list(self, author_id):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
@@ -232,6 +177,34 @@ class Syntactic:
 
         con.close()
         cur.close()
+
+    def get_paper_ids(self):
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        cur = con.cursor()
+        papers_id = []
+        cur.execute("select paper_id, count(*) from author_paper group by paper_id having count(*) = %s" % self.num_authors)
+        list_temp = cur.fetchall()
+        for i in list_temp:
+            papers_id.append(i[0])
+        con.close()
+        cur.close()
+        return papers_id
+
+    def get_authors(self, paper_ids):
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        cur = con.cursor()
+        authors = []
+        for paper_id in paper_ids:
+            cur.execute("select author_id from author_paper where paper_id = '%s'" % paper_id)
+            list_temp = cur.fetchall()
+            authors_id = []
+            for i in list_temp:
+                authors_id.append(i[0])
+            authors.append(authors_id)
+        con.close()
+        cur.close()
+        return authors
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
@@ -265,12 +238,12 @@ if __name__ == "__main__":
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
     syn_dataset.create_db_table()
 
-    list_authors_id_200 = syn_dataset.get_authors_id_200()
-    list_authors_name = syn_dataset.get_authors_name(list_authors_id_200)
-    syn_dataset.save_authors_to_db(list_authors_id_200, list_authors_name)
-
-    list_authors = syn_dataset.get_authors()
+    paper_ids = syn_dataset.get_paper_ids()
+    author_ids = syn_dataset.get_authors(paper_ids)
+    all_author_ids = np.concatenate(author_ids)
+    list_authors_name = syn_dataset.get_authors_name(all_author_ids)
+    syn_dataset.save_authors_to_db(all_author_ids, list_authors_name)
 
     syn_dataset.save_papers_to_db()
-    syn_dataset.save_writes_hidden_to_db(list_authors)
-    syn_dataset.save_section_features_to_db(list_authors, list_authors_id_200)
+    syn_dataset.save_writes_hidden_to_db(author_ids)
+    syn_dataset.save_section_features_to_db(author_ids, all_author_ids)
