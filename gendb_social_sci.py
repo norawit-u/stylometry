@@ -259,6 +259,7 @@ def parse_args():
     return parser.parse_args()
 
 if __name__ == "__main__":
+    args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
                             num_authors=args.num_authors, num_authors_list=args.num_authors_list,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
