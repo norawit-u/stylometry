@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 import psycopg2
 from paragraph import Paragraph
@@ -230,11 +232,36 @@ class Syntactic:
 
         con.close()
         cur.close()
+def parse_args():
+    parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
+    parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
+    parser.add_argument('--token_size', type=int, help='size of the overall token')
+    parser.add_argument('--num_authors', type=int, help='number of real authors')
+    parser.add_argument('--num_authors_list', type=int, help='number of authors including generated one')
+    parser.add_argument('--sliding_window', type=int, help='size of the sliding window')
+    parser.add_argument('--num_paper', type=int, help='number of a paper to create database')
+    """
+  parser.add_argument('--chunk_size', type=int, default=600,
+             help='size of the chunk, number of token in the chunk')
+   parser.add_argument('--token_size', type=int, default=12000,
+             help='size of the overall token')
+   parser.add_argument('--num_authors', type=int, default=2,
+             help='number of real authors')
+   parser.add_argument('--num_authors_list', type=int, default=5,
+             help='number of authors including generated one')
+   parser.add_argument('--sliding_window', type=int, default=600,
+             help='size of the sliding window')
+   parser.add_argument('--num_paper', type=int, default=500,
+             help='number of a paper to create database')
 
+  """
+
+    return parser.parse_args()
 
 if __name__ == "__main__":
-    syn_dataset = Syntactic(chunk_size=1000, token_size=12000, num_authors=2, num_authors_list=5, sliding_window=600,
-                            num_paper=500)
+    syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
+                            num_authors=args.num_authors, num_authors_list=args.num_authors_list,
+                            sliding_window=args.sliding_window, num_paper=args.num_paper)
     syn_dataset.create_db_table()
 
     list_authors_id_200 = syn_dataset.get_authors_id_200()
