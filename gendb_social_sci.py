@@ -76,7 +76,7 @@ class Syntactic:
         for author in list_authors_id_200:
             cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
-            authors_names += str(temp[0]).decode('utf8') + ' ' + str(temp[0]).decode('utf8')
+            authors_names += str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip()
         con.close()
         cur.close()
         return authors_names
@@ -142,7 +142,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
-        raw_text = cur.fetchall()[0][0]
+        raw_text = cur.fetchall()[0][0].strip()
         return raw_text
 
     def get_novel_id(self, author_id, index=0):
