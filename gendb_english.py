@@ -146,7 +146,7 @@ class Syntactic:
         return novel_id
 
     def get_paragraphs(self, tokens):
-        paragraphs = [tokens[x:x + self.chunk_size] for x in range(0, self.token_size, self.sliding_window)]
+        paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
