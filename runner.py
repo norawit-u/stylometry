@@ -44,7 +44,7 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
            "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
 
 
-def gen_fold(num_paper, n_fold, shuffle=False, append=False):
+def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
     doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
     if shuffle:
         np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
@@ -54,6 +54,13 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False):
             print(int(len(doc_id_list)/n_fold*i))
             tmp.append(doc_id_list[0:int(len(doc_id_list) / n_fold * i)])  # ex: [1, 2], [1, 2, 3, 4], [1, 2, 3, 4,
             # 5, 6]
+        return tmp
+    if train:
+        tmp = []
+        for i in range(n_fold):
+            array = np.split(doc_id_list, n_fold)
+            array.pop(i)
+            tmp.append(np.concatenate(array))  # ex: [3,4,5,6,7,8],[1,2,5,6,7,8],[1,2,3,4,7,8]
         return tmp
     else:
         return np.split(doc_id_list, n_fold)  # split the array ex [1,5,7],[4,3,2],[8,9,6],[0]
@@ -73,7 +80,7 @@ def get_author_number(db_name):
 def get_author_list_number(db_name):
     return int(db_name.split('_')[-2].split('al')[-1])
 
-def clean(path):
+def cleanning(path):
     execute('rm '+path)
 
 def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
@@ -100,7 +107,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
         print(execute(gengraph))
         print("============")
     if clean:
-        clean(path)
+        cleanning(path)
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
