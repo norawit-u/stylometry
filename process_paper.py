@@ -138,10 +138,6 @@ def insert_paper_category(cur, paper_id, categorie):
 def is_xml(string):
     return "xmlns:mml" in string
 
-
-'M. Soliman', 'hmed'
-
-
 def execute(con, cur, title, authors, raw_text, categories, scirp_id):
     author_ids = []
     for author in authors:
