@@ -20,7 +20,7 @@ class Syntactic:
         self.sliding_window = sliding_window
         self.copus_db_name = 'social_sci_paper'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
-            chunk_size, token_size, num_authors, num_authors_list, sliding_window)
+            chunk_size, token_size, num_authors, num_authors, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
