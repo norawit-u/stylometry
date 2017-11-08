@@ -18,7 +18,7 @@ class Syntactic:
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.sliding_window = sliding_window
-        self.copus_db_name = 'social_sci_paper'
+        self.copus_db_name = 'social_sci_paper_corpus'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
             chunk_size, token_size, num_authors, num_authors, sliding_window)
         self.num_paper = num_paper
