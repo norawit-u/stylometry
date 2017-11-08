@@ -155,14 +155,22 @@ def execute(con, cur, title, authors, raw_text, categories, scirp_id):
         insert_paper_category(cur, paper_id, category)
 
 
+def parser_args():
+    parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
+    parser.add_argument('--path', type=int, nargs='*', help='directory path the of the paper')
+    parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
+    return parser.parse_args()
+
+
 def run():
-    db_name = 'social_sci_paper'
+    arg = parser_args()
+    db_name = arg.db_name
     con, cur = get_con_cur(db_name)
 
     # drop_all_table(db_name)
     # create_database(db_name)
 
-    for file_path in tqdm(get_file_path_list("paper")):
+    for file_path in tqdm(get_file_path_list(arg.path)):
         file = get_file(file_path)
         if is_xml(file):
             tqdm.write(file_path)
