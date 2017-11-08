@@ -34,7 +34,6 @@ def parse_xml(string):
 def get_file(file_path):
     with open(file_path, 'r') as f:
         return f.read().encode('UTF-8')
-    f.close()
 
 
 def get_author(soup):
