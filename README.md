@@ -54,12 +54,12 @@ optional arguments:
 gendb.py
 
 ```bash
-python gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+> python gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
 ```
 gendb_social_sci
 
 ```bash
-python2 gendb_social_sci.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+> python2 gendb_social_sci.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
 ```
 
 gat_csv.py
@@ -106,9 +106,9 @@ runner.py
 
 run experiment
 ```bash
-python experiments_simple_min_p3.py 10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 4000
+> python experiments_simple_min_p3.py 10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 4000
 ```
 run gengraph
 ```bash
-python2 gengraph2_simple.py --num_authors 2  --num_authors_list 2 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200/
+> python2 gengraph2_simple.py --num_authors 2  --num_authors_list 2 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200/
 ```
