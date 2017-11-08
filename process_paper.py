@@ -167,8 +167,8 @@ def parser_args():
 def run():
     arg = parser_args()
     db_name = arg.db_name
-    con, cur = get_con_cur(db_name)
 
+    # con, cur = get_con_cur(db_name)
     # drop_all_table(db_name)
     # create_database(db_name)
 
