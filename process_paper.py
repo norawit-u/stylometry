@@ -159,7 +159,7 @@ def execute(con, cur, title, authors, raw_text, categories, scirp_id):
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--path', type=int, nargs='*', help='directory path the of the paper')
+    parser.add_argument('--path', type=str, help='directory path the of the paper')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     return parser.parse_args()
 
