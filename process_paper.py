@@ -175,12 +175,12 @@ def run():
             authors = get_author(xml)
             raw_text = get_raw_text(xml)
             categories = get_categories(xml)
-            if title and authors and raw_text and categories:
+            #if title and authors and raw_text and categories:
                 # tqdm.write(str(title)+' '+str(authors)+' '+str(len(raw_text))+' '+str(categories)):
 
                 # write to database
                 # execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
-                # con.commit()
+                #con.commit()
     con.close()
 
 
