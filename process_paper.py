@@ -191,7 +191,7 @@ def run():
                 # write to database
                 # execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
                 #con.commit()
-    con.close()
+    # con.close()
 
 
 if __name__ == "__main__":
