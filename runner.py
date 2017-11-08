@@ -45,6 +45,15 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
 
 
 def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
+    """
+    generate n fold id which slit the training set in to n subset ex: number of paper = 1000
+    :param num_paper: number of paper
+    :param n_fold: number of fold
+    :param shuffle: want to shuffle the id or not
+    :param append: want to extend each fold/subset or not
+    :param train: want to generate data set - fold
+    :return: array for fold example {[1,2,3],[4,5,6],[7,8,9]}
+    """
     doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
     if shuffle:
         np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
@@ -67,6 +76,11 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
 
 
 def execute(command):
+    """
+    execute a bash command
+    :param command: bash command
+    :return: out put from an execution
+    """
     try:
         return subprocess.check_output(command, shell=True)
     except subprocess.CalledProcessError as e:
@@ -74,6 +88,11 @@ def execute(command):
 
 
 def get_author_number(db_name):
+    """
+
+    :param db_name:
+    :return:
+    """
     return int(db_name.split('_')[-3].split('a')[-1])
 
 

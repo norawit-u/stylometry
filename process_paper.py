@@ -58,6 +58,7 @@ def get_raw_text(root):
             continue
         raw_text += sec.find('title').text + '\n'
         for p in sec.findAll('p'):
+            print(p.text)
             raw_text += p.text + '\n'
     return raw_text.encode("utf-8")
 
@@ -157,8 +158,10 @@ def execute(con, cur, title, authors, raw_text, categories, scirp_id):
 def run():
     db_name = 'social_sci_paper'
     con, cur = get_con_cur(db_name)
-    drop_all_table(db_name)
-    create_database(db_name)
+
+    # drop_all_table(db_name)
+    # create_database(db_name)
+
     for file_path in tqdm(get_file_path_list("paper")):
         file = get_file(file_path)
         if is_xml(file):
@@ -174,8 +177,10 @@ def run():
             categories = get_categories(xml)
             if title and authors and raw_text and categories:
                 # tqdm.write(str(title)+' '+str(authors)+' '+str(len(raw_text))+' '+str(categories)):
-                execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
-                con.commit()
+
+                # write to database
+                # execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
+                # con.commit()
     con.close()
 
 
