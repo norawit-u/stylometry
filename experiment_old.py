@@ -599,6 +599,7 @@ for i in range(NP):
 hitparaIndex = dict()
 hitIndexPara = dict()
 
+print(doc_to_au_dict)
 for doc in querySet:
     try:
         print(doc)
