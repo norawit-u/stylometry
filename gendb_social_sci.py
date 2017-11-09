@@ -139,6 +139,7 @@ class Syntactic:
                 try:
                     stylo_list = para.get_stylo_list()
                 except:
+                    raise
                     print('error')
                 for y in range(0, 57):
                     feature_id = y + 1
