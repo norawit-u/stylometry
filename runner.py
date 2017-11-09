@@ -40,11 +40,24 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
     :param dir_path: the output path of the experiment
     :return: command for running gengraph.py
     """
+    if 'social' in db_name:
+        return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
+               "--db_name %s  --dir_path %s" % (
+               num_author, num_author, ' '.join(map(str, papers)), db_name, dir_path)
     return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
            "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
 
 
 def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
+    """
+    generate n fold id which slit the training set in to n subset ex: number of paper = 1000
+    :param num_paper: number of paper
+    :param n_fold: number of fold
+    :param shuffle: want to shuffle the id or not
+    :param append: want to extend each fold/subset or not
+    :param train: want to generate data set - fold
+    :return: array for fold example {[1,2,3],[4,5,6],[7,8,9]}
+    """
     doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
     if shuffle:
         np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
@@ -67,6 +80,11 @@ def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
 
 
 def execute(command):
+    """
+    execute a bash command
+    :param command: bash command
+    :return: out put from an execution
+    """
     try:
         return subprocess.check_output(command, shell=True)
     except subprocess.CalledProcessError as e:
@@ -74,16 +92,42 @@ def execute(command):
 
 
 def get_author_number(db_name):
+    """
+    gat a number of author from database name
+    :param db_name: name of the database
+    :return: number of author
+    """
     return int(db_name.split('_')[-3].split('a')[-1])
 
 
 def get_author_list_number(db_name):
+    """
+    gat a number of author list from database name
+    :param db_name: database name
+    :return: author list number
+    """
     return int(db_name.split('_')[-2].split('al')[-1])
 
 def cleanning(path):
-    execute('rm '+path)
+    """
+    clean working folder
+    :param path: the path to remove
+    :return: None
+    """
+    execute('rm -r'+path)
 
 def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
+    """
+    apply cross validation and run the experiment
+    :param db_name: name of a database
+    :param path: path for running experiment
+    :param num_paper: number of paper
+    :param n_fold: number of fold
+    :param shuffle: shuffle the data or not
+    :param append: append each fold or not
+    :param clean: clean after run or not
+    :return: None
+    """
     folds = gen_fold(num_paper, n_fold, shuffle, append)
     print(folds)
     for key, fold in enumerate(folds):
@@ -110,6 +154,10 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
         cleanning(path)
 
 def parser_args():
+    """
+    init argument parsing
+    :return: argument
+    """
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
     parser.add_argument('--num_paper', type=int, help='number of paper')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")

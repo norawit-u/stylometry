@@ -1,3 +1,5 @@
+import argparse
+
 import requests
 import re
 import psycopg2
@@ -34,7 +36,6 @@ def parse_xml(string):
 def get_file(file_path):
     with open(file_path, 'r') as f:
         return f.read().encode('UTF-8')
-    f.close()
 
 
 def get_author(soup):
@@ -59,6 +60,7 @@ def get_raw_text(root):
             continue
         raw_text += sec.find('title').text + '\n'
         for p in sec.findAll('p'):
+            print(p.text)
             raw_text += p.text + '\n'
     return raw_text.encode("utf-8")
 
@@ -87,7 +89,7 @@ def get_con_cur(db_name):
 def drop_all_table(db_name):
     con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/" % (db_name))
     cur = con.cursor()
-    cur.execute("DROP TABLE author, paper, author_paper, paper_category")
+    cur.execute("DROP TABLE IF EXISTS author, paper, author_paper, paper_category")
     con.commit()
     con.close()
 
@@ -155,12 +157,22 @@ def execute(con, cur, title, authors, raw_text, categories, scirp_id):
         insert_paper_category(cur, paper_id, category)
 
 
+def parser_args():
+    parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
+    parser.add_argument('--path', type=str, help='directory path the of the paper')
+    parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
+    return parser.parse_args()
+
+
 def run():
-    db_name = 'social_sci_paper'
-    con, cur = get_con_cur(db_name)
-    drop_all_table(db_name)
-    create_database(db_name)
-    for file_path in tqdm(get_file_path_list("paper")):
+    arg = parser_args()
+    db_name = arg.db_name
+
+    # con, cur = get_con_cur(db_name)
+    # drop_all_table(db_name)
+    # create_database(db_name)
+
+    for file_path in tqdm(get_file_path_list(arg.path)):
         file = get_file(file_path)
         if is_xml(file):
             tqdm.write(file_path)
@@ -173,11 +185,13 @@ def run():
             authors = get_author(xml)
             raw_text = get_raw_text(xml)
             categories = get_categories(xml)
-            if title and authors and raw_text and categories:
+            #if title and authors and raw_text and categories:
                 # tqdm.write(str(title)+' '+str(authors)+' '+str(len(raw_text))+' '+str(categories)):
-                execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
-                con.commit()
-    con.close()
+
+                # write to database
+                # execute(con, cur, title, authors, raw_text, categories, file_path[-9:-4])
+                #con.commit()
+    # con.close()
 
 
 if __name__ == "__main__":
