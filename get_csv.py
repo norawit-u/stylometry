@@ -114,7 +114,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
         fragment_count = num_fragment * i # number of fragment(counter)
         for j in range(fragment_count,
                        fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
-            chunk_id = i * chunk_size + offset * (fragment_count % offset)
+            chunk_id = i * chunk_size + offset * (fragment_count / offset)
             for k in range(chunk_id, chunk_id + fragment_size):
                 list_feature = []
                 list_feature.append(str(j))  # fragment id
