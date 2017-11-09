@@ -5,6 +5,9 @@ import numpy as np
 from subprocess import call
 
 
+def get_chunk_size(db_name):
+    return int(int(db_name.split('_')[-4].split('t')[-1])/int(db_name.split('_')[-1].split('sw')[-1]))
+
 def command_get_csv(db_name, out_path, papers, note):
     """
     generate a command for running get_csv.py
@@ -15,10 +18,9 @@ def command_get_csv(db_name, out_path, papers, note):
     :return: command for running get_csv.py
     """
     fragment_size = 10
-    chunk_size = 10
     offset = 10
     return "python get_csv.py --db_name %s --out_path %s --papers  %s --fragment_size %s --chunk_size %s --offset %s " \
-           "--note %s" % ( db_name, out_path, ' '.join(map(str, papers)), fragment_size, chunk_size, offset, note)
+           "--note %s" % ( db_name, out_path, ' '.join(map(str, papers)), fragment_size, get_chunk_size(db_name), offset, note)
 
 
 def command_experiment(csv_path, output_path, num_fragment):
