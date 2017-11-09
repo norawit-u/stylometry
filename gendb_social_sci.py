@@ -59,7 +59,7 @@ class Syntactic:
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id:
-            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
+            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % int(author))
             temp = cur.fetchall()
             authors_names.append(str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip())
         con.close()
@@ -70,7 +70,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         list_return = []
-        cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
+        cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % int(author_id))
         list_temp = cur.fetchall()
         for i in list_temp:
             list_return.append(i[0])
@@ -78,10 +78,10 @@ class Syntactic:
         cur.close()
         return list_return
 
-    def get_raw_text(self, novel_id):
+    def get_raw_text(self, paper_id):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
+        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % int(paper_id))
         raw_text = cur.fetchall()[0][0].strip()
         return raw_text
 
@@ -142,7 +142,7 @@ class Syntactic:
 
                 raw_novel_text = self.get_raw_text(novel_id)
                 tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
-                tokens_sum += tokens[0:self.token_size / self.num_authors]
+                tokens_sum += tokens[0:self.token_size / len(list_authors[i])]
 
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)",
                             [i + 1, num_section, raw_novel_text, novel_id, list_authors[i][j]])
