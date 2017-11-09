@@ -37,8 +37,8 @@ if not os.path.exists(directory):
 output_dir = directory
 
 def npLoad(fileStr):
-    tmp = np.genfromtxt(fileStr, delimiter=',')
-    return np.delete(tmp, 0, 0)
+    temp = np.genfromtxt(fileStr, delimiter=',')
+    return np.delete(temp, 0, 0)
 
 
 def NormalizeOneDem(oneDemdata):
@@ -545,7 +545,7 @@ flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 #         querySet.append(doc[i][j])
 
 querySet =  list(set(my_data[:, 0]))
-print(querySet)
+# print(querySet)
 
 print("indexing")
 start = time.time()
@@ -603,6 +603,7 @@ hitIndexPara = dict()
 
 for doc in querySet:
     try:
+        print(doc)
         paraList = doc_to_para_dict[doc]
         for para in paraList:
             datasetQ.append(datasetm[paraIndex[para]])
