@@ -37,8 +37,8 @@ if not os.path.exists(directory):
 output_dir = directory
 
 def npLoad(fileStr):
-    temp = np.genfromtxt(fileStr, delimiter=',')
-    return np.delete(temp, 0, 0)
+    tmp = np.genfromtxt(fileStr, delimiter=',')
+    return np.delete(tmp, 0, 0)
 
 
 def NormalizeOneDem(oneDemdata):

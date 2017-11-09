@@ -87,8 +87,6 @@ def save_to_csv(list_return, name, fieldnames):
     os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
     with open(name+'.csv', 'w') as csvfile:
         csvfile.write(','.join(map(str, field_names)))
-        for name in fieldnames:
-            csvfile.write(name+',')
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
@@ -121,7 +119,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
             for k in range(chunk_id, chunk_id + fragment_size):
                 list_feature = []
                 list_feature.append(str(j))  # fragment id
-                list_feature.append(str(i))  # paper id
+                list_feature.append(str(i + 1))  # paper id
                 list_feature.append(str(k))  # chunk id
                 cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i +1, k + 1])
                 temp = cur.fetchall()
