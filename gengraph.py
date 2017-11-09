@@ -1,8 +1,5 @@
-<<<<<<< HEAD:gengraph_simple.py
 import psycopg2
-=======
 import ast
->>>>>>> cross_validation:gengraph.py
 import operator
 import math
 import argparse
