@@ -12,6 +12,8 @@ def get_chunk_size(db_name):
 def command_get_csv(db_name, out_path, papers, fragment_size, offset, note):
     """
     generate a command for running get_csv.py
+    :param offset:
+    :param fragment_size:
     :param db_name: name of the database
     :param out_path: the path to save csv
     :param papers: list of paper ex: 1, 2, 3, 4, 5
@@ -155,7 +157,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
     offset = 2
     for key, fold in enumerate(folds):
         # print(folds)
-        get_csv = command_get_csv(db_name, path + '/csv', fold, '_n' + str(key), fragment_size, offset)
+        get_csv = command_get_csv(db_name, path + '/csv', fragment_size, offset,  fold, '_n' + str(key))
         print(get_csv)
         execute(get_csv)
     for root, _, files in os.walk(path + '/csv'):
