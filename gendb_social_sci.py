@@ -201,7 +201,7 @@ class Syntactic:
         con.close()
         cur.close()
         return authors
-
+      
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
@@ -234,7 +234,6 @@ if __name__ == "__main__":
                             num_authors=args.num_authors, num_authors_list=args.num_authors_list,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
     syn_dataset.create_db_table()
-
     paper_ids = syn_dataset.get_paper_ids()
     author_ids = syn_dataset.get_authors(paper_ids)
     all_author_ids = np.concatenate(author_ids)
