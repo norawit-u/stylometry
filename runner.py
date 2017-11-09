@@ -17,8 +17,8 @@ def command_get_csv(db_name, out_path, papers, note):
     :param note: ending note
     :return: command for running get_csv.py
     """
-    fragment_size = 10
-    offset = 10
+    fragment_size = 20
+    offset = 2
     return "python get_csv.py --db_name %s --out_path %s --papers  %s --fragment_size %s --chunk_size %s --offset %s " \
            "--note %s" % ( db_name, out_path, ' '.join(map(str, papers)), fragment_size, get_chunk_size(db_name), offset, note)
 
