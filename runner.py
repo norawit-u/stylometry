@@ -139,9 +139,11 @@ def get_num_fragment(fragment_size, offset, chunk_size):
     return int((chunk_size - fragment_size) / offset + 1)
 
 
-def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
+def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, append, clean=False):
     """
     apply cross validation and run the experiment
+    :param offset:
+    :param fragment_size:
     :param db_name: name of a database
     :param path: path for running experiment
     :param num_paper: number of paper
@@ -153,8 +155,6 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
     """
     folds = gen_fold(num_paper, n_fold, shuffle, append)
     print(folds)
-    fragment_size = 20
-    offset = 2
     for key, fold in enumerate(folds):
         # print(folds)
         get_csv = command_get_csv(db_name, path + '/csv', fold, fragment_size, offset, '_n' + str(key))
@@ -191,10 +191,12 @@ def parser_args():
     parser.add_argument('-shuffle', type=bool, default=False, help='shuffle a cross validation')
     parser.add_argument('-append', type=bool, default=False, help='append the fold')
     parser.add_argument('-clean', type=bool, default=False, help='clean after finish running')
+    parser.add_argument('-fragment_size', type=bool, default=False, help='number of chunk in fragment')
+    parser.add_argument('-offset', type=bool, default=False, help='number of chunk between chunk n and n+1')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     arg = parser_args()
     for db_name in arg.db_name:
-        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.shuffle, arg.append, arg.clean)
+        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.fragment_size, arg.offset, arg.shuffle, arg.append, arg.clean)
