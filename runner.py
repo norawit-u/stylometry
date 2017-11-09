@@ -157,7 +157,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
     offset = 2
     for key, fold in enumerate(folds):
         # print(folds)
-        get_csv = command_get_csv(db_name, path + '/csv', fragment_size, offset,  fold, '_n' + str(key))
+        get_csv = command_get_csv(db_name, path + '/csv', fold, fragment_size, offset, '_n' + str(key))
         print(get_csv)
         execute(get_csv)
     for root, _, files in os.walk(path + '/csv'):
