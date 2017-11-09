@@ -25,7 +25,7 @@ def command_get_csv(db_name, out_path, papers, fragment_size, offset, note):
            db_name, out_path, ' '.join(map(str, papers)), fragment_size, get_chunk_size(db_name), offset, note)
 
 
-def command_experiment(csv_path, output_path, num_fragment):
+def command_experiment(csv_path, output_path):
     """
     generate a command for running experiment.py
     :param csv_path: path to a csv file
@@ -33,8 +33,8 @@ def command_experiment(csv_path, output_path, num_fragment):
     :param num_fragment: number of fragment normally: author number * number of paper
     :return: command for running experiment.py
     """
-    return "python experiment_old.py --csv_path %s --output_path %s --num_fragment %s" % (
-        csv_path, output_path, int(num_fragment))
+    return "python experiment_old.py --csv_path %s --output_path %s " % (
+        csv_path, output_path)
 
 
 def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
@@ -164,8 +164,7 @@ def cross(db_name, path, num_paper, n_fold, shuffle, append, clean=False):
         for file in files:
             if str(db_name) in str(file):
                 file_path = root + '/' + file
-                experiment = command_experiment(file_path, path + '/out',
-                                                get_num_fragment(fragment_size, offset, get_chunk_size(db_name)) * num_paper / len(folds))
+                experiment = command_experiment(file_path, path + '/out')
                 print(experiment)
                 execute(experiment)
     for key, fold in enumerate(folds):

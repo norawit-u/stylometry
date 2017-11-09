@@ -22,13 +22,11 @@ INF = 999999
 parser = argparse.ArgumentParser(description='Runing the experiment')
 parser.add_argument('--csv_path', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
-parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
 syn_name = arg.csv_path
-fragment_total = int(arg.num_fragment)
 directory = arg.output_path + '/' + syn_name.split('/')[-1].split('.')[0]
 
 if not os.path.exists(directory):
@@ -544,7 +542,7 @@ flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 #         doc[i][j]= int(doc[i][j])
 #         querySet.append(doc[i][j])
 
-querySet =  list(set(my_data[:, 0]))
+querySet = list(set(my_data[:, 0]))
 # print(querySet)
 
 print("indexing")
