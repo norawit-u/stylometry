@@ -14,8 +14,11 @@ def command_get_csv(db_name, out_path, papers, note):
     :param note: ending note
     :return: command for running get_csv.py
     """
-    return "python get_csv.py --db_name %s --out_path %s --papers  %s --note %s" % (
-        db_name, out_path, ' '.join(map(str, papers)), note)
+    fragment_size = 10
+    chunk_size = 10
+    offset = 10
+    return "python get_csv.py --db_name %s --out_path %s --papers  %s --fragment_size %s --chunk_size %s --offset %s " \
+           "--note %s" % ( db_name, out_path, ' '.join(map(str, papers)), fragment_size, chunk_size, offset, note)
 
 
 def command_experiment(csv_path, output_path, num_fragment):
