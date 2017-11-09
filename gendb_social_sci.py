@@ -187,6 +187,11 @@ class Syntactic:
         cur.close()
         return papers_id
 
+    def gen_shuffle_paper_id(self):
+        tmp = np.arange(self.num_paper)
+        np.shape(tmp)
+        return tmp
+
     def get_authors(self, paper_ids):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
@@ -234,7 +239,7 @@ if __name__ == "__main__":
                             num_authors=args.num_authors, num_authors_list=args.num_authors_list,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
     syn_dataset.create_db_table()
-    paper_ids = syn_dataset.get_paper_ids()
+    paper_ids = syn_dataset.gen_shuffle_paper_id()
     author_ids = syn_dataset.get_authors(paper_ids)
     all_author_ids = np.concatenate(author_ids)
     all_author_ids = np.unique(all_author_ids)
