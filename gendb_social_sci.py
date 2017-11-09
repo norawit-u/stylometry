@@ -234,7 +234,7 @@ if __name__ == "__main__":
     args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
-    
+
     syn_dataset.create_db_table()
     paper_ids = syn_dataset.gen_shuffle_paper_id()
     author_ids = syn_dataset.get_authors(paper_ids)
