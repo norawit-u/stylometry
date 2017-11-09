@@ -99,7 +99,7 @@ class Syntactic:
         dict_check = {k: 0 for k in list_top_200}
 
         j = 0
-        print([value for key, value in list_top_200_max.iteritems()])
+        print([value for key, value in list_top_200_max.items()])
         while j < self.num_paper:
             list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
             list_temp = []
@@ -116,7 +116,7 @@ class Syntactic:
                     except ValueError:
                         break
             j += 1
-        print([list_top_200_max[key] - value for key, value in dict_check.iteritems()])
+        print([list_top_200_max[key] - value for key, value in dict_check.items()])
         con.close()
         cur.close()
         return list_return
@@ -145,7 +145,7 @@ class Syntactic:
         return novel_id
 
     def get_paragraphs(self, tokens):
-        paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
+        paragraphs = [tokens[x:x + self.chunk_size] for x in range(0, self.token_size, self.sliding_window)]
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
@@ -172,7 +172,7 @@ class Syntactic:
         cur = con.cursor()
         for i in range(0, self.num_paper):
             for j in range(0, len(list_authors_id[i])):
-                cur.execute("INSERT INTO writes_hidden VALUES(%s,%s,%s)", [list_authors_id[i][j], i + 1, j + 1])
+                cur.execute("INSERT INTO writes_hidden VALUES(%s,%s,%s)", [int(list_authors_id[i][j]), i + 1, j + 1])
         con.commit()
         con.close()
         cur.close()
@@ -196,12 +196,12 @@ class Syntactic:
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
-                tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
-                tokens_sum += tokens[0:self.token_size / self.num_authors]
+                tokens = nltk.word_tokenize(raw_novel_text)
+                tokens_sum += tokens[0:int(self.token_size / self.num_authors)]
 
-                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section, \
+                cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
                                                                            raw_novel_text, novel_id,
-                                                                           list_authors[i][j]])
+                                                                           int(list_authors[i][j])])
                 num_section += 1
 
             paragraphs = self.get_paragraphs(tokens_sum)
@@ -219,8 +219,7 @@ class Syntactic:
                         value = stylo_list[y]
                     except:
                         value = 0
-                    cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % \
-                                (i + 1, chunk_id, feature_id, value))
+                    cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % (i + 1, chunk_id, feature_id, value))
                 chunk_id += 1
 
             con.commit()

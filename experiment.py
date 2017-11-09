@@ -16,48 +16,32 @@ from scipy.spatial.distance import euclidean
 from collections import defaultdict
 
 parser = argparse.ArgumentParser(description='Runing the experiment')
-parser.add_argument('--input', type=str, help='path of the csv')
+parser.add_argument('--csv_path', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
-parser.add_argument('--author_num', type=str, help='Input directory of the csv')
+parser.add_argument('--num_fragment', type=str, help='Number of fragment')
 arg = parser.parse_args()  # get argparse argument
 INF = 999999
 
 output_dir = 'out'
-csv_dir = 'csv'
-syn_name = ''
-fragment_total = 1000  # total number of fragment =  number papers * author number
-if len(sys.argv) >= 1:
-    syn_name = sys.argv[1]
-    fragment_total = int(sys.argv[2])
-directory = output_dir + '/' + syn_name
+syn_name = arg.csv_path
+fragment_total = arg.num_fragment
+directory = arg.output_path + '/' + syn_name
 
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
 if not os.path.exists(directory):
     os.makedirs(directory)
 
 print("reading file")
 start = time.time()
-# my_data = []
-# with open("../../dataset.csv") as f:
-#       for line in f:
-#               sliceline = line.replace("\n", "").replace("\r", "").split(",")
-#              my_data.append(sliceline)
-# my_data = genfromtxt('../../dataset.csv', delimiter=',')
-print(('./' + csv_dir + '/' + syn_name + '.csv'))
-my_data = loadtxt('./' + csv_dir + '/' + syn_name + '.csv', delimiter=',')  # input dataset
-# my_data = np.asarray(multiprocessLoad("../../splitedFiles1000000"))
+print(arg.csv_path)
+my_data = stylometry.npLoad(arg.csv_path)  # input dataset
 print((time.time() - start, "used to read file"))
+
 # parameters
 D = 56  # dimensions
 L = 334  # the number of group hash
 K = 1  # the number of hash functions in each group hash
-# N = 30000 # the size of dataset
-# N = 4259934 # the size of dataset
 N = len(my_data)  # the size of dataset
 NP = len(my_data)  # the size of data used for QP
-# NP = 4259934 #the size of data used for QP
-# NP = 30000 #the size of data used for QP
 NDocQ = 5
 R = 0.12 * math.sqrt(D)  # query range
 W = 1  # the width of bucket
@@ -72,21 +56,9 @@ topknn = 21  # MHD TopN list length
 shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
-# load query documents: fragment_id  to query
-# doc=[]
-# line = linecache.getlines("./fragment5000.csv")
-# for i in range(len(line)):
-#         sliceline = line[i].replace("\n", "").replace("\r", "").split(",")
-#         doc.append(sliceline)
-
-# querySet=[]
-# for i in range(len(doc)):
-#     for j in range(len(doc[i])):
-#         doc[i][j]= int(doc[i][j])
-#         querySet.append(doc[i][j])
-querySet = [x for x in range(1, fragment_total + 1)]
-print(querySet)
-
+querySet = [x for x in range(1, int(fragment_total) + 1)]
+# print(querySet)
+print(my_data.shape)
 print("indexing")
 start = time.time()
 
@@ -101,9 +73,10 @@ doc_to_au_dict = dict(list(zip(doc_id, author_id)))
 para_to_au_dict = dict(list(zip(para_id, author_id)))
 paraIndex = dict()
 IndexPara = dict()
+
+
 for i in range(len(para_id)):
     paraIndex[para_id[i]] = i
-
 for i in range(len(para_id)):
     IndexPara[i] = para_id[i]
 
@@ -185,6 +158,7 @@ def queryExp(q):
     #    data += (str(q) + "\n")
 
     try:
+
         """
         #LSH Pruning SHD
         start = time.time()
@@ -193,17 +167,20 @@ def queryExp(q):
         LSHLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+SHD) ", LSHLongListTime
 #        data += (str(LSHLongListTime) + "\n")
+
+
         start = time.time()
         ListLSH_SHDPrun = getSHDPrunedDoc(queryParaList, doc_hit_above_T_dict)
         LSHSHDPrunListTime = time.time()-start
         print "Pruning Time (LSH+SHD): ", LSHSHDPrunListTime
 #        data += (str(LSHSHDPrunListTime) + "\n")
+
         start = time.time()
         LSH_SHD_list, LSH_SHD_values = getSHDTop5Doc(ListLSH_SHDPrun, queryParaList, doc_to_para_dict, shdTopN, combinedhitQP, datasetP, paraIndex, hitparaIndex, "lsh")
         LSH_SHDTop5ListTime = time.time() - start
-
         print "Time to return topk doclist (LSH+SHD):", LSH_SHDTop5ListTime
 #        data += (str(LSH_SHDTop5ListTime) + "\n")
+
         """
         # LSH Pruning MHD
         start = time.time()
@@ -213,6 +190,7 @@ def queryExp(q):
         LSHMHDLongListTime = time.time() - start
         print(("Time to generate long doc_list (LSH+MHD) ", LSHMHDLongListTime))
         #        data += (str(LSHMHDLongListTime) + "\n")
+
         start = time.time()
         sortedListLSH = stylometry.MHDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R,
                                                hitparaIndex, doc_hit_above_T_dict, "lsh", MHDRatio)
@@ -221,6 +199,7 @@ def queryExp(q):
                                                                 flagNum, datasetm, paraIndex, hitparaIndex, MHDRatio,
                                                                 "lsh")
         print(("geneMHDPrun %s" % (time.time() - start)))
+
         LSH_MHD_len = LSH_MHD_Result[0]
         LSH_MHD_list = LSH_MHD_Result[1]
         LSHMHDgenTop5ListTime = time.time() - start
@@ -235,12 +214,12 @@ def queryExp(q):
         LSHMHDLongListTime = time.time()-start
         print "Time to generate long doc_list (LSH+M2HD) ", LSHMHDLongListTime
 #        data += (str(LSHMHDLongListTime) + "\n")
+
         start = time.time()
         sortedListLSH = M2HDPrunList(queryParaList, ListLSH_ALL, combinedhitQP, datasetm, paraIndex, R, hitparaIndex, doc_hit_above_T_dict, "lsh", startp, endp)
         LSH_M2HD_Result, LSH_M2HD_values = geneM2HDPrun(sortedListLSH, queryParaList, combinedhitQP, topknn, flagNum, datasetm, paraIndex, hitparaIndex, "lsh", startp, endp)
         LSH_M2HD_len = LSH_M2HD_Result[0]
         LSH_M2HD_list = LSH_M2HD_Result[1]
-
         LSHM2HDgenTop5ListTime = time.time() -start
         print "Time to return topk doclist (LSH+M2HD):", LSHM2HDgenTop5ListTime
  #       data += (str(LSHM2HDgenTop5ListTime) + "\n")
@@ -253,12 +232,10 @@ def queryExp(q):
         print "docList Length LSH_MHD: ", LSH_MHD_len
   #      data += (str(LSH_M2HD_len) + "\n")
         # print "docList Length LSH_M2HD: ", LSH_M2HD_len
-
   #      data += (str(len(ListLSH_ALL)/len(ListLSH_SHDPrun)) + "\n")
         print "prunRatio LSH_SHD: ", len(ListLSH_ALL)/len(ListLSH_SHDPrun)
  #       data += (str(len(ListLSH_ALL)/LSH_MHD_len) + "\n")
         print "prunRatio LSH_MHD: ", len(ListLSH_ALL)/LSH_MHD_len
-
  #       data += (str(len(ListLSH_ALL)/LSH_M2HD_len) + "\n")
         # print "prunRatio LSH_M2HD: ", len(ListLSH_ALL)/LSH_M2HD_len
 
@@ -271,7 +248,7 @@ def queryExp(q):
         print "///////////////////////////////////////////"
         print "use the top2 closet document to determine author_id:"
         print "Origin author: ", doc_to_au_dict[q]
-       data += (str(doc_to_au_dict[q]) + "\n")
+        data += (str(doc_to_au_dict[q]) + "\n")
 
 
         LSH_SHD_PKNN = PKNN(queryParaList, LSH_SHD_list, "LSH_SHD","", 20, 0, combinedhitQP, 5, datasetP, paraIndex )
@@ -301,7 +278,7 @@ def queryExp(q):
         f.close()
         print("I am gonna write the result in the directory please check it whether it is okaaaaaaaaaaay")
     except:
-        return
+        raise
 
 
 if __name__ == '__main__':
@@ -313,4 +290,5 @@ if __name__ == '__main__':
     temp = pool.map(queryExp, querySet, )
     pool.close()
     pool.join()
-    endtime = time.time() - start_time
+    end_time = time.time() - start_time
+    print(end_time)

@@ -18,7 +18,6 @@
 ```
 
 get_csv.py
-
 ```bash
 usage: get_csv.py [-h] [--fragment_size FRAGMENT_SIZE]
                   [--num_fragment NUM_FRAGMENT] [--chunk_size CHUNK_SIZE]
@@ -52,13 +51,37 @@ optional arguments:
 ```
 
 ## Run example
+gendb.py
 
+```bash
+python gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+```
 gat_csv.py
 
 ```bash
-> python get_csv.py --fragment_size 10 --chunk_size 20 --num_paper 1000 --offset 10 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw400 --out_path .
+> python get_csv.py --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path csv --num_paper 1000
+> python get_csv.py --fragment_size 20 --chunk_size 40 --num_paper 1000 --offset 20 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path . # fragment
+```
 
-> python get_csv.py --fragment_size 20 --chunk_size 40 --num_paper 1000 --offset 20 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 --out_path .
+experiment.py
+
+
+```bash
+> python experiment_old.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --input test/csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n3.csv --output_path test/out --num_fragment 400
+```
+
+gengraph.py
+
+```bash
+> python gengraph.py --num_authors 2  --num_authors_list 3 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/syn_eng_max_while_np1000_c600_t8000_a2_al3_sw200/
+```
+
+runner.py
+
+```bash
+> python runner.py --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --path test --n_fold 5
+
 ```
 
 ## Diagram
@@ -78,4 +101,11 @@ gat_csv.py
   number_of_chunk = number_of_paper x token_size / sliding_window
   number_of_chunk = number_of_features / 57
 
-  
+run experiment
+```bash
+python experiments_simple_min_p3.py 10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200 4000
+```
+run gengraph
+```bash
+python2 gengraph2_simple.py --num_authors 2  --num_authors_list 2 --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --dir_path /home/cpeuser/cpehk01/tle/FastLSH-Multiauthor/out_max1000/10_syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200/
+```

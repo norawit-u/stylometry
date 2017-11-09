@@ -1,7 +1,11 @@
-import csv
 import getpass
+import os
+import csv
 import argparse
+from lib2to3.btm_utils import tokens
+
 import psycopg2
+from six.moves import xrange
 
 USER = getpass.getuser()  # database username
 CON = None  # use only one connection
@@ -72,7 +76,6 @@ def get_num_fragment(fragment_size, offset, chunk_size):
     """
     return int((chunk_size - fragment_size) / offset + 1)
 
-
 def save_to_csv(list_return, name, fieldnames):
     """
         save data to csv file
@@ -81,13 +84,15 @@ def save_to_csv(list_return, name, fieldnames):
             name: name of a csv file
             fieldnames: field names of the csv file (header)
     """
+    os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
     with open(name+'.csv', 'w') as csvfile:
+        csvfile.write(','.join(map(str, field_names)))
         for name in fieldnames:
             csvfile.write(name+',')
+        csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
-
 
 def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_name):
     """
@@ -98,6 +103,9 @@ def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_nam
             offset: number of chunks between n and n+1 fragment
             num_fragment: number of fragment in a section
             db_name: database name
+            chunk_size: number of chunk in a fragment
+            author_number: number of author in paper
+            papers: list of paper that wanted to get
         Returns:
             List of features
     """
@@ -132,24 +140,20 @@ def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_nam
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--fragment_size', type=int, help='number of chunks in a fragment')
-    parser.add_argument('--num_fragment', type=int, help='number of fragment in a section')
-    parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
-    parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
-    parser.add_argument('--num_chunk_per_section', type=int, help='number of chunk in a section')
-
-    parser.add_argument('--num_paper', type=int, help='number of paper')
-    parser.add_argument('--offset', type=int, help="number of chunks between n and n+1 fragment")
+    parser.add_argument('--papers', type=int, nargs='*', help='list of paper that wanted to get')
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
+    parser.add_argument('--note', type=str, help="note for output file name")
     return parser.parse_args()
 
 
 if __name__ == '__main__':
-    field_names = ['paper_id', 'section_id', 'fragment_id', 'chunk_id']
-    field_names.extend(['fragment_'+str(i) for i in range(1, 58)])
+    field_names = ['fragment_id', 'paper_id', 'chunk_id']
+    field_names.extend(['fragment_' + str(i) for i in range(1, 58)])
     arg = parser_args()
-    if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
-        num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
-        list_return = get_features(arg.num_paper, arg.fragment_size, arg.offset, num_fragment, arg.db_name[0])
-        save_to_csv(list_return, arg.out_path+"/"+arg.db_name[0], field_names)
+    for db_name in arg.db_name:
+        list_return = get_syn(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
+            db_name.split('_')[-1].split('sw')[-1])),
+                              int(db_name.split('_')[-3].split('a')[-1]),
+                              arg.papers)
+    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0]+arg.note, field_names)
