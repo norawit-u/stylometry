@@ -66,29 +66,12 @@ class Syntactic:
         cur.close()
         return authors_names
 
-    def get_novel_list(self, author_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
-        cur = con.cursor()
-        list_return = []
-        cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % int(author_id))
-        list_temp = cur.fetchall()
-        for i in list_temp:
-            list_return.append(i[0])
-        con.close()
-        cur.close()
-        return list_return
-
     def get_raw_text(self, paper_id):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % int(paper_id))
         raw_text = cur.fetchall()[0][0].strip()
         return raw_text
-
-    def get_novel_id(self, author_id, index=0):
-        print(author_id,index)
-        novel_id = self.get_novel_list(author_id=author_id)[index]
-        return novel_id
 
     def get_paragraphs(self, tokens):
         paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
@@ -123,7 +106,7 @@ class Syntactic:
         con.close()
         cur.close()
 
-    def save_section_features_to_db(self, list_authors, list_authors_id_200):
+    def save_section_features_to_db(self, paper_ids, list_authors, list_authors_id_200):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
@@ -137,7 +120,7 @@ class Syntactic:
         for i in range(0, self.num_paper):
             tokens_sum = []
             for j in range(0, len(list_authors[i])):
-                novel_id = self.get_novel_id(author_id=list_authors[i][j], index=index[list_authors[i][j]])
+                novel_id = paper_ids[i]
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
@@ -245,4 +228,4 @@ if __name__ == "__main__":
 
     syn_dataset.save_papers_to_db()
     syn_dataset.save_writes_hidden_to_db(author_ids)
-    syn_dataset.save_section_features_to_db(author_ids, all_author_ids)
+    syn_dataset.save_section_features_to_db(paper_ids, author_ids, all_author_ids)

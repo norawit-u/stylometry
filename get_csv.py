@@ -94,7 +94,7 @@ def save_to_csv(list_return, name, fieldnames):
         for x in range(0, len(list_return)):
             write.writerow(list_return[x])
 
-def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_name):
+def get_features(papers, num_chunk_per_fragment, offset, num_fragment, db_name):
     """
         get the feature from the database
         Args:
@@ -104,7 +104,6 @@ def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_nam
             num_fragment: number of fragment in a section
             db_name: database name
             chunk_size: number of chunk in a fragment
-            author_number: number of author in paper
             papers: list of paper that wanted to get
         Returns:
             List of features
@@ -116,17 +115,15 @@ def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_nam
     chunk_count = 1 + num_chunk_per_fragment  # number of chunk(counter)
     chunk_number = 1  # chunk id
     _, cur = connect_database(db_name)  # database connection and cursor
-    for i in range(0, num_paper):  # loop for number of paper
+    for i in papers:  # loop for number of paper
         for j in range(section_count, section_count+num_section_per_paper):
             for k in range(fragment_count, fragment_count+num_fragment):
                 for l in range(chunk_count, chunk_count+num_chunk_per_fragment):
                     row = []
-                    row.append(i+1)     # paper id
                     row.append(j)       # section id
                     row.append(k)       # fragment id
                     row.append(chunk_number)       # chunk id
-                    row.append(l)
-                    cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, l])
+                    cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i, l])
                     temp = cur.fetchall()
                     for m in range(0, len(temp)):
                         row.append(temp[m][0])
@@ -140,10 +137,16 @@ def get_features(num_paper, num_chunk_per_fragment, offset, num_fragment, db_nam
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--papers', type=int, nargs='*', help='list of paper that wanted to get')
+    parser.add_argument('--fragment_size', type=int, help='number of chunks in a fragment')
+    parser.add_argument('--num_fragment', type=int, help='number of fragment in a section')
+    parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
+    parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
+    parser.add_argument('--num_chunk_per_section', type=int, help='number of chunk in a section')
+
+    parser.add_argument('--num_paper', type=int, help='number of paper')
+    parser.add_argument('--offset', type=int, help="number of chunks between n and n+1 fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
     parser.add_argument('--out_path', type=str, help="output path", default='.')
-    parser.add_argument('--note', type=str, help="note for output file name")
     return parser.parse_args()
 
 
@@ -152,8 +155,8 @@ if __name__ == '__main__':
     field_names.extend(['fragment_' + str(i) for i in range(1, 58)])
     arg = parser_args()
     for db_name in arg.db_name:
-        list_return = get_syn(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
+        list_return = get_features(db_name, int(int(db_name.split('_')[-4].split('t')[-1]) / int(
             db_name.split('_')[-1].split('sw')[-1])),
                               int(db_name.split('_')[-3].split('a')[-1]),
                               arg.papers)
-    save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0]+arg.note, field_names)
+        save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0]+arg.note, field_names)
