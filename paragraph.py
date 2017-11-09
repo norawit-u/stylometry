@@ -5,12 +5,11 @@ import re
 import math
 import string
 from collections import Counter
-
-
 # from bigram import Bigram
 
 
 class Paragraph:
+
     def __init__(self, doc_id, para=[]):
         """
             Constructor of self class
@@ -18,7 +17,7 @@ class Paragraph:
         """
         """ The meta-data of the document """
         self.doc_id = doc_id
-        # self.para_no = para_no
+        #self.para_no = para_no
         self.file_path = ""
 
         """ Unhandled raw self """
@@ -39,12 +38,11 @@ class Paragraph:
 
     def get_para_insert_query(self):
         return "INSERT INTO paragraph(doc_id, chapter_id, path) " \
-               "VALUES ({}, currval('chapter_chapter_id_seq'), '{}');\n" \
+            "VALUES ({}, currval('chapter_chapter_id_seq'), '{}');\n"\
             .format(self.doc_id, "somewhere")
 
     def regroup_tokens_to_self(self):
-        self = "".join([" " + i if not i.startswith("'") and i not in string.punctuation else i for i in
-                        self.tokenized_self]).strip()
+        self = "".join([" "+i if not i.startswith("'") and i not in string.punctuation else i for i in self.tokenized_self]).strip()
         return self
 
     def get_dict_of_word_and_occurrence(self):
@@ -64,7 +62,6 @@ class Paragraph:
     """
     9 different kinds of vocabulary richness are calculated
     """
-
     def get_vocabulary_richness(self):
         try:
             return float(self.get_total_no_of_distinct_words()) / float(self.get_total_no_of_words())
@@ -78,8 +75,7 @@ class Paragraph:
             total = 0
             for val in self.word_occurrence.values():
                 total += val * val
-            return float(math.pow(10, 4) * (total - self.get_total_no_of_words())) / float(
-                math.pow(self.get_total_no_of_words(), 2))
+            return float(math.pow(10, 4) * (total - self.get_total_no_of_words())) / float(math.pow(self.get_total_no_of_words(), 2))
         except ZeroDivisionError as e:
             return -1
         except ValueError as e:
@@ -95,8 +91,7 @@ class Paragraph:
 
     def get_C_vocabulary_richness(self):
         try:
-            return float(math.log(self.get_total_no_of_distinct_words())) / float(
-                math.log(self.get_total_no_of_words()))
+            return float(math.log(self.get_total_no_of_distinct_words())) / float(math.log(self.get_total_no_of_words()))
         except ZeroDivisionError as e:
             return -1
         except ValueError as e:
@@ -104,8 +99,7 @@ class Paragraph:
 
     def get_H_vocabulary_richness(self):
         try:
-            return float(100 * math.log(self.get_total_no_of_words())) / float(
-                1 - self.word_occurrence.values().count(1) / self.get_total_no_of_distinct_words())
+            return float(100 * math.log(self.get_total_no_of_words())) / float(1 - self.word_occurrence.values().count(1) / self.get_total_no_of_distinct_words())
         except ZeroDivisionError as e:
             return -1
         except ValueError as e:
@@ -121,8 +115,7 @@ class Paragraph:
 
     def get_k_vocabulary_richness(self):
         try:
-            return float(math.log(self.get_total_no_of_distinct_words())) / float(
-                math.log(float(math.log(self.get_total_no_of_words()))))
+            return float(math.log(self.get_total_no_of_distinct_words())) / float(math.log(float(math.log(self.get_total_no_of_words()))))
         except ZeroDivisionError as e:
             return -1
         except ValueError as e:
@@ -130,8 +123,7 @@ class Paragraph:
 
     def get_LN_vocabulary_richness(self):
         try:
-            return float(1 - math.pow(self.get_total_no_of_distinct_words(), 2)) / float(
-                math.pow(self.get_total_no_of_distinct_words(), 2) * math.log(self.get_total_no_of_words()))
+            return float(1 - math.pow(self.get_total_no_of_distinct_words(), 2)) / float(math.pow(self.get_total_no_of_distinct_words(), 2) * math.log(self.get_total_no_of_words()))
         except ZeroDivisionError as e:
             return -1
         except ValueError as e:
@@ -141,8 +133,7 @@ class Paragraph:
         try:
             total = 0
             for val in self.word_occurrence.values():
-                total += ((float(val) / float(self.get_total_no_of_words())) * math.log(
-                    float(val) / float(self.get_total_no_of_words())))
+                total += ((float(val) / float(self.get_total_no_of_words())) * math.log(float(val) / float(self.get_total_no_of_words())))
             return -100 * float(total)
         except ZeroDivisionError as e:
             return -1
@@ -175,23 +166,23 @@ class Paragraph:
         return len(self.char_list)
 
     def get_total_no_of_alpha_character(self):
-        eng_list = [char for char in self.char_list if char in string.ascii_letters]  # re.match('[a-zA-Z]', char)]
+        eng_list = [char for char in self.char_list if char in string.ascii_letters] #re.match('[a-zA-Z]', char)]
         return len(eng_list)
 
     def get_total_no_of_uppercase_character(self):
-        uppercase_list = [char for char in self.char_list if char in string.ascii_uppercase]  # char.isupper()]
+        uppercase_list = [char for char in self.char_list if char in string.ascii_uppercase] #char.isupper()]
         return len(uppercase_list)
 
     def get_total_no_of_lowercase_character(self):
-        lowercase_list = [char for char in self.char_list if char in string.ascii_lowercase]  # char.islower()]
+        lowercase_list = [char for char in self.char_list if char in string.ascii_lowercase] #char.islower()]
         return len(lowercase_list)
 
     def get_total_no_of_special_character(self):
-        special_list = [char for char in self.char_list if char in string.punctuation]  # re.match('\W', char)]
+        special_list = [char for char in self.char_list if char in string.punctuation] #re.match('\W', char)]
         return len(special_list)
 
     def get_total_no_of_digital_character(self):
-        digit_list = [char for char in self.char_list if char in string.digits]  # char.isdigit()]
+        digit_list = [char for char in self.char_list if char in string.digits] #char.isdigit()]
         return len(digit_list)
 
     def get_total_no_of_whitespace_character(self):
@@ -199,40 +190,22 @@ class Paragraph:
         return len(whitespace_list)
 
     def get_alpha_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_alpha_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_alpha_character()) / float(self.get_total_no_of_character())
 
     def get_uppercase_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_uppercase_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_uppercase_character()) / float(self.get_total_no_of_character())
 
     def get_lowercase_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_lowercase_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_lowercase_character()) / float(self.get_total_no_of_character())
 
     def get_special_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_special_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_special_character()) / float(self.get_total_no_of_character())
 
     def get_digital_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_digital_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_digital_character()) / float(self.get_total_no_of_character())
 
     def get_whitespace_chars_ratio(self):
-        try:
-            return float(self.get_total_no_of_whitespace_character()) / float(self.get_total_no_of_character())
-        except ZeroDivisionError:
-            return 0
+        return float(self.get_total_no_of_whitespace_character()) / float(self.get_total_no_of_character())
 
     def get_total_no_of_sentences(self):
         return len(self.sentences)
@@ -387,3 +360,4 @@ class Paragraph:
         stylo_list.append(self.get_freq_of_sen_terminator())
         stylo_list.append(self.get_freq_of_symbol())
         return stylo_list
+    

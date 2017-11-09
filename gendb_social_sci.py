@@ -12,13 +12,15 @@ from collections import Counter
 from six.moves import xrange
 
 class Syntactic:
-    def __init__(self, chunk_size, token_size, sliding_window, num_paper):
+    def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
         self.chunk_size = chunk_size
         self.token_size = token_size
+        self.num_authors = num_authors
+        self.num_authors_list = num_authors_list
         self.sliding_window = sliding_window
         self.copus_db_name = 'social_sci_paper_corpus'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
-            chunk_size, token_size, 0, 0, sliding_window)
+            chunk_size, token_size, num_authors, num_authors, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
@@ -59,19 +61,36 @@ class Syntactic:
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id:
-            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % int(author))
+            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % author)
             temp = cur.fetchall()
             authors_names.append(str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip())
         con.close()
         cur.close()
         return authors_names
 
-    def get_raw_text(self, paper_id):
+    def get_novel_list(self, author_id):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % int(paper_id))
+        list_return = []
+        cur.execute("SELECT paper_id FROM author_paper WHERE author_id = '%s'" % (author_id))
+        list_temp = cur.fetchall()
+        for i in list_temp:
+            list_return.append(i[0])
+        con.close()
+        cur.close()
+        return list_return
+
+    def get_raw_text(self, novel_id):
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        cur = con.cursor()
+        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % (novel_id))
         raw_text = cur.fetchall()[0][0].strip()
         return raw_text
+
+    def get_novel_id(self, author_id, index=0):
+        print(author_id,index)
+        novel_id = self.get_novel_list(author_id=author_id)[index]
+        return novel_id
 
     def get_paragraphs(self, tokens):
         paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
@@ -106,7 +125,7 @@ class Syntactic:
         con.close()
         cur.close()
 
-    def save_section_features_to_db(self, paper_ids, list_authors, list_authors_id_200):
+    def save_section_features_to_db(self, list_authors, list_authors_id_200):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
@@ -119,13 +138,14 @@ class Syntactic:
 
         for i in range(0, self.num_paper):
             tokens_sum = []
-            for j in range(0, len(list_authors[i])):
-                novel_id = paper_ids[i]
+
+            for j in range(0, self.num_authors):
+                novel_id = self.get_novel_id(author_id=list_authors[i][j], index=index[list_authors[i][j]])
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
                 tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
-                tokens_sum += tokens[0:self.token_size / len(list_authors[i])]
+                tokens_sum += tokens[0:self.token_size / self.num_authors]
 
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)",
                             [i + 1, num_section, raw_novel_text, novel_id, list_authors[i][j]])
@@ -139,7 +159,6 @@ class Syntactic:
                 try:
                     stylo_list = para.get_stylo_list()
                 except:
-                    raise
                     print('error')
                 for y in range(0, 57):
                     feature_id = y + 1
@@ -168,17 +187,12 @@ class Syntactic:
         cur.close()
         return papers_id
 
-    def gen_shuffle_paper_id(self):
-        tmp = np.arange(self.num_paper)
-        np.shape(tmp)
-        return tmp
-
     def get_authors(self, paper_ids):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors = []
         for paper_id in paper_ids:
-            cur.execute("select author_id from author_paper where paper_id = '%s'" % int(paper_id))
+            cur.execute("select author_id from author_paper where paper_id = '%s'" % paper_id)
             list_temp = cur.fetchall()
             authors_id = []
             for i in list_temp:
@@ -187,7 +201,7 @@ class Syntactic:
         con.close()
         cur.close()
         return authors
-      
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
@@ -217,10 +231,11 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
+                            num_authors=args.num_authors, num_authors_list=args.num_authors_list,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
-
     syn_dataset.create_db_table()
-    paper_ids = syn_dataset.gen_shuffle_paper_id()
+
+    paper_ids = syn_dataset.get_paper_ids()
     author_ids = syn_dataset.get_authors(paper_ids)
     all_author_ids = np.concatenate(author_ids)
     all_author_ids = np.unique(all_author_ids)
@@ -229,4 +244,4 @@ if __name__ == "__main__":
 
     syn_dataset.save_papers_to_db()
     syn_dataset.save_writes_hidden_to_db(author_ids)
-    syn_dataset.save_section_features_to_db(paper_ids, author_ids, all_author_ids)
+    syn_dataset.save_section_features_to_db(author_ids, all_author_ids)
