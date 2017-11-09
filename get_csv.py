@@ -135,7 +135,6 @@ def get_features(papers, num_chunk_per_fragment, offset, num_fragment, db_name):
                 for l in range(0, len(temp)):
                     list_feature.append(temp[l][0])
                 list_return.append(list_feature)
-                chunk_count += 1
             chunk_count += offset
     return list_return
 
