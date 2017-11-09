@@ -191,8 +191,8 @@ def parser_args():
     parser.add_argument('-shuffle', type=bool, default=False, help='shuffle a cross validation')
     parser.add_argument('-append', type=bool, default=False, help='append the fold')
     parser.add_argument('-clean', type=bool, default=False, help='clean after finish running')
-    parser.add_argument('-fragment_size', type=bool, default=False, help='number of chunk in fragment')
-    parser.add_argument('-offset', type=bool, default=False, help='number of chunk between chunk n and n+1')
+    parser.add_argument('--fragment_size', type=int, default=False, help='number of chunk in fragment')
+    parser.add_argument('--offset', type=int, default=False, help='number of chunk between chunk n and n+1')
     return parser.parse_args()
 
 
