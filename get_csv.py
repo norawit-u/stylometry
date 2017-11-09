@@ -98,7 +98,7 @@ def get_features(papers, num_chunk_per_fragment, offset, num_fragment, db_name):
     """
         get the feature from the database
         Args:
-            num_paper: number of paper
+            papers: list of paper id
             num_chunk_per_fragment: number of chunks in a fragment
             offset: number of chunks between n and n+1 fragment
             num_fragment: number of fragment in a section
