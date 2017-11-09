@@ -12,15 +12,13 @@ from collections import Counter
 from six.moves import xrange
 
 class Syntactic:
-    def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
+    def __init__(self, chunk_size, token_size, sliding_window, num_paper):
         self.chunk_size = chunk_size
         self.token_size = token_size
-        self.num_authors = num_authors
-        self.num_authors_list = num_authors_list
         self.sliding_window = sliding_window
         self.copus_db_name = 'social_sci_paper_corpus'
         self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
-            chunk_size, token_size, num_authors, num_authors, sliding_window)
+            chunk_size, token_size, 0, 0, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
@@ -138,8 +136,7 @@ class Syntactic:
 
         for i in range(0, self.num_paper):
             tokens_sum = []
-
-            for j in range(0, self.num_authors):
+            for j in range(0, len(list_authors[i])):
                 novel_id = self.get_novel_id(author_id=list_authors[i][j], index=index[list_authors[i][j]])
                 index[list_authors[i][j]] += 1
 
@@ -236,8 +233,8 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
-                            num_authors=args.num_authors, num_authors_list=args.num_authors_list,
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
+    
     syn_dataset.create_db_table()
     paper_ids = syn_dataset.gen_shuffle_paper_id()
     author_ids = syn_dataset.get_authors(paper_ids)
