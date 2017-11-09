@@ -1,5 +1,5 @@
 import argparse
-
+import math
 import numpy as np
 import psycopg2
 from paragraph import Paragraph
@@ -144,7 +144,7 @@ class Syntactic:
                 for y in range(0, 57):
                     feature_id = y + 1
                     try:
-                        value = stylo_list[y]
+                        value = 0 if math.isnan(stylo_list[y]) else stylo_list[y]
                     except:
                         value = 0
                     cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % (i + 1, chunk_id, feature_id, value))
