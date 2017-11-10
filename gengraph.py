@@ -47,7 +47,7 @@ class Gengraph:
             for fragment_id in fragments.keys():
                 new_fragments_pmfs[fragment_id] = dict(uniform_pmf)
             frag_probs[paper_id] = new_fragments_pmfs
-        # print(frag_probs)
+        print(frag_probs)
         return frag_probs
 
     def get_similar_fragments(self, papers, paper_id, fragment_id):
