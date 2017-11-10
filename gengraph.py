@@ -125,7 +125,7 @@ class Gengraph:
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
-                           frag_probs[x][(x) * len(papers[x]['authors'])]}
+                           frag_probs[x][5*(x-1)]}
         for key, z in enumerate(sum_prob):
             list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                                            0:len(papers[z]['authors'])]
