@@ -211,7 +211,7 @@ class Syntactic:
         cur = con.cursor()
         authors = []
         for paper_id in paper_ids:
-            cur.execute("select author_id from author_paper where paper_id = '%s'" % int(paper_id))
+            cur.execute("select DISTINCT(author_id) from author_paper where paper_id = '%s'" % int(paper_id))
             list_temp = cur.fetchall()
             authors_id = []
             for i in list_temp:
