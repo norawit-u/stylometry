@@ -90,7 +90,7 @@ class Gengraph:
         # print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
-            print(p_id,f_id)
+            # print(p_id,f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -119,7 +119,7 @@ class Gengraph:
         list_check = {}
         sum_prob = {}
         for x in papers:
-            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * len(papers[x]['authors'])]}
+            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * len(frag_probs[x])]}
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
