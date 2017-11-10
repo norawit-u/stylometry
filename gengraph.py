@@ -25,13 +25,13 @@ class Gengraph:
 
     def generate_paper(self):
         papers = {}
-        for j in self.papers:
+        for j in self.papers: # loop over the papers
             paper_id = j + 1
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
-            for i in range(0, self.num_authors):
-                fragment_id = (i + 1) + self.num_authors * j
-                new_fragments[fragment_id] = author_list[i]  # frag_id = author_list[i]
+            for author_id in author_list:
+                fragment_id = (i + 1) + len(author_list) * j
+                new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
         return papers
