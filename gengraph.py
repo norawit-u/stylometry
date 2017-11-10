@@ -70,13 +70,13 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        # print("similar_fragments",similar_fragments)
-        # print("fragment_id",fragment_id)
-        # print("frag_probs",frag_probs)
-        # print("==================================")
+        print("similar_fragments",similar_fragments)
+        print("fragment_id",fragment_id)
+        print("frag_probs",frag_probs)
+        print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
-            # print(p_id,f_id)
+            print(p_id,f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
