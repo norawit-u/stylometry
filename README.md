@@ -59,7 +59,7 @@ gendb.py
 gendb_social_sci
 
 ```bash
-> python2 gendb_social_sci.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+> python2 gendb_social_sci.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 100 
 ```
 
 gat_csv.py
@@ -86,8 +86,7 @@ gengraph.py
 runner.py
 
 ```bash
-> python runner.py --num_paper 1000 --db_name syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200  --path test --n_fold 5
-
+> python runner.py --num_paper 100 --db_name syn_social_c600_t8000_a0_al0_sw200 --path test --n_fold 5 --fragment_size 20  --offset 5
 ```
 
 ## Diagram

@@ -192,6 +192,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
+        # TODO: remove number dependent from the query
         cur.execute("select paper_id from author_paper where author_id in (select author_id from author_paper group by author_id order by count(*) DESC LIMIT 20)")
         list_temp = cur.fetchall()
         for i in list_temp:
