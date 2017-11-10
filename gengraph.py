@@ -34,7 +34,7 @@ class Gengraph:
         '''
         fragment_author_list = []
         for i in range(fragment_size):
-            fragment_author_list.append(author_list(i%len(author_list)))
+            fragment_author_list.append(author_list[i % len(author_list)])
         return fragment_author_list
 
     def generate_paper(self):
