@@ -33,12 +33,13 @@ class Gengraph:
                 fragment_id = (i + 1) + len(author_list) * j
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
-        # print(papers)
+        print(papers)
         return papers
 
     def generate_frag_probs(self, papers):
         frag_probs = {}
         for (paper_id, v) in papers.items():
+            print(v)
             authors = v['authors'][0:self.num_authors_list]
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
