@@ -144,6 +144,9 @@ class Gengraph:
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
+        print(count)
+        print(count_least_1)
+        print(count_all)
         print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / (len(papers) * len(papers[i]['authors'])))))
