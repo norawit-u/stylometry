@@ -33,7 +33,7 @@ class Gengraph:
         :return:
         '''
         fragment_author_list = []
-        for i in fragment_size:
+        for i in range(fragment_size):
             fragment_author_list.append(author_list(i%len(author_list)))
         return fragment_author_list
 
