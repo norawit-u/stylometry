@@ -121,7 +121,7 @@ class Gengraph:
         for x in papers:
             print(frag_probs)
             print(frag_probs[x])
-            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * 3)]}
+            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * 3]}
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
