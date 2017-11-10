@@ -53,7 +53,7 @@ class Gengraph:
     def generate_frag_probs(self, papers):
         frag_probs = {}
         for (paper_id, v) in papers.items():
-            print(v)
+            # print(v)
             authors = v['authors']
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
