@@ -100,6 +100,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
+            print(list_authors_id[i])
             for j in range(0, len(list_authors_id[i])):
                 cur.execute("INSERT INTO writes_hidden VALUES(%s,%s,%s)", [int(list_authors_id[i][j]), i + 1, j + 1])
         con.commit()
