@@ -210,6 +210,6 @@ if __name__ == "__main__":
     for i in range(0, 10):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
-        print(i)
+        # print(i)
     gengraph.sum_prob(papers, frag_probs)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
