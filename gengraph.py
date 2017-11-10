@@ -29,8 +29,8 @@ class Gengraph:
             paper_id = j + 1
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
-            for author_id in author_list:
-                fragment_id = (author_id + 1) + len(author_list) * j
+            for i, author_id in enumerate(author_list):
+                fragment_id = (i + 1) + len(author_list) * j
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         print(papers)
