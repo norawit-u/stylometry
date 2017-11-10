@@ -172,7 +172,7 @@ def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, appe
         gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name,
                                      dir_path)
         print(gengraph)
-        print(execute(gengraph))
+        print(str(execute(gengraph)))
         print("============")
     if clean:
         cleanning(path)
