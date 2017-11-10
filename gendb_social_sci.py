@@ -170,8 +170,24 @@ class Syntactic:
 
     def gen_shuffle_paper_id(self):
         tmp = np.arange(self.num_paper)
-        np.shape(tmp)
+        np.random.shuffle(tmp)
         return tmp
+
+    def get_top_author_paper(self, shuffle=False):
+        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        cur = con.cursor()
+        papers_id = []
+        cur.execute("select paper_id, count(*) from author_paper group by paper_id order by count(*) DESC LIMIT %s", self.num_paper)
+        list_temp = cur.fetchall()
+        for i in list_temp:
+            papers_id.append(i[0])
+        con.close()
+        cur.close()
+        if shuffle:
+            papers_id = np.array(papers_id)
+            np.random.shuffle(papers_id)
+        return papers_id
+
 
     def get_authors(self, paper_ids):
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
@@ -220,7 +236,7 @@ if __name__ == "__main__":
                             sliding_window=args.sliding_window, num_paper=args.num_paper)
 
     syn_dataset.create_db_table()
-    paper_ids = syn_dataset.gen_shuffle_paper_id()
+    paper_ids = syn_dataset.get_top_author_paper()
     author_ids = syn_dataset.get_authors(paper_ids)
     all_author_ids = np.concatenate(author_ids)
     all_author_ids = np.unique(all_author_ids)
