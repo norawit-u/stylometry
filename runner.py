@@ -37,9 +37,10 @@ def command_experiment(csv_path, output_path):
         csv_path, output_path)
 
 
-def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
+def command_gen_graph(num_author, num_authors_list, papers, db_name, num_fragment, dir_path):
     """
     generate a command for running gengraph.py
+    :param num_fragment:
     :param num_author:  number of author
     :param num_authors_list:  number of overall author
     :param papers: list of papers id
@@ -52,7 +53,7 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, dir_path):
                "--db_name %s  --dir_path %s" % (
                    num_author, num_author, ' '.join(map(str, papers)), db_name, dir_path)
     return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
-           "--db_name %s  --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, dir_path)
+           "--db_name %s --num_fragment %s --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)), db_name, num_fragment dir_path)
 
 
 def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
@@ -170,7 +171,7 @@ def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, appe
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), fold, db_name,
-                                     dir_path)
+                                     get_num_fragment(fragment_size, offset, get_chunk_size(db_name)), dir_path)
         print(gengraph)
         print(str(execute(gengraph)))
         print("============")
