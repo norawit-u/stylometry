@@ -19,8 +19,8 @@ class Gengraph:
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
         get_list = cur.fetchall()
         list_return = []
-        for i in range(0, self.num_authors_list):
-            list_return.append(get_list[i][0])
+        for i in get_list:
+            list_return.append(i[0])
         return list_return
 
     def generate_paper(self):
