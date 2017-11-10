@@ -62,6 +62,7 @@ class Gengraph:
             fragment_id2 = int(x[i][1])
             # print(fragment_id2, self.num_authors)
             paper_id2 = math.ceil(fragment_id2 / float(len(papers[paper_id]['authors'])))
+            # TODO: update code to get paper id from fragment id
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
 
