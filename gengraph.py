@@ -40,7 +40,7 @@ class Gengraph:
         frag_probs = {}
         for (paper_id, v) in papers.items():
             print(v)
-            authors = v['authors'][0:self.num_authors_list]
+            authors = v['authors']
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
             fragments = v['fragments']
