@@ -259,5 +259,6 @@ if __name__ == "__main__":
     syn_dataset.save_authors_to_db(all_author_ids, list_authors_name)
 
     syn_dataset.save_papers_to_db()
+    print(author_ids)
     syn_dataset.save_writes_hidden_to_db(author_ids)
     syn_dataset.save_section_features_to_db(paper_ids, author_ids, all_author_ids)
