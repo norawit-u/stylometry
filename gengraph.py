@@ -45,7 +45,7 @@ class Gengraph:
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i, author_id in enumerate(self.fit_author_to_fragment(self.num_fragment, author_list)):
-                fragment_id = i + self.num_fragment * j + 1
+                fragment_id = i + self.num_fragment * (j - 1) + 1
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
@@ -93,7 +93,7 @@ class Gengraph:
         # print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
-            # print(p_id,f_id)
+            print(p_id,f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
