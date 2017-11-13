@@ -543,7 +543,7 @@ flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 #         querySet.append(doc[i][j])
 
 querySet = list(set(my_data[:, 0]))
-# print(querySet)
+print(querySet)
 
 print("indexing")
 start = time.time()
@@ -599,7 +599,7 @@ for i in range(NP):
 hitparaIndex = dict()
 hitIndexPara = dict()
 
-print(doc_to_au_dict)
+# print(doc_to_au_dict)
 for doc in querySet:
     try:
         # print(doc)
