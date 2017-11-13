@@ -185,6 +185,12 @@ class Gengraph:
         return entropy
         # max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         # return max_entropy
+    def entropy(self, frag_probs, paper_id):
+        from scipy import stats
+        entropy = {}
+        for i in frag_probs[paper_id].keys():
+            entropy[i] = stats.entropy(list(frag_probs[paper_id][i].values()))
+        return
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
@@ -218,6 +224,7 @@ if __name__ == "__main__":
         # print(i)
     for paper_id in papers:
         print(gengraph.max_entropy(frag_probs, paper_id))
+        print(gengraph.entropy(frag_probs, paper_id))
         print('=================================')
         print(frag_probs[paper_id])
     gengraph.sum_prob(papers, frag_probs)
