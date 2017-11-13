@@ -24,9 +24,10 @@ class Gengraph:
             list_return.append(i[0])
         return list_return
 
-   # TODO generate fragment from paper
+        # TODO generate fragment from paper
+
     # TODO flexible token size
-    def fit_author_to_fragment(self, fragment_size, author_list ):
+    def fit_author_to_fragment(self, fragment_size, author_list):
         '''
          Use round robin to circulate the author list
         :param fragment_size:
@@ -40,7 +41,7 @@ class Gengraph:
 
     def generate_paper(self):
         papers = {}
-        for j in self.papers: # loop over the papers
+        for j in self.papers:  # loop over the papers
             paper_id = j
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
@@ -93,7 +94,7 @@ class Gengraph:
         # print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
-            print(p_id,f_id)
+            # print(p_id, f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -124,11 +125,11 @@ class Gengraph:
         for x in papers:
             # print(frag_probs)
             # print(frag_probs[x])
-            sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment*(x-1)]}
+            sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
-                           frag_probs[x][self.num_fragment*(x-1)]}
+                           frag_probs[x][self.num_fragment * x]}
         for key, z in enumerate(sum_prob):
             list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                                            0:len(papers[z]['authors'])]
