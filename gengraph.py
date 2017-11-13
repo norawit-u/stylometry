@@ -86,6 +86,7 @@ class Gengraph:
 
     def recalculate_prob(self, papers, frag_probs, paper_id, fragment_id):
         similar_fragments = self.get_similar_fragments(papers, paper_id, fragment_id)
+        print(similar_fragments)
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
@@ -112,7 +113,6 @@ class Gengraph:
     def recalculate_frag_probs(self, papers, frag_probs):
         new_frag_probs = {}
         for paper_id, frag_pmfs in frag_probs.items():
-            print(self.max_entropy(frag_probs, paper_id))
             new_frag_pmfs = {}
             for frag_id in frag_pmfs.keys():
                 # print(frag_id)
