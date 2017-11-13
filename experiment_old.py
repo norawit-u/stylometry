@@ -602,7 +602,7 @@ hitIndexPara = dict()
 print(doc_to_au_dict)
 for doc in querySet:
     try:
-        print(doc)
+        # print(doc)
         paraList = doc_to_para_dict[doc]
         for para in paraList:
             datasetQ.append(datasetm[paraIndex[para]])
