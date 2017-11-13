@@ -177,11 +177,12 @@ class Gengraph:
     def max_entropy(self, frag_probs, paper_id, base=10):
         entropy = {}
         for i in frag_probs[paper_id].keys():
-            tmp_entropy = 0
-            for j in frag_probs[paper_id][i].keys():
-                if frag_probs[paper_id][i][j] != 0:
-                    tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
-            entropy[i] = tmp_entropy
+            # tmp_entropy = 0
+            # for j in frag_probs[paper_id][i].keys():
+            #     if frag_probs[paper_id][i][j] != 0:
+            #         tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
+            # entropy[i] = tmp_entropy
+            entropy[i] = -np.sum(frag_probs[paper_id][i] * np.log(frag_probs[paper_id][i]), axis=0)
         max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
 
