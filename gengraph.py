@@ -155,7 +155,7 @@ class Gengraph:
         print(count_all)
         print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / (len(papers) * len(papers[i]['authors'])))))
+        print("Accuracy: %s" % (float(count * 100 / (len(papers) * len(papers[i]['fragments'])))))
 
     def sum_prob(self, papers, frag_probs):
         sum_prob = {}
