@@ -45,7 +45,7 @@ class Gengraph:
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i, author_id in enumerate(self.fit_author_to_fragment(self.num_fragment, author_list)):
-                fragment_id = i + self.num_fragment * j
+                fragment_id = i + self.num_fragment * j + 1
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
@@ -208,6 +208,7 @@ if __name__ == "__main__":
     gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
+
     for i in range(0, 10):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
