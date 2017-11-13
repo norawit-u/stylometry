@@ -56,6 +56,8 @@ class Gengraph:
         for (paper_id, v) in papers.items():
             # print(v)
             authors = v['authors']
+            print(authors)
+            print(self.get_authors_list(str(paper_id)))
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
             fragments = v['fragments']
