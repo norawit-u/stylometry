@@ -182,8 +182,9 @@ class Gengraph:
                 if frag_probs[paper_id][i][j] != 0:
                     tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
             entropy[i] = tmp_entropy
-        max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
-        return max_entropy
+        return entropy
+        # max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
+        # return max_entropy
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
