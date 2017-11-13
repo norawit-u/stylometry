@@ -86,7 +86,7 @@ class Gengraph:
 
     def recalculate_prob(self, papers, frag_probs, paper_id, fragment_id):
         similar_fragments = self.get_similar_fragments(papers, paper_id, fragment_id)
-        print(similar_fragments)
+        # print(similar_fragments)
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
