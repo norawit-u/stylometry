@@ -41,7 +41,7 @@ class Gengraph:
     def generate_paper(self):
         papers = {}
         for j in self.papers: # loop over the papers
-            paper_id = j + 1
+            paper_id = j
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i, author_id in enumerate(self.fit_author_to_fragment(self.num_fragment, author_list)):
@@ -56,8 +56,8 @@ class Gengraph:
         for (paper_id, v) in papers.items():
             # print(v)
             authors = v['authors']
-            print(authors)
-            print(self.get_authors_list(str(paper_id)))
+            # print(authors)
+            # print(self.get_authors_list(str(paper_id)))
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
             fragments = v['fragments']
