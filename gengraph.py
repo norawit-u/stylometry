@@ -1,3 +1,4 @@
+import numpy as np
 import psycopg2
 import ast
 import operator
@@ -111,6 +112,7 @@ class Gengraph:
     def recalculate_frag_probs(self, papers, frag_probs):
         new_frag_probs = {}
         for paper_id, frag_pmfs in frag_probs.items():
+            print(self.max_entropy(frag_probs, paper_id))
             new_frag_pmfs = {}
             for frag_id in frag_pmfs.keys():
                 # print(frag_id)
@@ -172,7 +174,7 @@ class Gengraph:
             sorted_prob = sorted(sum_prob[i].items(), key=operator.itemgetter(1), reverse=True)
             # print("paper %s prob %s" % (i + 1, sorted_prob))
 
-    def max_entropy(self, frag_probs, paper_id):
+    def max_entropy(self, frag_probs, paper_id, base=10):
         entropy = {}
         for i in frag_probs[paper_id].keys():
             tmp_entropy = 0
@@ -182,7 +184,6 @@ class Gengraph:
             entropy[i] = tmp_entropy
         max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
-
 
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
