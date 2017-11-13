@@ -217,6 +217,6 @@ if __name__ == "__main__":
         frag_probs = new_frag_probs
         # print(i)
     for paper_id in papers:
-        print(gengraph.max_entropy(frag_probs, paper_id))
+        print(gengraph.max_entropy(frag_probs, paper_id),frag_probs[paper_id])
     gengraph.sum_prob(papers, frag_probs)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
