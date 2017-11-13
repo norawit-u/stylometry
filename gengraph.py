@@ -182,7 +182,7 @@ class Gengraph:
             #     if frag_probs[paper_id][i][j] != 0:
             #         tmp_entropy += (-1) * frag_probs[paper_id][i][j] * math.log(frag_probs[paper_id][i][j])
             # entropy[i] = tmp_entropy
-            entropy[i] = -np.sum(frag_probs[paper_id][i] * np.log(list(frag_probs[paper_id][i].values())), axis=0)
+            entropy[i] = -np.sum(list(frag_probs[paper_id][i]) * np.log(list(frag_probs[paper_id][i].values())), axis=0)
         max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
 
