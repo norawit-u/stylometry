@@ -60,7 +60,7 @@ class Gengraph:
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             # print(fragment_id2, self.num_authors)
-            paper_id2 = math.ceil(fragment_id2 / float(self.num_authors))
+            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
 
