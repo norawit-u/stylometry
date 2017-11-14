@@ -133,10 +133,11 @@ class Gengraph:
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
                 author_id = papers[i]['fragments'][j]
-                for k in range(0, len(list_check[i])):
-                    if author_id == list_check[i][k][0]:
-                        count += 1
-                        count_tmp += 1
+                if frag_probs[i]:
+                    for k in range(0, len(list_check[i])):
+                        if author_id == list_check[i][k][0]:
+                            count += 1
+                            count_tmp += 1
             if count_tmp == self.num_authors:
                 count_all += 1
             if count_tmp >= 1:
