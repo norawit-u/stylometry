@@ -203,7 +203,7 @@ def parser_args():
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
                         help='path to the directory')
-    parser.add_argument('--use_entropy', type=str,
+    parser.add_argument('--use_entropy', type=int,
                         help='if use entropy the program will remove high entropy fragment')
     return parser.parse_args()
 
@@ -220,5 +220,6 @@ if __name__ == "__main__":
         frag_probs = new_frag_probs
         print(i)
     gengraph.sum_prob(papers, frag_probs)
-    gengraph.remove_high_entropy(frag_probs, papers, 90)
+    if arg.use_entropy:
+        gengraph.remove_high_entropy(frag_probs, papers, arg.use_entropy)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
