@@ -48,7 +48,7 @@ class Gengraph:
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
         return papers
-    
+
     def generate_frag_probs(self, papers):
         frag_probs = {}
         for (paper_id, v) in papers.items():
@@ -88,7 +88,7 @@ class Gengraph:
         # print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
-            print(p_id, f_id)
+            # print(p_id, f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -117,11 +117,11 @@ class Gengraph:
         list_check = {}
         sum_prob = {}
         for x in papers:
-            sum_prob[x] = {k: 0 for k in frag_probs[x][(x) * self.num_authors]}
+            sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
-                           frag_probs[x][(x) * self.num_authors]}
+                           frag_probs[x][self.num_fragment * x]}
         for key, z in enumerate(sum_prob):
             list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                                            0:self.num_authors]
@@ -132,8 +132,8 @@ class Gengraph:
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
                 author_id = papers[i]['fragments'][j]
-                for k in range(0, len(list_check[i - 1])):
-                    if author_id == list_check[i - 1][k][0]:
+                for k in range(0, len(list_check[i])):
+                    if author_id == list_check[i][k][0]:
                         count += 1
                         count_tmp += 1
             if count_tmp == self.num_authors:
