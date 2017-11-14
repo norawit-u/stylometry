@@ -113,14 +113,16 @@ class Gengraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
+        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         list_check = {}
         sum_prob = {}
         for x in papers:
-            sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
-            for y in frag_probs[x].keys():
-                sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
-            sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
-                           frag_probs[x][self.num_fragment * x]}
+            if frag_probs[x]:
+                sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
+                for y in frag_probs[x].keys():
+                    sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
+                sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
+                               frag_probs[x][self.num_fragment * x]}
         for key, z in enumerate(sum_prob):
             list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                                            0:self.num_authors]
@@ -139,7 +141,6 @@ class Gengraph:
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
-        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / total_fragment)))
