@@ -185,7 +185,7 @@ class Gengraph:
     def remove_high_entropy(self, frag_probs, papers, percent=90):
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
-            for key, entropy in sorted(entropys.items(), key=operator.itemgetter(1)):
+            for k, key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
                 if key > len(entropys)*percent/100:
                     del frag_probs[paper_id][key]
 def parser_args():
