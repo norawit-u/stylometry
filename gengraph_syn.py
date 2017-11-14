@@ -3,6 +3,7 @@ import ast
 import operator
 import math
 import argparse
+import collections
 
 class Gengraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
@@ -57,8 +58,8 @@ class Gengraph:
             fragments = v['fragments']
             new_fragments_pmfs = {}
             for fragment_id in fragments.keys():
-                new_fragments_pmfs[fragment_id] = dict(uniform_pmf)
-            frag_probs[paper_id] = new_fragments_pmfs
+                new_fragments_pmfs[fragment_id] = collections.OrderedDict(sorted(uniform_pmf))
+            frag_probs[paper_id] = sorted(new_fragments_pmfs)
         # print(frag_probs)
         return frag_probs
 
