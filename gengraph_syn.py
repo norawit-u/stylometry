@@ -58,7 +58,7 @@ class Gengraph:
             fragments = v['fragments']
             new_fragments_pmfs = {}
             for fragment_id in fragments.keys():
-                new_fragments_pmfs[fragment_id] = collections.OrderedDict(sorted(uniform_pmf))
+                new_fragments_pmfs[fragment_id] = collections.OrderedDict(sorted(dict(uniform_pmf).items()))
             frag_probs[paper_id] = sorted(new_fragments_pmfs)
         # print(frag_probs)
         return frag_probs
