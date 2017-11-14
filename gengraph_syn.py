@@ -133,6 +133,8 @@ class Gengraph:
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
+            # print(list_check[z])
+        # print(list_check)
         count_all = 0
         count = 0
         count_least_1 = 0
