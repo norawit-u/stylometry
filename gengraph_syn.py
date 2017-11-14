@@ -6,12 +6,13 @@ import argparse
 
 
 class Gengraph:
-    def __init__(self, num_authors, num_authors_list, papers, db_name, fname):
+    def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.papers = papers
         self.db_name = db_name
         self.fname = fname
+        self.num_fragment = num_fragment
 
     def get_authors_list(self, paper_id):
         con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
@@ -171,6 +172,8 @@ def parser_args():
                         help='papers id')
     parser.add_argument('--num_paper', type=int,
                         help='number of paper')
+    parser.add_argument('--num_fragment', type=int,
+                        help='number of fragment in the paper')
     parser.add_argument('--db_name', type=str,
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
@@ -180,7 +183,7 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path)
+    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
