@@ -121,14 +121,14 @@ class Gengraph:
         sum_prob = {}
         for x in papers:
             if frag_probs[x]:
-                print("frag_probs", frag_probs)
+                print("frag_probs", frag_probs[x])
                 sum_prob[x] = {k: 0 for k in frag_probs[x][list(frag_probs[x].keys())[0]]}
-                print("sum_prob", sum_prob)
+                print("sum_prob", sum_prob[x])
                 for y in frag_probs[x].keys():
                     sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
-                print("sum_prob final", sum_prob)
+                print("sum_prob final", sum_prob[x])
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
