@@ -5,6 +5,7 @@ import math
 import argparse
 import collections
 
+
 class Gengraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
         self.num_authors = num_authors
@@ -42,7 +43,8 @@ class Gengraph:
             paper_id = j
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
-            for i, author_id in enumerate(self.fit_author_to_fragment(self.num_fragment, author_list[:self.num_authors])):
+            for i, author_id in enumerate(
+                    self.fit_author_to_fragment(self.num_fragment, author_list[:self.num_authors])):
                 fragment_id = i + self.num_fragment * (j - 1) + 1
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
@@ -119,14 +121,17 @@ class Gengraph:
         sum_prob = {}
         for x in papers:
             if frag_probs[x]:
+                print("frag_probs", frag_probs)
                 sum_prob[x] = {k: 0 for k in frag_probs[x][list(frag_probs[x].keys())[0]]}
+                print("sum_prob", sum_prob)
                 for y in frag_probs[x].keys():
                     sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
+                print("sum_prob final", sum_prob)
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
-                                           0:self.num_authors]
+                            0:self.num_authors]
         count_all = 0
         count = 0
         count_least_1 = 0
@@ -186,8 +191,10 @@ class Gengraph:
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
-                if key > len(entropys)*percent/100:
+                if key > len(entropys) * percent / 100:
                     del frag_probs[paper_id][entropy[0]]
+
+
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
