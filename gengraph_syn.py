@@ -196,7 +196,7 @@ if __name__ == "__main__":
     arg = parser_args()
     gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
-    print(papers)
+    # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
     for i in range(0, 10):
