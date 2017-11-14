@@ -139,16 +139,16 @@ class Gengraph:
         count = 0
         count_least_1 = 0
         for i in papers.keys():
-            print('i', i)
+            # print('i', i)
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
-                print('j', j)
+                # print('j', j)
                 author_id = papers[i]['fragments'][j]
                 if frag_probs[i]:
-                    print("author_id", author_id)
+                    # print("author_id", author_id)
                     for k in range(0, len(list_check[i])):
-                        print("k", k)
-                        print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
+                        # print("k", k)
+                        # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                         if author_id == list_check[i][k][0]:
                             count += 1
                             count_tmp += 1
