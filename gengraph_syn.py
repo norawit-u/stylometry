@@ -4,7 +4,6 @@ import operator
 import math
 import argparse
 
-
 class Gengraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
         self.num_authors = num_authors
