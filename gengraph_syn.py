@@ -24,19 +24,31 @@ class Gengraph:
             list_return.append(get_list[i][0])
         return list_return
 
+    def fit_author_to_fragment(self, fragment_size, author_list):
+        '''
+         Use round robin to circulate the author list
+        :param fragment_size:
+        :param author_list:
+        :return:
+        '''
+        fragment_author_list = []
+        for i in range(fragment_size):
+            fragment_author_list.append(author_list[i % len(author_list)])
+        return sorted(fragment_author_list)
+
     def generate_paper(self):
         papers = {}
         for j in self.papers:
             paper_id = j
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
-            for i in range(0, self.num_authors):
+            for i, author_id in enumerate(self.fit_author_to_fragment(self.num_fragment, author_list[:self.num_authors])):
                 fragment_id = i + self.num_fragment * (j - 1) + 1
-                new_fragments[fragment_id] = author_list[i]  # frag_id = author_list[i]
+                new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
         return papers
-
+    
     def generate_frag_probs(self, papers):
         frag_probs = {}
         for (paper_id, v) in papers.items():
