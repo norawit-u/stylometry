@@ -186,7 +186,7 @@ class Gengraph:
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in sorted(entropys.items(), key=operator.itemgetter(1)):
-                if key > len(entropy)*percent/100:
+                if key > len(entropys)*percent/100:
                     del frag_probs[paper_id][key]
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
