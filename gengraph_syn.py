@@ -59,7 +59,7 @@ class Gengraph:
             new_fragments_pmfs = {}
             for fragment_id in fragments.keys():
                 new_fragments_pmfs[fragment_id] = dict(uniform_pmf)
-            frag_probs[paper_id] = sorted(new_fragments_pmfs)
+            frag_probs[paper_id] = new_fragments_pmfs
         # print(frag_probs)
         return frag_probs
 
