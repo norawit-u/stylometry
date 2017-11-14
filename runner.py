@@ -37,9 +37,10 @@ def command_experiment(csv_path, output_path):
         csv_path, output_path)
 
 
-def command_gen_graph(num_author, num_authors_list, papers, db_name, num_fragment, dir_path):
+def command_gen_graph(num_author, num_authors_list, papers, db_name, num_fragment, dir_path, entropy=0):
     """
     generate a command for running gengraph.py
+    :param entropy:
     :param num_fragment:
     :param num_author:  number of author
     :param num_authors_list:  number of overall author
@@ -53,8 +54,8 @@ def command_gen_graph(num_author, num_authors_list, papers, db_name, num_fragmen
                "--db_name %s --num_fragment %s --dir_path %s" % (
                    num_author, num_author, ' '.join(map(str, papers)), db_name,  num_fragment, dir_path)
     return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
-           "--db_name %s --num_fragment %s --dir_path %s" % (num_author, num_authors_list, ' '.join(map(str, papers)),
-                                                             db_name, num_fragment, dir_path)
+           "--db_name %s --num_fragment %s --dir_path %s --use_entropy %s" % (num_author, num_authors_list, ' '.join(map(str, papers)),
+                                                             db_name, num_fragment, dir_path, entropy)
 
 
 def gen_fold(num_paper, n_fold, shuffle=False, append=False, train=False):
@@ -141,9 +142,10 @@ def get_num_fragment(fragment_size, offset, chunk_size):
     return int((chunk_size - fragment_size) / offset + 1)
 
 
-def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, append, clean=False):
+def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, append, entropy, clean=False):
     """
     apply cross validation and run the experiment
+    :param entropy:
     :param offset:
     :param fragment_size:
     :param db_name: name of a database
@@ -172,7 +174,7 @@ def cross(db_name, path, num_paper, n_fold, fragment_size, offset, shuffle, appe
     for key, fold in enumerate(folds):
         dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
         gengraph = command_gen_graph(get_author_number(db_name), get_author_list_number(db_name), [(x + 1) for x in fold], db_name,
-                                     get_num_fragment(fragment_size, offset, get_chunk_size(db_name)), dir_path)
+                                     get_num_fragment(fragment_size, offset, get_chunk_size(db_name)), dir_path, entropy)
         print(gengraph)
         print(str(execute(gengraph)))
         print("============")
@@ -195,10 +197,12 @@ def parser_args():
     parser.add_argument('-clean', type=bool, default=False, help='clean after finish running')
     parser.add_argument('--fragment_size', type=int, default=False, help='number of chunk in fragment')
     parser.add_argument('--offset', type=int, default=False, help='number of chunk between chunk n and n+1')
+    parser.add_argument('--entropy', type=int, help='if use entropy the program will remove high entropy fragment')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     arg = parser_args()
     for db_name in arg.db_name:
-        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.fragment_size, arg.offset, arg.shuffle, arg.append, arg.clean)
+        cross(db_name, arg.path, arg.num_paper, arg.n_fold, arg.fragment_size, arg.offset, arg.shuffle, arg.append,
+              arg.entropy, arg.clean)
