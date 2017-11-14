@@ -162,6 +162,7 @@ class Gengraph:
             for fragment_id, author_id in papers[i]['fragments'].items():
                 # print('j', j)
                 author_id = papers[i]['fragments'][fragment_id]
+                print(frag_probs[i])
                 if frag_probs[i][fragment_id]:
                     experiment_author_id = sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(1),
                                                   reverse=True)[0][0]
