@@ -20,7 +20,7 @@ class Gengraph:
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
         get_list = cur.fetchall()
         list_return = []
-        for i in range(0,self.num_authors_list):
+        for i in range(0, self.num_authors_list):
             list_return.append(get_list[i][0])
         return list_return
 
@@ -34,12 +34,12 @@ class Gengraph:
                 fragment_id = i + self.num_fragment * (j - 1) + 1
                 new_fragments[fragment_id] = author_list[i]  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
-        #print(papers)
+        # print(papers)
         return papers
 
-    def generate_frag_probs(self,papers):
+    def generate_frag_probs(self, papers):
         frag_probs = {}
-        for (paper_id,v) in papers.items():
+        for (paper_id, v) in papers.items():
             authors = v['authors'][0:self.num_authors_list]
             prob = 1.0 / len(authors)
             uniform_pmf = {k: prob for k in authors}
@@ -48,10 +48,10 @@ class Gengraph:
             for fragment_id in fragments.keys():
                 new_fragments_pmfs[fragment_id] = dict(uniform_pmf)
             frag_probs[paper_id] = new_fragments_pmfs
-        #print(frag_probs)
+        # print(frag_probs)
         return frag_probs
 
-    def get_similar_fragments(self,papers,paper_id,fragment_id):
+    def get_similar_fragments(self, papers, paper_id, fragment_id):
         similar_fragments = []
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
@@ -65,18 +65,18 @@ class Gengraph:
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
 
-    def recalculate_prob(self,papers,frag_probs,paper_id,fragment_id):
-        similar_fragments = self.get_similar_fragments(papers,paper_id,fragment_id)
+    def recalculate_prob(self, papers, frag_probs, paper_id, fragment_id):
+        similar_fragments = self.get_similar_fragments(papers, paper_id, fragment_id)
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        #print("similar_fragments",similar_fragments)
-        #print("fragment_id",fragment_id)
-        #print("frag_probs",frag_probs)
-        #print("==================================")
+        # print("similar_fragments",similar_fragments)
+        # print("fragment_id",fragment_id)
+        # print("frag_probs",frag_probs)
+        # print("==================================")
         for entry in similar_fragments:
-            p_id,f_id = entry[0],entry[1]
-            #print(p_id,f_id)
+            p_id, f_id = entry[0], entry[1]
+            print(p_id, f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -90,17 +90,16 @@ class Gengraph:
             avg_pmf = frag_probs[paper_id][fragment_id]
         return avg_pmf
 
-    def recalculate_frag_probs(self,papers,frag_probs):
+    def recalculate_frag_probs(self, papers, frag_probs):
         new_frag_probs = {}
-        for paper_id,frag_pmfs in frag_probs.items():
+        for paper_id, frag_pmfs in frag_probs.items():
             new_frag_pmfs = {}
             for frag_id in frag_pmfs.keys():
-                #print(frag_id)
-                avg_pmf = self.recalculate_prob(papers,frag_probs,paper_id,frag_id)
+                # print(frag_id)
+                avg_pmf = self.recalculate_prob(papers, frag_probs, paper_id, frag_id)
                 new_frag_pmfs[frag_id] = avg_pmf
             new_frag_probs[paper_id] = new_frag_pmfs
         return new_frag_probs
-
 
     def checking_accuracy_fragments(self, papers, frag_probs):
         list_check = {}
@@ -110,9 +109,10 @@ class Gengraph:
             for y in frag_probs[x].keys():
                 sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
             sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
-                               frag_probs[x][(x) * self.num_authors]}
+                           frag_probs[x][(x) * self.num_authors]}
         for key, z in enumerate(sum_prob):
-            list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[0:self.num_authors]
+            list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
+                                           0:self.num_authors]
         count_all = 0
         count = 0
         count_least_1 = 0
@@ -125,14 +125,14 @@ class Gengraph:
                         count += 1
                         count_tmp += 1
             if count_tmp == self.num_authors:
-                count_all +=1
+                count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
         print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
 
-    def sum_prob(self,papers,frag_probs):
+    def sum_prob(self, papers, frag_probs):
         sum_prob = {}
         for i in frag_probs.keys():
             authors_interest = []
@@ -149,7 +149,7 @@ class Gengraph:
             sorted_prob = sorted(sum_prob[i].items(), key=operator.itemgetter(1), reverse=True)
             # print("paper %s prob %s" % (i + 1, sorted_prob))
 
-    def max_entropy(self,frag_probs,paper_id):
+    def max_entropy(self, frag_probs, paper_id):
         entropy = {}
         for i in frag_probs[paper_id].keys():
             tmp_entropy = 0
@@ -185,6 +185,7 @@ if __name__ == "__main__":
     arg = parser_args()
     gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
+    print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
     for i in range(0, 10):
