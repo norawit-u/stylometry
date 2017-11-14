@@ -185,7 +185,7 @@ class Gengraph:
             upper_bound = sum(entropys.values())/len(entropys)*percent/100
             for key, entropy in entropys.items():
                 if entropy > upper_bound:
-                    del frag_probs[key]
+                    del frag_probs[paper_id][key]
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
