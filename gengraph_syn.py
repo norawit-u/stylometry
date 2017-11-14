@@ -220,5 +220,5 @@ if __name__ == "__main__":
         frag_probs = new_frag_probs
         print(i)
     gengraph.sum_prob(papers, frag_probs)
-    remove_high_entropy(frag_probs, papers, 90)
+    gengraph.remove_high_entropy(frag_probs, papers, 90)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
