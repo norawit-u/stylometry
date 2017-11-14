@@ -26,7 +26,7 @@ class Gengraph:
     def generate_paper(self):
         papers = {}
         for j in self.papers:
-            paper_id = j + 1
+            paper_id = j 
             new_fragments = {}
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i in range(0, self.num_authors):
