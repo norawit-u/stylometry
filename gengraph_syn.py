@@ -127,6 +127,7 @@ class Gengraph:
         count_all = 0
         count = 0
         count_least_1 = 0
+        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         for i in papers.keys():
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
@@ -139,9 +140,9 @@ class Gengraph:
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
-        print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
-        print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_fragment))))
+        print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
+        print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
+        print("Accuracy: %s" % (float(count * 100 / total_fragment)))
 
     def sum_prob(self, papers, frag_probs):
         sum_prob = {}
@@ -189,6 +190,8 @@ def parser_args():
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
                         help='path to the directory')
+    parser.add_argument('--use_entropy', type=str,
+                        help='if use entropy the program will remove high entropy fragment')
     return parser.parse_args()
 
 
