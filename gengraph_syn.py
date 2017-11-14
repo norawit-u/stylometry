@@ -182,7 +182,7 @@ class Gengraph:
     def remove_high_entropy(self, frag_probs, papers, percent=90):
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
-            upper_bound = sum(entropys.values())/len(entropys)*percent
+            upper_bound = sum(entropys.values())/len(entropys)*percent/100
             for key, entropy in entropys.items():
                 if entropy > upper_bound:
                     del frag_probs[key]
