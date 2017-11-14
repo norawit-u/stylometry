@@ -127,7 +127,6 @@ class Gengraph:
         count_all = 0
         count = 0
         count_least_1 = 0
-        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         for i in papers.keys():
             count_tmp = 0
             for j in papers[i]['fragments'].keys():
@@ -140,6 +139,7 @@ class Gengraph:
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
+        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / total_fragment)))
@@ -172,7 +172,20 @@ class Gengraph:
         max_entropy = max(entropy.items(), key=operator.itemgetter(1))[0]
         return max_entropy
 
+    def entropy(self, frag_probs, paper_id):
+        from scipy import stats
+        entropy = {}
+        for i in frag_probs[paper_id].keys():
+            entropy[i] = stats.entropy(list(frag_probs[paper_id][i].values()))
+        return entropy
 
+    def remove_high_entropy(self, frag_probs, papers, percent=90):
+        for paper_id in papers:
+            entropys = self.entropy(frag_probs, paper_id)
+            upper_bound = sum(entropys.values())/len(entropys)*percent
+            for key, entropy in entropys.items():
+                if entropy > upper_bound:
+                    del frag_probs[key]
 def parser_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
 
@@ -207,4 +220,5 @@ if __name__ == "__main__":
         frag_probs = new_frag_probs
         print(i)
     gengraph.sum_prob(papers, frag_probs)
+    remove_high_entropy(frag_probs, papers, 90)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
