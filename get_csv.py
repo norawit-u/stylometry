@@ -113,6 +113,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
     list_return = []  # for storing features that will return
 
     _, cur = connect_database(db_name)  # database connection and cursor
+    counter = 1
     for i in papers:  # loop for number of paper
         fragment_count = num_fragment * i  # number of fragment(counter)
         for j in range(fragment_count,
@@ -124,7 +125,9 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
                 list_feature.append(str(j + 1))  # fragment id
                 list_feature.append(str(i + 1))  # paper id
                 list_feature.append(str(k + 1))  # chunk id
-                print(i+1,j+1,k+1)
+                print(i + 1, j + 1, k + 1, counter, len(list_return))
+                counter += 1
+
                 cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, k + 1])
                 temp = cur.fetchall()
                 for l in range(0, len(temp)):
