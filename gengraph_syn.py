@@ -102,9 +102,9 @@ class Gengraph:
                 new_pmf = {k: v / total_prob for k, v in new_pmf.items()}
                 sum_pmf = {k: sum_pmf.get(k, 0) + new_pmf.get(k, 0) for k in set(sum_pmf)}
                 num_pmfs = num_pmfs + 1
-                if new_pmf:
-                    print("new_pmf", new_pmf)
-                    print(p_id, f_id)
+                # if new_pmf:
+                #     print("new_pmf", new_pmf)
+                #     print(p_id, f_id)
         # print("new_pmf", new_pmf)
         # print("sum_pmf", sum_pmf)
         # print("num_pmfs", num_pmfs)
@@ -122,6 +122,7 @@ class Gengraph:
             for frag_id in frag_pmfs.keys():
                 print(frag_id)
                 avg_pmf = self.recalculate_prob(papers, frag_probs, paper_id, frag_id)
+                print(avg_pmf)
                 new_frag_pmfs[frag_id] = avg_pmf
             new_frag_probs[paper_id] = new_frag_pmfs
         return new_frag_probs
