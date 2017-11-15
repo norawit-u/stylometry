@@ -12,7 +12,7 @@ PATH = " test/out_tmp/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n4/"
 
 def get_input():
     l = []
-    for root, dir, files in os.walk(path):
+    for root, dir, files in os.walk(PATH):
         for file in files:
             with open(root + file, 'r') as f:
                 content = f.read().replace('\n', '')
@@ -22,10 +22,9 @@ def get_input():
                     l.append(int(x[i][1]))
     return l
 
-
 def plot(x):
     fig = plt.hist(x, normed=0)
-    fig.savefig('temp.png')
+    plt.savefig('temp.png')
 
 if __name__ == "main":
     data = get_input()
