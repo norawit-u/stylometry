@@ -75,8 +75,8 @@ class Runner:
 
         authors = self.get_writes_hidden()
         # authors = sorted(authors, key=lambda k: len(authors[k]), reverse=True)
-        for author in authors:
-            for paper_id in author:
+        for author_id, papers in authors.items():
+            for paper_id in papers:
                 if len(out[counter % fold]) < self.num_paper / fold:
                     out[counter % fold].append(paper_id)
                     counter += 1
