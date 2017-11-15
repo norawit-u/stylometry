@@ -95,7 +95,7 @@ def save_to_csv(list_return, name, fieldnames):
             write.writerow(x)
 
 
-def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragment, db_name):
+def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragment, db_name, name, field_names):
     """
         get the feature from the database
         Args:
@@ -166,7 +166,7 @@ if __name__ == '__main__':
         if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
             num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
             get_features(arg.papers, arg.chunk_size, arg.fragment_size, arg.offset, num_fragment,
-                                       arg.db_name[0])
+                                       arg.db_name[0],  arg.out_path + "/" + arg.db_name[0] + arg.note, field_names)
             # save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0] + arg.note, field_names)
         else:
             print('can not create a fragment')
