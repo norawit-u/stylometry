@@ -224,7 +224,7 @@ class Gengraph:
                     if key > len(entropys) * percent / 100:
                         del frag_probs[paper_id][entropy[0]]
                 else:
-                    if entropy > upper_bound:
+                    if entropy[1] > upper_bound:
                         del frag_probs[paper_id][entropy[0]]
 
 
