@@ -1,8 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 import ast
 import argparse
@@ -11,9 +9,9 @@ PATH = "syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n0/"
 
 
 
-def get_input():
+def get_input(path):
     l = []
-    for root, dir, files in os.walk(PATH):
+    for root, dir, files in os.walk(path):
         for file in files:
             with open(root + file, 'r') as f:
                 content = f.read().replace('\n', '')
@@ -23,20 +21,21 @@ def get_input():
                     l.append(int(x[i][1]))
     return l
 
-def plot(x):
+def plot(x, name):
     fig = plt.hist(x, normed=0)
-    plt.savefig('temp.png')
+    plt.savefig(name+'.png')
 
 def parser_args():
     """
     init argument parsing
     :return: argument
     """
-    parser = argparse.ArgumentParser(description='Get a stylometry synthetic data.')
-    parser.add_argument('--num_paper', type=int, help='number of paper')
+    parser = argparse.ArgumentParser(description='print histogram')
+    parser.add_argument('--path', type=str, help='path to a folder')
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    data = get_input()
-    plot(data)
+    arg = parser_args()
+    data = get_input(arg.path)
+    plot(data, arg.path.split('/')[-1])
