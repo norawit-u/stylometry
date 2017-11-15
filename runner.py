@@ -233,14 +233,14 @@ class Runner:
             # print(folds)
             get_csv = self.command_get_csv(path + '/csv', fold, fragment_size, offset, '_n' + str(key))
             print(get_csv)
-            # self.execute(get_csv)
+            self.execute(get_csv)
         for root, _, files in os.walk(path + '/csv'):
             for file in files:
                 if str(self.db_name) in str(file):
                     file_path = root + '/' + file
                     experiment = self.command_experiment(file_path, path + '/out')
                     print(experiment)
-                    # self.execute(experiment)
+                    self.execute(experiment)
         for key, fold in enumerate(folds):
             dir_path = path + '/out/' + self.db_name + '_n' + str(key) + '/'
             gengraph = self.command_gen_graph(self.get_author_number(), self.get_author_list_number(),
@@ -248,7 +248,7 @@ class Runner:
                                               self.get_num_fragment(fragment_size, offset,
                                                                     self.get_chunk_size()), dir_path, entropy)
             print(gengraph)
-            # print(str(self.execute(gengraph)))
+            print(str(self.execute(gengraph)))
             print("============")
         if clean:
             self.cleanning(path)
