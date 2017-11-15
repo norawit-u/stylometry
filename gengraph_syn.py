@@ -216,6 +216,7 @@ class Gengraph:
         over_all_entropy = []
         for i in [self.entropy(frag_probs, j) for j in papers]:
             over_all_entropy.extend(list(i.values()))
+        sorted(over_all_entropy)
         upper_bound = over_all_entropy[int(len(over_all_entropy)*percent/100)]
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
