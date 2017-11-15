@@ -119,7 +119,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
         csvfile.write(','.join(map(str, field_names)))
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
-        for i in papers:  # loop for number of paper
+        for i in range(1000):  # loop for number of paper
             fragment_count = num_fragment * i  # number of fragment(counter)
             for j in range(fragment_count,
                            fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
