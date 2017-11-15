@@ -67,7 +67,7 @@ class Gengraph:
 
     def get_similar_fragments(self, papers, paper_id, fragment_id):
         similar_fragments = []
-        tmp_fragment = []
+        tmp_fragment = []  # TODO: delete
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
@@ -78,9 +78,9 @@ class Gengraph:
             # print(fragment_id2, self.num_authors)
             paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
             similar_fragments.append((paper_id2, fragment_id2, author_id))
-            tmp_fragment.append((paper_id, fragment_id, author_id))
-        print("similar_fragments", similar_fragments)
-        print("tmp_fragment", tmp_fragment)
+            tmp_fragment.append((paper_id, fragment_id, author_id))  # TODO: delete
+        # print("similar_fragments", similar_fragments)
+        # print("tmp_fragment", tmp_fragment)
         return similar_fragments
 
     def recalculate_prob(self, papers, frag_probs, paper_id, fragment_id):
@@ -102,6 +102,9 @@ class Gengraph:
                 new_pmf = {k: v / total_prob for k, v in new_pmf.items()}
                 sum_pmf = {k: sum_pmf.get(k, 0) + new_pmf.get(k, 0) for k in set(sum_pmf)}
                 num_pmfs = num_pmfs + 1
+        print("sum_pmf", sum_pmf)
+        print("sum_pmf", sum_pmf)
+        print("num_pmfs", num_pmfs)
         if num_pmfs > 0:
             avg_pmf = {k: v / num_pmfs for k, v in sum_pmf.items()}
         else:
