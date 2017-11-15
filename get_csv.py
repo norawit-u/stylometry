@@ -91,6 +91,7 @@ def save_to_csv(list_return, name, fieldnames):
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
+            print(x)
             write.writerow(list_return[x])
 
 
