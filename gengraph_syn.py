@@ -84,9 +84,9 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        print("similar_fragments",similar_fragments)
-        print("fragment_id",fragment_id)
-        print("frag_probs",frag_probs)
+        print("similar_fragments", similar_fragments)
+        # print("fragment_id", fragment_id)
+        print("frag_probs", frag_probs)
         print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
@@ -102,6 +102,7 @@ class Gengraph:
             avg_pmf = {k: v / num_pmfs for k, v in sum_pmf.items()}
         else:
             avg_pmf = frag_probs[paper_id][fragment_id]
+        print('avg_pmf', avg_pmf)
         return avg_pmf
 
     def recalculate_frag_probs(self, papers, frag_probs):
@@ -217,7 +218,7 @@ class Gengraph:
         for i in [self.entropy(frag_probs, j) for j in papers]:
             over_all_entropy.extend(list(i.values()))
         sorted(over_all_entropy)
-        upper_bound = over_all_entropy[int(len(over_all_entropy)*percent/100)]
+        upper_bound = over_all_entropy[int(len(over_all_entropy) * percent / 100)]
         # print(upper_bound)
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
@@ -229,7 +230,6 @@ class Gengraph:
                     if entropy[1] >= upper_bound:
                         # print(paper_id,entropy[0],entropy[1])
                         del frag_probs[paper_id][entropy[0]]
-
 
 
 def parser_args():
