@@ -78,7 +78,7 @@ class Runner:
         for author_id, papers in authors.items():
             for paper_id in papers:
                 if len(out[counter % fold]) < self.num_paper / fold:
-                    out[counter % fold].append(paper_id)
+                    out[counter % fold].append(int(paper_id))
                     counter += 1
         return out
 
