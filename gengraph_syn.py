@@ -84,10 +84,10 @@ class Gengraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        print("similar_fragments", similar_fragments)
+        # print("similar_fragments", similar_fragments)
         # print("fragment_id", fragment_id)
-        print("frag_probs", frag_probs)
-        print("==================================")
+        # print("frag_probs", frag_probs)
+        # print("==================================")
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
             # print(p_id, f_id)
@@ -110,7 +110,7 @@ class Gengraph:
         for paper_id, frag_pmfs in frag_probs.items():
             new_frag_pmfs = {}
             for frag_id in frag_pmfs.keys():
-                # print(frag_id)
+                print(frag_id)
                 avg_pmf = self.recalculate_prob(papers, frag_probs, paper_id, frag_id)
                 new_frag_pmfs[frag_id] = avg_pmf
             new_frag_probs[paper_id] = new_frag_pmfs
