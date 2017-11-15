@@ -18,7 +18,7 @@ class Runner:
     def get_chunk_size(self):
         return int(int(self.db_name.split('_')[-4].split('t')[-1]) / int(db_name.split('_')[-1].split('sw')[-1]))
 
-    def get_paper_per_author(self):
+    def get_paper_per_author(self):  # TODO: DELETE
         self.cur.execute(
             "select num_paper from (select count(*) as num_paper from writes_hidden group by author_id) as foo group by foo.num_paper")
         get_list = self.cur.fetchall()
@@ -28,7 +28,7 @@ class Runner:
         self.con.commit()
         return list_return
 
-    def get_author_id_by_num_written_paper(self, num_paper):
+    def get_author_id_by_num_written_paper(self, num_paper): # TODO: DELETE
         self.cur.execute("select author_id, count(*) from writes_hidden group by author_id having count(*) = %s",
                          num_paper)
         get_list = self.cur.fetchall()
@@ -38,7 +38,7 @@ class Runner:
         self.con.commit()
         return list_return
 
-    def distributed(self, fold):
+    def distributed(self, fold): # TODO: DELETE
         paper_ids = []
         out = []
         for f in range(fold):
