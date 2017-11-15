@@ -102,7 +102,7 @@ class Gengraph:
                 new_pmf = {k: v / total_prob for k, v in new_pmf.items()}
                 sum_pmf = {k: sum_pmf.get(k, 0) + new_pmf.get(k, 0) for k in set(sum_pmf)}
                 num_pmfs = num_pmfs + 1
-        print("sum_pmf", sum_pmf)
+        print("new_pmf", new_pmf)
         print("sum_pmf", sum_pmf)
         print("num_pmfs", num_pmfs)
         if num_pmfs > 0:
