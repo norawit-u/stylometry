@@ -235,17 +235,17 @@ class Runner:
             # self.execute(get_csv)
         for root, _, files in os.walk(path + '/csv'):
             for file in files:
-                if str(db_name) in str(file):
+                if str(self.db_name) in str(file):
                     file_path = root + '/' + file
                     experiment = self.command_experiment(file_path, path + '/out')
                     print(experiment)
                     # self.execute(experiment)
         for key, fold in enumerate(folds):
-            dir_path = path + '/out/' + db_name + '_n' + str(key) + '/'
+            dir_path = path + '/out/' + self.db_name + '_n' + str(key) + '/'
             gengraph = self.command_gen_graph(self.get_author_number(), self.get_author_list_number(),
                                               [(x + 1) for x in fold],
                                               self.get_num_fragment(fragment_size, offset,
-                                                                    self.get_chunk_size(db_name)), dir_path, entropy)
+                                                                    self.get_chunk_size()), dir_path, entropy)
             print(gengraph)
             # print(str(self.execute(gengraph)))
             print("============")
