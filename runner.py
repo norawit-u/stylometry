@@ -50,7 +50,36 @@ class Runner:
             for author_id in author_id_per_num_paper:
                 if len(out[counter % fold]) < self.num_paper / fold:
                     out[counter % fold].append(author_id)
+                    counter += 1
         return out
+
+    def get_writes_hidden(self):
+        self.cur.execute("select author_id, paper_id from writes_hidden")
+        get_list = self.cur.fetchall()
+        out = {}
+        for i in get_list:
+            paper_id = i[1]
+            author_id = i[0]
+            if paper_id not in out:
+                out[paper_id] = []
+            out[paper_id].append(author_id)
+        self.con.commit()
+        return out
+
+    def distributing(self, fold):
+
+        out = []
+        counter = 0
+        for f in fold:
+            out.append([])
+
+        papers = self.get_writes_hidden()
+        papers = sorted(papers, key=lambda k: len(papers[k]), reverse=True)
+        for paper in papers:
+            for author_id in paper:
+                if len(out[counter % fold]) < self.num_paper / fold:
+                    out[counter % fold].append(paper)
+                    counter += 1
 
     def command_get_csv(self, out_path, papers, fragment_size, offset, note):
         """
@@ -111,7 +140,7 @@ class Runner:
         :return: array for fold example {[1,2,3],[4,5,6],[7,8,9]}
         """
         if distribute:
-            return self.distributed(n_fold)
+            return self.distributing(n_fold)
         doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
         if shuffle:
             np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
@@ -180,7 +209,8 @@ class Runner:
         """
         return int((chunk_size - fragment_size) / offset + 1)
 
-    def cross(self, path, num_paper, n_fold, fragment_size, offset, shuffle, append, entropy, clean=False, distribute=True):
+    def cross(self, path, num_paper, n_fold, fragment_size, offset, shuffle, append, entropy, clean=False,
+              distribute=True):
         """
         apply cross validation and run the experiment
         :param distribute:
