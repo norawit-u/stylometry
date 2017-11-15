@@ -54,15 +54,15 @@ class Runner:
         return out
 
     def get_writes_hidden(self):
-        self.cur.execute("select author_id, paper_id from writes_hidden")
+        self.cur.execute("select author_id, paper_id from writes_hidden ORDER  by author_id")
         get_list = self.cur.fetchall()
         out = {}
         for i in get_list:
             paper_id = i[1]
             author_id = i[0]
-            if paper_id not in out:
-                out[paper_id] = []
-            out[paper_id].append(author_id)
+            if author_id not in out:
+                out[author_id] = []
+            out[author_id].append(paper_id)
         self.con.commit()
         return out
 
@@ -73,12 +73,12 @@ class Runner:
         for f in fold:
             out.append([])
 
-        papers = self.get_writes_hidden()
-        papers = sorted(papers, key=lambda k: len(papers[k]), reverse=True)
-        for paper in papers:
-            for author_id in paper:
+        authors = self.get_writes_hidden()
+        authors = sorted(authors, key=lambda k: len(authors[k]), reverse=True)
+        for author in authors:
+            for paper_id in author:
                 if len(out[counter % fold]) < self.num_paper / fold:
-                    out[counter % fold].append(paper)
+                    out[counter % fold].append(paper_id)
                     counter += 1
 
     def command_get_csv(self, out_path, papers, fragment_size, offset, note):
