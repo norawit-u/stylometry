@@ -41,7 +41,7 @@ class Runner:
     def distributed(self, fold):
         paper_ids = []
         out = []
-        for f in fold:
+        for f in range(fold):
             out.append([])
         for i in self.get_paper_per_author():
             paper_ids.append(self.get_author_id_by_num_written_paper(i))
@@ -70,11 +70,11 @@ class Runner:
 
         out = []
         counter = 0
-        for f in fold:
+        for f in range(fold):
             out.append([])
 
         authors = self.get_writes_hidden()
-        # authors = sorted(authors, key=lambda k: len(authors[k]), reverse=True)
+        authors = sorted(authors, key=lambda k: len(authors[k]), reverse=True)
         for author in authors:
             for paper_id in author:
                 if len(out[counter % fold]) < self.num_paper / fold:
