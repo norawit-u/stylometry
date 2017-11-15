@@ -212,12 +212,22 @@ class Gengraph:
             entropy[i] = stats.entropy(list(frag_probs[paper_id][i].values()))
         return entropy
 
-    def remove_high_entropy(self, frag_probs, papers, percent=90):
+    def remove_high_entropy(self, frag_probs, papers, percent=90, per_dataset=False):
+        over_all_entropy = []
+        list(i.values())
+        for i in [self.entropy(frag_probs, j) for j in papers]:
+            over_all_entropy.extend(i)
+        upper_bound = over_all_entropy[int(len(over_all_entropy)*percent/100)]
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
-                if key > len(entropys) * percent / 100:
-                    del frag_probs[paper_id][entropy[0]]
+                if not per_dataset:
+                    if key > len(entropys) * percent / 100:
+                        del frag_probs[paper_id][entropy[0]]
+                else:
+                    if entropy > upper_bound:
+                        del frag_probs[paper_id][entropy[0]]
+
 
 
 def parser_args():
