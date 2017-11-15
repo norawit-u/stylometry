@@ -6,7 +6,7 @@ import numpy as np
 import os
 import ast
 
-PATH = " test/out_tmp/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n4/"
+PATH = "syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n0/"
 
 
 
@@ -26,6 +26,6 @@ def plot(x):
     fig = plt.hist(x, normed=0)
     plt.savefig('temp.png')
 
-if __name__ == "main":
+if __name__ == "__main__":
     data = get_input()
     plot(data)
