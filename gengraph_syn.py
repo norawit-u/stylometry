@@ -214,9 +214,8 @@ class Gengraph:
 
     def remove_high_entropy(self, frag_probs, papers, percent=90, per_dataset=False):
         over_all_entropy = []
-        list(i.values())
         for i in [self.entropy(frag_probs, j) for j in papers]:
-            over_all_entropy.extend(i)
+            over_all_entropy.extend(list(i.values()))
         upper_bound = over_all_entropy[int(len(over_all_entropy)*percent/100)]
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
