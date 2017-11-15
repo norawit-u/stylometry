@@ -125,7 +125,7 @@ class Gengraph:
                 # print(avg_pmf)
                 new_frag_pmfs[frag_id] = avg_pmf
             new_frag_probs[paper_id] = new_frag_pmfs
-            print(frag_id, new_frag_probs[paper_id])
+            # print(frag_id, new_frag_probs[paper_id])
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
