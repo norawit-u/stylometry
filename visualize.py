@@ -24,8 +24,7 @@ def get_input():
 
 
 def plot(x):
-    fig = plt.figure()
-    n, bins, patches = plt.hist(x)
+    fig = plt.hist(x, normed=0)
     fig.savefig('temp.png')
 
 if __name__ == "main":
