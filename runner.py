@@ -12,7 +12,7 @@ class Runner:
     def __init__(self, db_name, num_paper):
         self.db_name = db_name
         self.num_paper = num_paper
-        self.con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower()), Runner.USER)
+        self.con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), Runner.USER))
         self.cur = self.con.cursor()
 
     def get_chunk_size(self):
