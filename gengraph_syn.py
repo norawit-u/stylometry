@@ -106,7 +106,7 @@ class Gengraph:
             avg_pmf = {k: v / num_pmfs for k, v in sum_pmf.items()}
         else:
             avg_pmf = frag_probs[paper_id][fragment_id]
-        print('avg_pmf', avg_pmf)
+        # print('avg_pmf', avg_pmf)
         return avg_pmf
 
     def recalculate_frag_probs(self, papers, frag_probs):
