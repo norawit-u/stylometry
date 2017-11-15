@@ -80,6 +80,7 @@ class Runner:
                 if len(out[counter % fold]) < self.num_paper / fold:
                     out[counter % fold].append(paper_id)
                     counter += 1
+        return out
 
     def command_get_csv(self, out_path, papers, fragment_size, offset, note):
         """
