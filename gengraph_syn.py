@@ -218,16 +218,16 @@ class Gengraph:
             over_all_entropy.extend(list(i.values()))
         sorted(over_all_entropy)
         upper_bound = over_all_entropy[int(len(over_all_entropy)*percent/100)]
-        print(upper_bound)
+        # print(upper_bound)
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
                 if not per_dataset:
-                    if key > len(entropys) * percent / 100:
+                    if key >= len(entropys) * percent / 100:
                         del frag_probs[paper_id][entropy[0]]
                 else:
                     if entropy[1] >= upper_bound:
-                        print(paper_id,entropy[0],entropy[1])
+                        # print(paper_id,entropy[0],entropy[1])
                         del frag_probs[paper_id][entropy[0]]
 
 
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     gengraph.sum_prob(papers, frag_probs)
     if arg.use_entropy:
         # print(frag_probs)
-        gengraph.remove_high_entropy(frag_probs, papers, arg.use_entropy, True)
+        gengraph.remove_high_entropy(frag_probs, papers, arg.use_entropy)
         print("use entropy")
     # print(frag_probs)
     gengraph.checking_accuracy_fragments(papers, frag_probs)
