@@ -78,7 +78,7 @@ class Gengraph:
             # print(fragment_id2, self.num_authors)
             paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
             similar_fragments.append((paper_id2, fragment_id2, author_id))
-            tmp_fragment.append(paper_id, fragment_id, author_id)
+            tmp_fragment.append((paper_id, fragment_id, author_id))
         print("similar_fragments", similar_fragments)
         print("tmp_fragment", tmp_fragment)
         return similar_fragments
