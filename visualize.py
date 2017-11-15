@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,7 +8,7 @@ import os
 import ast
 
 PATH = " test/out_tmp/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n4/"
-matplotlib.use('Agg')
+
 
 
 def get_input():
