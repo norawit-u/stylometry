@@ -276,6 +276,6 @@ def parser_args():
 if __name__ == '__main__':
     arg = parser_args()
     for db_name in arg.db_name:
-        runner = Runner(arg.db_name, arg.num_paper)
+        runner = Runner(db_name, arg.num_paper)
         runner.cross(arg.path, arg.num_paper, arg.n_fold, arg.fragment_size, arg.offset, arg.shuffle, arg.append,
                      arg.entropy, arg.clean, distribute=arg.distribute)
