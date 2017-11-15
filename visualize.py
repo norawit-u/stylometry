@@ -1,5 +1,4 @@
 import matplotlib
-
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
@@ -24,7 +23,8 @@ def get_input(path):
 
 def plot(x, name):
     fig, ax = plt.subplots()
-    plt.hist(x, normed=0)
+    print(len(x))
+    plt.hist(x, normed=0, range=(min(x), max(x)), bins=1000)
     plt.show()
     print(name)
     fig.savefig(name + '.png')
