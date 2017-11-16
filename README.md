@@ -54,7 +54,7 @@ optional arguments:
 gendb.py
 
 ```bash
-> python gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+> python2 gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
 ```
 gendb_social_sci
 
