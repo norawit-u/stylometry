@@ -52,7 +52,7 @@ class GenGraph:
 
     def generate_paper(self):
         """
-
+        generate paper
         :return:
         """
         papers = {}

@@ -74,7 +74,6 @@ para_to_au_dict = dict(list(zip(para_id, author_id)))
 paraIndex = dict()
 IndexPara = dict()
 
-
 for i in range(len(para_id)):
     paraIndex[para_id[i]] = i
 for i in range(len(para_id)):
