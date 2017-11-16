@@ -10,6 +10,9 @@ from collections import Counter
 
 from six.moves import xrange
 
+###############################################
+#                 PYTHON 2                    #
+###############################################
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
         self.chunk_size = chunk_size
