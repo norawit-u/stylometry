@@ -3,11 +3,19 @@ import ast
 import operator
 import math
 import argparse
-import collections
 
 
-class Gengraph:
+class GenGraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
+        """
+        init GenGraph
+        :param num_authors: number of author in the paper
+        :param num_authors_list:  number of all the author in the paper
+        :param papers: list of paper
+        :param db_name: name of the database
+        :param fname: directory path of the experiment out put
+        :param num_fragment:  number of fragment in a paper
+        """
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.papers = papers
@@ -16,6 +24,11 @@ class Gengraph:
         self.num_fragment = num_fragment
 
     def get_authors_list(self, paper_id):
+        """
+        get all the authors id who write a paper
+        :param paper_id: paper id
+        :return: list of author id
+        """
         con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
@@ -26,18 +39,22 @@ class Gengraph:
         return list_return
 
     def fit_author_to_fragment(self, fragment_size, author_list):
-        '''
+        """
          Use round robin to circulate the author list
         :param fragment_size:
         :param author_list:
-        :return:
-        '''
+        :return: list of author who write the fragment
+        """
         fragment_author_list = []
         for i in range(fragment_size):
             fragment_author_list.append(author_list[i % len(author_list)])
         return sorted(fragment_author_list)
 
     def generate_paper(self):
+        """
+
+        :return:
+        """
         papers = {}
         for j in self.papers:
             paper_id = j
@@ -268,7 +285,7 @@ def parser_args():
 
 if __name__ == "__main__":
     arg = parser_args()
-    gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
+    gengraph = GenGraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
     # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
