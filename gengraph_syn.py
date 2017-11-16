@@ -69,6 +69,11 @@ class GenGraph:
         return papers
 
     def generate_frag_probs(self, papers):
+        """
+        generate a fragment probability
+        :param papers: dict of paper_id with author id and fragment id
+        :return: dict of paper_id with author id and dict fragment of probability
+        """
         frag_probs = {}
         for (paper_id, v) in papers.items():
             authors = v['authors'][0:self.num_authors_list]
@@ -83,6 +88,13 @@ class GenGraph:
         return frag_probs
 
     def get_similar_fragments(self, papers, paper_id, fragment_id):
+        """
+        get a similar fragments
+        :param papers:
+        :param paper_id:
+        :param fragment_id:
+        :return:
+        """
         similar_fragments = []
         tmp_fragment = []  # TODO: delete
         author_id = papers[paper_id]['fragments'][fragment_id]

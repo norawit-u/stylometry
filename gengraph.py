@@ -29,12 +29,12 @@ class Gengraph:
 
     # TODO flexible token size
     def fit_author_to_fragment(self, fragment_size, author_list):
-        '''
+        """
          Use round robin to circulate the author list
         :param fragment_size:
         :param author_list:
         :return:
-        '''
+        """
         fragment_author_list = []
         for i in range(fragment_size):
             fragment_author_list.append(author_list[i % len(author_list)])
