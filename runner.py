@@ -148,7 +148,7 @@ class Runner:
         """
         if distribute:
             return self.distributing(n_fold)
-        doc_id_list = np.arange(num_paper)  # generate array ex: 0,1,2,3,4,5,6,...,10
+        doc_id_list = np.arange(1, num_paper+1)  # generate array ex: 1,1,2,3,4,5,6,...,10
         if shuffle:
             np.random.shuffle(doc_id_list)  # shuffle array ex: 2,8,6,7,10,9,1,3,5,4
         if append:
