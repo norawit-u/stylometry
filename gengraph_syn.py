@@ -99,6 +99,7 @@ class GenGraph:
         tmp_fragment = []  # TODO: delete
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
+        print(paper_id, fragment_id)
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
         x = ast.literal_eval(content)
