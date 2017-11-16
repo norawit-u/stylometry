@@ -67,7 +67,11 @@ class Runner:
         return out
 
     def distributing(self, fold):
-
+        """
+        round robin distribution
+        :param fold: number of fold
+        :return: list of paper id in each fold
+        """
         out = []
         counter = 0
         for f in range(fold):
@@ -265,11 +269,11 @@ def parser_args():
     parser.add_argument('--n_fold', type=int, help="number of fold in cross validation")
     parser.add_argument('-shuffle', type=bool, default=False, help='shuffle a cross validation')
     parser.add_argument('-append', type=bool, default=False, help='append the fold')
+    parser.add_argument('--distribute', type=bool, help='distribute the paper_id equably')
     parser.add_argument('-clean', type=bool, default=False, help='clean after finish running')
     parser.add_argument('--fragment_size', type=int, default=False, help='number of chunk in fragment')
     parser.add_argument('--offset', type=int, default=False, help='number of chunk between chunk n and n+1')
     parser.add_argument('--entropy', type=int, help='if use entropy the program will remove high entropy fragment')
-    parser.add_argument('--distribute', type=bool, help='distribute the paper_id equably')
     return parser.parse_args()
 
 
