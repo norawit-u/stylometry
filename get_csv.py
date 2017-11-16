@@ -114,7 +114,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
 
     _, cur = connect_database(db_name)  # database connection and cursor
     for i in papers:  # loop for number of paper
-        fragment_count = num_fragment * (i - 1) + 1  # number of fragment(counter)
+        fragment_count = num_fragment * (i - 1)  # number of fragment(counter)
         for j in range(fragment_count,
                        fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
             chunk_id = (i-1) * chunk_size + offset * int(j % num_fragment)
