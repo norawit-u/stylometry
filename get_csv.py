@@ -117,14 +117,14 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
         fragment_count = num_fragment * i  # number of fragment(counter)
         for j in range(fragment_count,
                        fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
-            chunk_id = i * chunk_size + offset * int(j % num_fragment)
+            chunk_id = (i-1) * chunk_size + offset * int(j % num_fragment)
             print(chunk_id, i, chunk_size, offset, int(j % num_fragment))
             for k in range(chunk_id, chunk_id + fragment_size):
                 list_feature = []
                 list_feature.append(str(j + 1))  # fragment id
-                list_feature.append(str(i + 1))  # paper id
+                list_feature.append(str(i))  # paper id
                 list_feature.append(str(k + 1))  # chunk id
-                cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, k + 1])
+                cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i, k + 1])
                 temp = cur.fetchall()
                 for l in range(0, len(temp)):
                     list_feature.append(temp[l][0])
