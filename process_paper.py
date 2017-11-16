@@ -176,28 +176,69 @@ def insert_author(cur, name, surname):
 
 
 def get_author_id(cur, name, surname):
+    """
+    get author id
+    :param cur: cursor
+    :param name: author's name
+    :param surname: author's surname
+    :return: paper id
+    """
     cur.execute("SELECT author_id FROM author WHERE name = %s AND surname = %s", (name, surname))
 
 
 def get_paper_id(cur, scirp_id):
+    """
+    get paper id
+    :param cur: cursorf
+    :param scirp_id: real paper id
+    :return: paper id
+    """
     cur.execute("SELECT paper_id FROM paper WHERE scirp_id = %s", (scirp_id,))
 
 
 def insert_paper(cur, paper_id, paper_title, raw_text):
+    """
+    insert paper into a database
+    :param cur: cursor
+    :param paper_id: paper id
+    :param paper_title: tile of the paper
+    :param raw_text: raw text of the paper
+    :return:
+    """
     cur.execute("INSERT INTO paper (scirp_id,paper_title, raw_text) VALUES(%s,%s,%s)",
                 (paper_id, paper_title, raw_text))
 
 
 def insert_author_paper(cur, author_id, paper_id, author_num):
+    """
+
+    :param cur:
+    :param author_id:
+    :param paper_id:
+    :param author_num:
+    :return:
+    """
     cur.execute("INSERT INTO author_paper (author_id,paper_id,author_num) VALUES(%s,%s,%s)",
                 (author_id, paper_id, author_num))
 
 
 def insert_paper_category(cur, paper_id, categorie):
+    """
+
+    :param cur:
+    :param paper_id:
+    :param categorie:
+    :return:
+    """
     cur.execute("INSERT INTO paper_category (paper_id,category) VALUES(%s,%s)", (paper_id, categorie))
 
 
 def is_xml(string):
+    """
+
+    :param string:
+    :return:
+    """
     return "xmlns:mml" in string
 
 def execute(con, cur, title, authors, raw_text, categories, scirp_id):

@@ -55,6 +55,7 @@ gendb.py
 
 ```bash
 > python2 gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 5 --sliding_window 200 --num_paper 1000 --num_authors 3
+> python2 gendb_english.py --chunk_size 600 --token_size 8000 --num_authors_list 2 --sliding_window 200 --num_paper 100 --num_authors 2
 ```
 gendb_social_sci
 
@@ -89,17 +90,17 @@ runner.py
 > python runner.py --num_paper 100 --db_name syn_social_c600_t8000_a0_al0_sw200 --path test --n_fold 5 --fragment_size 20  --offset 5
 ```
 
-## Diagram
+## Synthetic Data set
 
+|parameter| lower limit|
+|:=:|:=:|
+|offset of chunk | 200|
+|chunk size| 600|
+|offset for fragment| 2|
+|size of fragment| 5|
+|num author| 2|
+|num author list| 2|
 
-||||  Generate Database(gendb_english.py) |||
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|number of paper  |	chunk size  |	token size  |	author  | 	author list |	sliding window  | |
-
-
-|||| Database ||||
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|| paper ||| chunk  ||
 
 ## Calculation
 
