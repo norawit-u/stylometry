@@ -261,7 +261,7 @@ def parser_args():
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
                         help='path to the directory')
-    parser.add_argument('--use_entropy', type=bool,
+    parser.add_argument('--use_entropy', type=int,
                         help='if use entropy the program will remove high entropy fragment')
     return parser.parse_args()
 
