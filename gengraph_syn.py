@@ -62,7 +62,7 @@ class GenGraph:
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i, author_id in enumerate(
                     self.fit_author_to_fragment(self.num_fragment, author_list[:self.num_authors])):
-                fragment_id = i + self.num_fragment * j + 1
+                fragment_id = i + self.num_fragment * (j - 1) + 1
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
