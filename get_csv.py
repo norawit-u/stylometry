@@ -90,12 +90,11 @@ def save_to_csv(list_return, name, fieldnames):
         csvfile.write(','.join(map(str, field_names)))
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
-        for x in list_return:
-            print(x)
-            write.writerow(x)
+        for x in range(0, len(list_return)):
+            write.writerow(list_return[x])
 
 
-def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragment, db_name, name, field_names):
+def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragment, db_name):
     """
         get the feature from the database
         Args:
@@ -113,34 +112,23 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
     list_return = []  # for storing features that will return
 
     _, cur = connect_database(db_name)  # database connection and cursor
-    counter = 1
-    os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
-    with open(name + '.csv', 'w') as csvfile:
-        csvfile.write(','.join(map(str, field_names)))
-        csvfile.write('\n')
-        # write = csv.writer(csvfile, delimiter=',')
-        for i in range(1000):  # loop for number of paper
-            fragment_count = num_fragment * i  # number of fragment(counter)
-            for j in range(fragment_count,
-                           fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
-                chunk_id = i * chunk_size + offset * int(j % num_fragment)
-                # print(chunk_id, i, chunk_size, offset, int(j % num_fragment))
-                for k in range(chunk_id, chunk_id + fragment_size):
-                    list_feature = []
-                    list_feature.append(str(j + 1))  # fragment id
-                    list_feature.append(str(i + 1))  # paper id
-                    list_feature.append(str(k + 1))  # chunk id
-                    # print(i + 1, j + 1, k + 1, counter, len(list_return))
-                    counter += 1
-
-                    cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, k + 1])
-                    temp = cur.fetchall()
-                    for l in range(0, len(temp)):
-                        list_feature.append(temp[l][0])
-                    # write.writerow(list_return)
-                    csvfile.write(','.join(map(str, list_feature)))
-    #                 list_return.append(list_feature)
-    # return list_return
+    for i in papers:  # loop for number of paper
+        fragment_count = num_fragment * i  # number of fragment(counter)
+        for j in range(fragment_count,
+                       fragment_count + num_fragment):  # loop from current fragment to current fragment + number of fragment
+            chunk_id = i * chunk_size + offset * int(j % num_fragment)
+            print(chunk_id, i, chunk_size, offset, int(j % num_fragment))
+            for k in range(chunk_id, chunk_id + fragment_size):
+                list_feature = []
+                list_feature.append(str(j + 1))  # fragment id
+                list_feature.append(str(i + 1))  # paper id
+                list_feature.append(str(k + 1))  # chunk id
+                cur.execute("SELECT value FROM features WHERE paper_id = '%s' AND chunk_id = '%s'", [i + 1, k + 1])
+                temp = cur.fetchall()
+                for l in range(0, len(temp)):
+                    list_feature.append(temp[l][0])
+                list_return.append(list_feature)
+    return list_return
 
 
 def parser_args():
@@ -166,8 +154,8 @@ if __name__ == '__main__':
     for db_name in arg.db_name:
         if is_fragmentable(arg.fragment_size, arg.offset, arg.chunk_size):
             num_fragment = get_num_fragment(arg.fragment_size, arg.offset, arg.chunk_size)
-            get_features(arg.papers, arg.chunk_size, arg.fragment_size, arg.offset, num_fragment,
-                                       arg.db_name[0],  arg.out_path + "/" + arg.db_name[0] + arg.note, field_names)
-            # save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0] + arg.note, field_names)
+            list_return = get_features(arg.papers, arg.chunk_size, arg.fragment_size, arg.offset, num_fragment,
+                                       arg.db_name[0])
+            save_to_csv(list_return, arg.out_path + "/" + arg.db_name[0] + arg.note, field_names)
         else:
             print('can not create a fragment')
