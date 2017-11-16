@@ -91,6 +91,7 @@ def save_to_csv(list_return, name, fieldnames):
         csvfile.write('\n')
         write = csv.writer(csvfile, delimiter=',')
         for x in range(0, len(list_return)):
+            print(list_return[x][1])
             write.writerow(list_return[x])
 
 
@@ -109,7 +110,7 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
             List of features
     """
     fragment_size = num_chunk_per_fragment  # changing the name
-    list_return = []  # for storing features that will return
+    return_list = []  # for storing features that will return
 
     _, cur = connect_database(db_name)  # database connection and cursor
     for i in papers:  # loop for number of paper
@@ -127,8 +128,8 @@ def get_features(papers, chunk_size, num_chunk_per_fragment, offset, num_fragmen
                 temp = cur.fetchall()
                 for l in range(0, len(temp)):
                     list_feature.append(temp[l][0])
-                list_return.append(list_feature)
-    return list_return
+                return_list.append(list_feature)
+    return return_list
 
 
 def parser_args():
