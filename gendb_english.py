@@ -100,7 +100,7 @@ class Syntactic:
         dict_check = {k: 0 for k in list_top_200}
 
         j = 0
-        print([value for key, value in list_top_200_max.items()])
+        print([value for key, value in list_top_200_max.iteritems()])
         while j < self.num_paper:
             list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
             list_temp = []
@@ -117,7 +117,7 @@ class Syntactic:
                     except ValueError:
                         break
             j += 1
-        print([list_top_200_max[key] - value for key, value in dict_check.items()])
+        print([list_top_200_max[key] - value for key, value in dict_check.iteritems()])
         con.close()
         cur.close()
         return list_return
@@ -197,8 +197,8 @@ class Syntactic:
                 index[list_authors[i][j]] += 1
 
                 raw_novel_text = self.get_raw_text(novel_id)
-                tokens = nltk.word_tokenize(raw_novel_text)
-                tokens_sum += tokens[0:int(self.token_size / self.num_authors)]
+                tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
+                tokens_sum += tokens[0:self.token_size / self.num_authors]
 
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
                                                                            raw_novel_text, novel_id,
