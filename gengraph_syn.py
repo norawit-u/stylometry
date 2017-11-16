@@ -99,14 +99,15 @@ class GenGraph:
         tmp_fragment = []  # TODO: delete
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
-        print(paper_id, fragment_id)
+        # print(paper_id, fragment_id)
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
         x = ast.literal_eval(content)
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             # print(fragment_id2, self.num_authors)
-            paper_id2 = int((fragment_id2 - 1) / self.num_fragment)
+            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
+            print(fragment_id2, paper_id2)
             similar_fragments.append((paper_id2, fragment_id2, author_id))
             tmp_fragment.append((paper_id, fragment_id, author_id))  # TODO: delete
         # print("similar_fragments", similar_fragments)
