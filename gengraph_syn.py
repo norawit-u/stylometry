@@ -62,7 +62,7 @@ class GenGraph:
             author_list = self.get_authors_list(str(paper_id))  # query authors_list
             for i, author_id in enumerate(
                     self.fit_author_to_fragment(self.num_fragment, author_list[:self.num_authors])):
-                fragment_id = i + self.num_fragment * (j - 1) + 1
+                fragment_id = i + self.num_fragment * j + 1
                 new_fragments[fragment_id] = author_id  # frag_id = author_list[i]
             papers[paper_id] = {'authors': author_list, 'fragments': new_fragments}
         # print(papers)
@@ -105,7 +105,7 @@ class GenGraph:
         for i in range(1, len(x)):
             fragment_id2 = int(x[i][1])
             # print(fragment_id2, self.num_authors)
-            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
+            paper_id2 = int((fragment_id2 - 1) / self.num_fragment)
             similar_fragments.append((paper_id2, fragment_id2, author_id))
             tmp_fragment.append((paper_id, fragment_id, author_id))  # TODO: delete
         # print("similar_fragments", similar_fragments)
