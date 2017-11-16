@@ -247,7 +247,7 @@ class Runner:
         for key, fold in enumerate(folds):
             dir_path = path + '/out/' + self.db_name + '_n' + str(key) + '/'
             gengraph = self.command_gen_graph(self.get_author_number(), self.get_author_list_number(),
-                                              [(x + 1) for x in fold],
+                                              [x for x in fold],
                                               self.get_num_fragment(fragment_size, offset,
                                                                     self.get_chunk_size()), dir_path, entropy)
             print(gengraph)
