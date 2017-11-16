@@ -87,7 +87,6 @@ class Runner:
         generate a command for running get_csv.py
         :param offset:
         :param fragment_size:
-        :param db_name: name of the database
         :param out_path: the path to save csv
         :param papers: list of paper ex: 1, 2, 3, 4, 5
         :param note: ending note
@@ -103,7 +102,6 @@ class Runner:
         generate a command for running experiment.py
         :param csv_path: path to a csv file
         :param output_path: path where the experiment will be save
-        :param num_fragment: number of fragment normally: author number * number of paper
         :return: command for running experiment.py
         """
         return "python experiment_old.py --csv_path %s --output_path %s " % (
@@ -117,7 +115,6 @@ class Runner:
         :param num_author:  number of author
         :param num_authors_list:  number of overall author
         :param papers: list of papers id
-        :param db_name: database name
         :param dir_path: the output path of the experiment
         :return: command for running gengraph.py
         """
@@ -176,7 +173,6 @@ class Runner:
     def get_author_number(self):
         """
         gat a number of author from database name
-        :param db_name: name of the database
         :return: number of author
         """
         return int(self.db_name.split('_')[-3].split('a')[-1])
@@ -184,7 +180,6 @@ class Runner:
     def get_author_list_number(self):
         """
         gat a number of author list from database name
-        :param db_name: database name
         :return: author list number
         """
         return int(self.db_name.split('_')[-2].split('al')[-1])
@@ -218,7 +213,6 @@ class Runner:
         :param entropy:
         :param offset:
         :param fragment_size:
-        :param db_name: name of a database
         :param path: path for running experiment
         :param num_paper: number of paper
         :param n_fold: number of fold

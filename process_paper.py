@@ -15,13 +15,23 @@ sys.setdefaultencoding('utf8')
 
 
 def remove_ref_tag(text):
+    """
+    remove a xml reference tag from the text
+    :param text: text that contain xml ref tag
+    :return: text with out a tag
+    """
     if text is None:
         return ''
     text = re.sub('<xref.{1,70}</xref>\n', '', text.strip())
     return re.sub('<xref.{1,70}</xref>', '', text.strip())
 
 
-def get_file_path_list(path):
+def get_files_path_list(path):
+    """
+    get a list of path to each paper file
+    :param path: directory that contain paper
+    :return: list of full path to the paper
+    """
     f = []
     for (dirpath, dirnames, filenames) in walk(path):
         f.extend([dirpath + '/' + s for s in filenames])
@@ -30,15 +40,30 @@ def get_file_path_list(path):
 
 
 def parse_xml(string):
+    """
+    parse a xml to BeautifulSoup object
+    :param string: xml text
+    :return: BeautifulSoup of the xml
+    """
     return BeautifulSoup(string, "xml")
 
 
 def get_file(file_path):
+    """
+    read the a file
+    :param file_path: path to a file
+    :return: string of xml
+    """
     with open(file_path, 'r') as f:
         return f.read().encode('UTF-8')
 
 
 def get_author(soup):
+    """
+    get all the author who wrote the paper
+    :param soup: BeautifulSoup object
+    :return: list of the author in the paper
+    """
     names = []
     contrib = soup.find('contrib-group')
     author_count = 1
@@ -51,6 +76,11 @@ def get_author(soup):
 
 
 def get_raw_text(root):
+    """
+    get a raw text from a paper
+    :param root: BeautifulSoup object
+    :return: raw text of the paper
+    """
     raw_text = ""
     body = root.find('body')
     if body is None:
@@ -66,12 +96,22 @@ def get_raw_text(root):
 
 
 def get_title(root):
+    """
+    get the title of the paper
+    :param root: BeautifulSoup object
+    :return: paper title
+    """
     if root.find("article-title") is None:
         return None
     return root.find("article-title").text
 
 
 def get_categories(root):
+    """
+    get categories of the paper
+    :param root: BeautifulSoup object
+    :return: list of categories that the paper is in
+    """
     categories = []
     article_categories = root.find("article-categories")
     if article_categories is None:
@@ -82,11 +122,21 @@ def get_categories(root):
 
 
 def get_con_cur(db_name):
+    """
+    connect to a database
+    :param db_name: name of the database
+    :return: con: database connection
+            cur: cursor of the connection
+    """
     con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (db_name))
     return con, con.cursor()
 
 
 def drop_all_table(db_name):
+    """
+    drop all the table in database
+    :param db_name: name of the database that wanted to be drop
+    """
     con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/" % (db_name))
     cur = con.cursor()
     cur.execute("DROP TABLE IF EXISTS author, paper, author_paper, paper_category")
@@ -95,6 +145,10 @@ def drop_all_table(db_name):
 
 
 def create_database(db_name):
+    """
+    create a new database
+    :param db_name: database name
+    """
     con = psycopg2.connect("dbname='%s' user='cpehk01' host=/tmp/" % (db_name))
     cur = con.cursor()
     cur.execute(
@@ -110,6 +164,12 @@ def create_database(db_name):
 
 
 def insert_author(cur, name, surname):
+    """
+    insert a author into a database
+    :param cur: cursor
+    :param name: name of the author
+    :param surname: surname of the author
+    """
     cur.execute(
         "INSERT INTO author (name,surname) SELECT %s,%s WHERE NOT EXISTS (SELECT name,surname FROM author WHERE name =%s AND surname = %s )",
         (name, surname, name, surname))
@@ -172,7 +232,7 @@ def run():
     # drop_all_table(db_name)
     # create_database(db_name)
 
-    for file_path in tqdm(get_file_path_list(arg.path)):
+    for file_path in tqdm(get_files_path_list(arg.path)):
         file = get_file(file_path)
         if is_xml(file):
             tqdm.write(file_path)

@@ -73,7 +73,7 @@ experiment.py
 
 
 ```bash
-> python experiment_old.py --input csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200.csv --output_path out --num_fragment 4000
+> python experiment_old.py --csv_path test/csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n4.csv --output_path test/out 
 > python experiment_old.py --input test/csv/syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n3.csv --output_path test/out --num_fragment 400
 ```
 
