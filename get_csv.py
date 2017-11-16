@@ -139,7 +139,6 @@ def parser_args():
     parser.add_argument('--chunk_size', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_chunk', type=int, help='number of chunk in a fragment')
     parser.add_argument('--num_chunk_per_section', type=int, help='number of chunk in a section')
-
     parser.add_argument('--papers', type=int, nargs='*', help='number of paper')
     parser.add_argument('--offset', type=int, help="number of chunks between n and n+1 fragment")
     parser.add_argument('--db_name', type=str, nargs='*', help="database name that want to get")
