@@ -207,7 +207,7 @@ class GenGraph:
                 author_id = papers[i]['fragments'][fragment_id]
                 # print(frag_probs[i])
                 if fragment_id in frag_probs[i].keys():
-                    experiment_author_id = sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(1),
+                    experiment_author_id = sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),
                                                   reverse=True)[0][0]
                     if author_id == experiment_author_id:
                         count += 1
