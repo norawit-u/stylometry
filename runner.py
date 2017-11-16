@@ -122,10 +122,15 @@ class Runner:
             return "python gengraph.py --num_authors %s  --num_authors_list %s --papers %s " \
                    "--db_name %s --num_fragment %s --dir_path %s" % (
                        num_author, num_author, ' '.join(map(str, papers)), self.db_name, num_fragment, dir_path)
-        return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
+        if entropy:
+            return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
                "--db_name %s --num_fragment %s --dir_path %s --use_entropy %s" % (
                    num_author, num_authors_list, ' '.join(map(str, papers)),
                    self.db_name, num_fragment, dir_path, entropy)
+        return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
+               "--db_name %s --num_fragment %s --dir_path %s" % (
+                   num_author, num_authors_list, ' '.join(map(str, papers)),
+                   self.db_name, num_fragment, dir_path)
 
     def gen_fold(self, num_paper, n_fold, shuffle=False, append=False, train=False, distribute=True):
         """
