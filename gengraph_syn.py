@@ -276,7 +276,7 @@ class GenGraph:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
                 if not per_dataset:
-                    if key >= sorted(entropys.items(), key=operator.itemgetter(1))[int(len(entropys.items()) * percent / 100)][1]:
+                    if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[int(len(entropys.items()) * percent / 100)][1]:
                         del frag_probs[paper_id][entropy[0]]
                 else:
                     if entropy[1] >= upper_bound:
