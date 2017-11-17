@@ -9,6 +9,11 @@ PATH = "syn_eng_max_while_np1000_c600_t8000_a2_al2_sw200_n0/"
 
 
 def get_input(path):
+    """
+    read the file
+    :param path: path to the directory which contain the file
+    :return: list of content in file
+    """
     l = []
     for root, dir, files in os.walk(path):
         for file in files:
