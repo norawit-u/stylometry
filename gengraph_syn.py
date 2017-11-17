@@ -160,6 +160,7 @@ class GenGraph:
 
     def checking_accuracy_fragments(self, papers, frag_probs):
         total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
+        total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
         sum_prob = {}
         for x in papers:
@@ -275,7 +276,7 @@ class GenGraph:
             entropys = self.entropy(frag_probs, paper_id)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
                 if not per_dataset:
-                    if key >= len(entropys) * percent / 100:
+                    if key >= sorted(entropys.items(), key=operator.itemgetter(1))[int(len(entropys.items()) * percent / 100)][1]:
                         del frag_probs[paper_id][entropy[0]]
                 else:
                     if entropy[1] >= upper_bound:
