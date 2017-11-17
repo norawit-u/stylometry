@@ -159,7 +159,7 @@ class GenGraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
-        total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
+        # total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
         sum_prob = {}

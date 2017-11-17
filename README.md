@@ -92,10 +92,10 @@ runner.py
 
 ## Synthetic Data set
 
-|parameter| lower limit|
-|:-:|:-:|
+|parameter| lower limit| upper limit|
+|:-:|:-:|:-:|
 |offset of chunk | 200|
-|chunk size| 600|
+|chunk size| 600| 1000|
 |offset for fragment| 2|
 |size of fragment| 5|
 |num author| 2|
