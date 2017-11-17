@@ -199,7 +199,7 @@ class GenGraph:
                         if author_id == list_check[i][k][0]:
                             count += 1
                             count_tmp += 1
-            if count_tmp == len(papers[i]['fragments'].keys()):
+            if count_tmp == len(frag_probs[i].keys()):
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
