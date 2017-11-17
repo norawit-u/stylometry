@@ -128,7 +128,7 @@ class GenGraph:
             # print(p_id, f_id)
             pmf = frag_probs[p_id][f_id]
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest and entry[2] == k}
-            print(pmf, new_pmf, authors_of_interest, p_id, f_id, entry[2])
+            # print(pmf, new_pmf, authors_of_interest, p_id, f_id, entry[2])
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
                 total_prob = sum(new_pmf.values())
                 new_pmf = {k: v / total_prob for k, v in new_pmf.items()}
@@ -137,7 +137,7 @@ class GenGraph:
                 # if new_pmf:
                 #     print("new_pmf", new_pmf)
                 #     print(p_id, f_id)
-                print(p_id, f_id, pmf, new_pmf, sum_pmf, num_pmfs, total_prob)
+                # print(p_id, f_id, pmf, new_pmf, sum_pmf, num_pmfs, total_prob)
         # print("new_pmf", new_pmf)
         # print("sum_pmf", sum_pmf)
         # print("num_pmfs", num_pmfs)
