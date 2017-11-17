@@ -118,7 +118,7 @@ class GenGraph:
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
         num_pmfs = 0
-        # print(sum_pmd)
+        # print(sum_pmf)
         # print("similar_fragments", similar_fragments)
         # print("fragment_id", fragment_id)
         # print("frag_probs", frag_probs)
@@ -315,7 +315,7 @@ if __name__ == "__main__":
     # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 10):
+    for i in range(0, 1):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         # print(i)
