@@ -145,7 +145,7 @@ class GenGraph:
         # print('avg_pmf', avg_pmf)
         return avg_pmf
 
-    def zrecalculate_frag_probs(self, papers, frag_probs):
+    def recalculate_frag_probs(self, papers, frag_probs):
         new_frag_probs = {}
         for paper_id, frag_pmfs in frag_probs.items():
             new_frag_pmfs = {}
@@ -199,9 +199,6 @@ class GenGraph:
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
-        print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
-        print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / total_fragment)))
         count_all = 0
         count = 0
         count_least_1 = 0
