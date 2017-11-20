@@ -89,10 +89,10 @@ class GenGraph:
 
     def get_similar_fragments(self, papers, paper_id, fragment_id):
         """
-        get a similar fragments
-        :param papers:
-        :param paper_id:
-        :param fragment_id:
+        get a similar fragments from the experiment
+        :param papers: array contain fragment and author information
+        :param paper_id: id of a paper
+        :param fragment_id: id of a fragment
         :return:
         """
         similar_fragments = []
@@ -100,13 +100,14 @@ class GenGraph:
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
         # print(paper_id, fragment_id)
+        # read file
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        x = ast.literal_eval(content)
+        x = ast.literal_eval(content)  # convert content in file to python object
         for i in range(1, len(x)):
-            fragment_id2 = int(x[i][1])
+            fragment_id2 = int(x[i][1])  # get fragment id
             # print(fragment_id2, self.num_authors)
-            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
+            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1  # compute paper id
             similar_fragments.append((paper_id2, fragment_id2, author_id))
             tmp_fragment.append((paper_id, fragment_id, author_id))  # TODO: delete
         # print("similar_fragments", similar_fragments)
@@ -114,6 +115,14 @@ class GenGraph:
         return similar_fragments
 
     def recalculate_prob(self, papers, frag_probs, paper_id, fragment_id):
+        """
+        recalculate the probability from the experiment output
+        :param papers: array contain fragment and author information
+        :param frag_probs: fragment probability
+        :param paper_id: id of the paper
+        :param fragment_id: id of the fragment
+        :return:
+        """
         similar_fragments = self.get_similar_fragments(papers, paper_id, fragment_id)
         authors_of_interest = papers[paper_id]['authors']
         sum_pmf = {k: 0 for k in authors_of_interest}
@@ -149,6 +158,12 @@ class GenGraph:
         return avg_pmf
 
     def recalculate_frag_probs(self, papers, frag_probs):
+        """
+        recalculate a fragment probability
+        :param papers: array contain fragment and author information
+        :param frag_probs: fragment probability
+        :return:
+        """
         new_frag_probs = {}
         for paper_id, frag_pmfs in frag_probs.items():
             new_frag_pmfs = {}
@@ -162,6 +177,12 @@ class GenGraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
+        """
+        checking the accuracy for each fragment
+        :param papers: array contain fragment and author information
+        :param frag_probs: fragment probability
+        :return:
+        """
         # total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
         total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
@@ -221,7 +242,7 @@ class GenGraph:
                 if fragment_id in frag_probs[i].keys():
                     # print(sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),reverse=False), key=operator.itemgetter(1), reverse=True))
                     experiment_author_id = sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),
-                                                  reverse=False), key=operator.itemgetter(1), reverse=True)[0][0]
+                                                         reverse=False), key=operator.itemgetter(1), reverse=True)[0][0]
                     if author_id == experiment_author_id:
                         count += 1
                         count_tmp += 1
@@ -235,6 +256,12 @@ class GenGraph:
         print("Accuracy: %s" % (float(count * 100 / total_fragment)))
 
     def sum_prob(self, papers, frag_probs):
+        """
+        some the probability
+        :param papers: array contain fragment and author information
+        :param frag_probs: fragment probability
+        :return:
+        """
         sum_prob = {}
         for i in frag_probs.keys():
             authors_interest = []
@@ -270,6 +297,14 @@ class GenGraph:
         return entropy
 
     def remove_high_entropy(self, frag_probs, papers, percent=90, per_dataset=False):
+        """
+        Remove a high entropy fragment for a paper
+        :param papers: array contain fragment and author information
+        :param frag_probs: fragment probability
+        :param percent: percent of removing
+        :param per_dataset: use an entropy of the data set
+        :return: 
+        """
         over_all_entropy = []
         for i in [self.entropy(frag_probs, j) for j in papers]:
             over_all_entropy.extend(list(i.values()))
