@@ -3,7 +3,7 @@ import ast
 import operator
 import math
 import argparse
-
+from scipy import stats
 
 class GenGraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
@@ -279,6 +279,12 @@ class GenGraph:
             # print("paper %s prob %s" % (i, sorted_prob))
 
     def max_entropy(self, frag_probs, paper_id):
+        """
+        calculate max entropy
+        :param frag_probs: fragment probability
+        :param papers: array contain fragment and author information
+        :return: max entropy
+        """
         entropy = {}
         for i in frag_probs[paper_id].keys():
             tmp_entropy = 0
@@ -290,7 +296,12 @@ class GenGraph:
         return max_entropy
 
     def entropy(self, frag_probs, paper_id):
-        from scipy import stats
+        """
+        calculate entropy using stats
+        :param frag_probs: fragment probability
+        :param papers: array contain fragment and author information
+        :return:
+        """
         entropy = {}
         for i in frag_probs[paper_id].keys():
             entropy[i] = stats.entropy(list(frag_probs[paper_id][i].values()))
@@ -303,7 +314,7 @@ class GenGraph:
         :param frag_probs: fragment probability
         :param percent: percent of removing
         :param per_dataset: use an entropy of the data set
-        :return: 
+        :return:
         """
         over_all_entropy = []
         for i in [self.entropy(frag_probs, j) for j in papers]:
