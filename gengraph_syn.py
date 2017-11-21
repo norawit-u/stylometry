@@ -213,7 +213,7 @@ class GenGraph:
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
-            for author_id in papers[i]['authors']:
+            for author_id in papers[i]['authors'][:self.num_authors]:
                 if frag_probs[i]:
                     # print("author_id", author_id)
                     for k in range(0, len(list_check[i])):
