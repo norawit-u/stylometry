@@ -1,5 +1,3 @@
-
-753698412
 import numpy as np
 import psycopg2
 import ast
