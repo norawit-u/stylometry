@@ -1,3 +1,5 @@
+
+753698412
 import numpy as np
 import psycopg2
 import ast
@@ -16,6 +18,11 @@ class Gengraph:
         self.num_fragment = num_fragment
 
     def get_authors_list(self, paper_id):
+        """
+        get a list of author id
+        :param paper_id: list of a paper id
+        :return: list of author id
+        """
         con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM writes_hidden WHERE paper_id = '%s' " % (paper_id))
@@ -25,9 +32,9 @@ class Gengraph:
             list_return.append(i[0])
         return list_return
 
-        # TODO generate fragment from paper
+        # TODO: generate fragment from paper
 
-    # TODO flexible token size
+    # TODO: flexible token size
     def fit_author_to_fragment(self, fragment_size, author_list):
         """
          Use round robin to circulate the author list
@@ -41,6 +48,11 @@ class Gengraph:
         return sorted(fragment_author_list)
 
     def generate_paper(self):
+        """
+        generate a paper
+
+        :return:
+        """
         papers = {}
         for j in self.papers:  # loop over the papers
             paper_id = j

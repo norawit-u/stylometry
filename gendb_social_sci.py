@@ -270,7 +270,11 @@ class Syntactic:
 
 
     def get_authors(self, paper_ids):
-        
+        """
+        get list distinct author id who write a paper
+        :param paper_ids: list of paper id
+        :return: list of author id
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors = []
