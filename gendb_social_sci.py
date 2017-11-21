@@ -16,6 +16,15 @@ from six.moves import xrange
 
 class Syntactic:
     def __init__(self, chunk_size, token_size, sliding_window, num_paper):
+        """
+        class used for create a synthetic data set
+        :param chunk_size: size of a chunk
+        :param token_size: number of token in a paper
+        :param num_authors: number of authors in the paper
+        :param num_authors_list: number of over all paper in the paper
+        :param sliding_window: sliding window between the chunk
+        :param num_paper: number of paper
+        """
         self.chunk_size = chunk_size
         self.token_size = token_size
         self.sliding_window = sliding_window
@@ -26,7 +35,7 @@ class Syntactic:
 
     def create_db_table(self):
         """
-        create a database
+        create a database and a table
         :return:
         """
         con = psycopg2.connect("dbname ='postgres' user='%s' host=/tmp/" % (getpass.getuser()))
@@ -134,6 +143,13 @@ class Syntactic:
         cur.close()
 
     def save_section_features_to_db(self, paper_ids, list_authors, list_authors_id_200):
+        """
+        save a feature to a database
+        :param paper_ids: list of  paper id
+        :param list_authors:  list of all the author
+        :param list_authors_id_200: list of author in each paper
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
@@ -183,6 +199,12 @@ class Syntactic:
         cur.close()
 
     def get_paper_ids(self):
+        """
+        #TODO deprecated code
+        get papers id where # number of author write the paper
+        :return: list of a paper id
+
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
@@ -195,11 +217,22 @@ class Syntactic:
         return papers_id
 
     def gen_shuffle_paper_id(self):
+        """
+        #TODO deprecated code
+        generate a shuffle paper id
+        :return: list of a shuffle paper id
+        """
         tmp = np.arange(self.num_paper)
         np.random.shuffle(tmp)
         return tmp
 
     def get_top_author_in_paper(self, shuffle=False):
+        """
+        #TODO deprecated code
+        get a paper id who write the top number of paper
+        :param shuffle: is shuffle or not
+        :return: list of paper id
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
@@ -215,6 +248,11 @@ class Syntactic:
         return papers_id
 
     def get_top_author_who_write_paper(self, shuffle=False):
+        """
+        get paper id which has a author who write a lot of author (sorting by the number of author who write the paper)
+        :param shuffle: is shuffle or not
+        :return: list of paper id
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
@@ -232,6 +270,7 @@ class Syntactic:
 
 
     def get_authors(self, paper_ids):
+        
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors = []

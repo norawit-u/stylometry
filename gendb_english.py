@@ -10,11 +10,21 @@ from collections import Counter
 
 from six.moves import xrange
 
+
 ###############################################
 #                 PYTHON 2                    #
 ###############################################
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
+        """
+        class used for create a synthetic data set
+        :param chunk_size: size of a chunk
+        :param token_size: number of token in a paper
+        :param num_authors: number of authors in the paper
+        :param num_authors_list: number of over all paper in the paper
+        :param sliding_window: sliding window between the chunk
+        :param num_paper: number of paper
+        """
         self.chunk_size = chunk_size
         self.token_size = token_size
         self.num_authors = num_authors
@@ -25,6 +35,10 @@ class Syntactic:
         self.num_paper = num_paper
 
     def create_db_table(self):
+        """
+        create a database and a table
+        :return:
+        """
         con = psycopg2.connect("dbname ='postgres' user='%s' host=/tmp/" % (getpass.getuser()))
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
@@ -58,6 +72,10 @@ class Syntactic:
         cur.close()
 
     def get_authors_id_200(self):
+        """
+        get the author id sorted by number of paper the author write
+        :return: list of author id
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT author_id FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
@@ -70,6 +88,11 @@ class Syntactic:
         return list_authors_id_200
 
     def get_authors_name(self, list_authors_id_200):
+        """
+        get a author name
+        :param list_authors_id_200: list of author id
+        :return: list of author name
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         list_authors_name = []
@@ -81,6 +104,11 @@ class Syntactic:
         return list_authors_name
 
     def get_num_paper_per_author(self, list_authors):
+        """
+        get number of paper written by the author
+        :param list_authors:  list of author id
+        :return:
+        """
         list_temp = []
         for i in range(0, len(list_authors)):
             for j in range(0, len(list_authors[i][0:self.num_authors])):
