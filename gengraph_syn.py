@@ -213,14 +213,12 @@ class GenGraph:
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
-            for j in papers[i]['fragments'].keys():
-                # print('j', j)
-                author_id = papers[i]['fragments'][j]
+            for author_id in papers[i]['authors']:
                 if frag_probs[i]:
                     # print("author_id", author_id)
                     for k in range(0, len(list_check[i])):
                         # print("k", k)
-                            # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
+                        # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                         # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
                         if author_id == list_check[i][k][0]:
                             count += 1
@@ -234,6 +232,34 @@ class GenGraph:
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / total_fragment)))
+
+        count_all = 0
+        count = 0
+        count_least_1 = 0
+        for i in papers.keys():
+            # print('i', i)
+            count_tmp = 0
+            for fragment_id, author_id in sorted(papers[i]['fragments'].items(), key=operator.itemgetter(0)):
+                # print('j', j)
+                author_id = papers[i]['fragments'][fragment_id]
+                # print(frag_probs[i])
+                if fragment_id in frag_probs[i].keys():
+                    # print(sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),reverse=False), key=operator.itemgetter(1), reverse=True))
+                    # print(author_id,sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0), reverse=False), key = operator.itemgetter(1), reverse = True))
+                    experiment_author_id = sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),
+                                                         reverse=False), key=operator.itemgetter(1), reverse=True)[0][0]
+                    if author_id == experiment_author_id:
+                        count += 1
+                        count_tmp += 1
+            if count_tmp == len(papers[i]['fragments'].keys()):
+                count_all += 1
+            if count_tmp >= 1:
+                count_least_1 += 1
+        print(count)
+        print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
+        print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
+        print("Accuracy: %s" % (float(count * 100 / total_fragment)))
+
 
     def sum_prob(self, papers, frag_probs):
         """
