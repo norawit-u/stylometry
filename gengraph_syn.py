@@ -5,6 +5,7 @@ import math
 import argparse
 from scipy import stats
 
+
 class GenGraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
         """
@@ -307,7 +308,7 @@ class GenGraph:
             entropy[i] = stats.entropy(list(frag_probs[paper_id][i].values()))
         return entropy
 
-    def remove_high_entropy(self, frag_probs, papers, percent=90, per_dataset=False):
+    def remove_high_entropy(self, frag_probs, papers, percent=90, num=0, per_dataset=False):
         """
         Remove a high entropy fragment for a paper
         :param papers: array contain fragment and author information
@@ -316,6 +317,7 @@ class GenGraph:
         :param per_dataset: use an entropy of the data set
         :return:
         """
+
         over_all_entropy = []
         for i in [self.entropy(frag_probs, j) for j in papers]:
             over_all_entropy.extend(list(i.values()))
@@ -324,9 +326,14 @@ class GenGraph:
         # print(upper_bound)
         for paper_id in papers:
             entropys = self.entropy(frag_probs, paper_id)
+            entropys_len = len(entropys)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
                 if not per_dataset:
-                    if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[int(len(entropys.items()) * percent / 100)][1]:
+                    if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[
+                        int(len(entropys.items()) * percent / 100)][1]:
+                        del frag_probs[paper_id][entropy[0]]
+                elif num != 0: # TODO: max entropy by number
+                    if key >= entropys_len - num:
                         del frag_probs[paper_id][entropy[0]]
                 else:
                     if entropy[1] >= upper_bound:

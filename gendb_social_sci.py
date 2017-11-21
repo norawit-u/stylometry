@@ -10,6 +10,9 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from collections import Counter
 
 from six.moves import xrange
+###############################################
+#                 PYTHON 2                    #
+###############################################
 
 class Syntactic:
     def __init__(self, chunk_size, token_size, sliding_window, num_paper):
@@ -22,6 +25,10 @@ class Syntactic:
         self.num_paper = num_paper
 
     def create_db_table(self):
+        """
+        create a database
+        :return:
+        """
         con = psycopg2.connect("dbname ='postgres' user='%s' host=/tmp/" % (getpass.getuser()))
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
@@ -67,6 +74,11 @@ class Syntactic:
         return authors_names
 
     def get_raw_text(self, paper_id):
+        """
+        get raw text from database
+        :param paper_id: id of the paper
+        :return: raw text
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % int(paper_id))
@@ -74,10 +86,21 @@ class Syntactic:
         return raw_text
 
     def get_paragraphs(self, tokens):
+        """
+        get a paragraphs from the token
+        :param tokens: list of token
+        :return: paragraphs
+        """
         paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
+        """
+        save a authors informatin to database
+        :param list_authors_id: list of authors id
+        :param list_authors_name:  list of a author name
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
@@ -87,6 +110,10 @@ class Syntactic:
         cur.close()
 
     def save_papers_to_db(self):
+        """
+        save a papers in to a database
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
@@ -140,7 +167,6 @@ class Syntactic:
                     stylo_list = para.get_stylo_list()
                 except:
                     raise
-                    print('error')
                 for y in range(0, 57):
                     feature_id = y + 1
                     try:
