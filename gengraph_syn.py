@@ -231,7 +231,7 @@ class GenGraph:
         print(count)
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / len(papers) * self.num_authors)))
+        print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
 
         count_all = 0
         count = 0
