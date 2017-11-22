@@ -371,6 +371,8 @@ def parser_args():
                         help='path to the directory')
     parser.add_argument('--entropy', type=int,
                         help='if use entropy the program will remove high entropy fragment')
+    parser.add_argument('--percent_entropy', type=bool,
+                        help='use percent of fragment instead of number of fragment')
     return parser.parse_args()
 
 

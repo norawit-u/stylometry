@@ -14,6 +14,7 @@ from six.moves import xrange
 ###############################################
 #                 PYTHON 2                    #
 ###############################################
+# assume that novel id and paper id is equial
 class Syntactic:
     def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
         """
@@ -180,10 +181,15 @@ class Syntactic:
         cur.close()
         return list_return
 
-    def get_raw_text(self, novel_id):
+    def get_raw_text(self, paper_id):
+        """
+        get a raw text from the database
+        :param paper_id: id of the paper
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT doc_content FROM document_english WHERE doc_id = '%s'" % (novel_id))
+        cur.execute("SELECT doc_content FROM document_english WHERE doc_id = '%s'" % (paper_id))
         raw_text = cur.fetchall()[0][0]
         return raw_text
 
