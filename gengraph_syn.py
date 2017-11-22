@@ -137,7 +137,7 @@ class GenGraph:
             p_id, f_id = entry[0], entry[1]
             # print(p_id, f_id)
             pmf = frag_probs[p_id][f_id]
-            new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest and entry[2] == k}
+            new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             # print(pmf, new_pmf, authors_of_interest, p_id, f_id, entry[2])
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
                 # print(new_pmf, authors_of_interest, entry[0], entry[1], entry[2])
