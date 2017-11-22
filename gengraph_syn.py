@@ -205,7 +205,7 @@ class GenGraph:
                 # print("sum_prob loop", sum_prob[x])
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
-                
+
                 temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
                 sum_top = {}
                 for k, v in temp_top.items():
@@ -230,11 +230,11 @@ class GenGraph:
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
-            for k in range(0, len(list_check[i])):
+            for k in range(0, len(top_prob[i])):
                 # print("k", k)
                 # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                 # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
-                if list_check[i][k][0] in papers[i]['authors'][:self.num_authors]:
+                if top_prob[i][k][0] in papers[i]['authors'][:self.num_authors]:
                     count += 1
                     count_tmp += 1
                     # print(author_id, list_check[i])
