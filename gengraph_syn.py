@@ -207,8 +207,8 @@ class GenGraph:
                 # print("sum_prob final", sum_prob[x])
         # sort the prob and pick top n author
         for key, z in enumerate(sum_prob):
-            list_check[z] = [key for key, _ in sorted(sorted([(int(k), v) for k, v in sum_prob[z].items()], key=operator.itemgetter(0)), key=operator.itemgetter(1), reverse=True)[
-                            0:self.num_authors]]
+            list_check[z] = sorted(sorted([(int(k), v) for k, v in sum_prob[z].items()], key=operator.itemgetter(0)), key=operator.itemgetter(1), reverse=True)[
+                            0:self.num_authors]
             # print(list_check[z])
         # print(list_check)
         # count all the collect author in the paper
