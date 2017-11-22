@@ -199,15 +199,15 @@ class GenGraph:
                 # print(list(frag_probs[x].keys()))
                 # print(frag_probs[x][list(frag_probs[x].keys())[0]])
                 # print("sum_prob", sum_prob[x])
-                for y in sorted(list(frag_probs[x].keys())):
-                    sum_prob[x] = {k: sum_prob[x][k] + v for k, v in sorted(frag_probs[x][y].items(), key=operator.itemgetter(0))}
+                for y in list(frag_probs[x].keys()):
+                    sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
                 # print("sum_prob loop", sum_prob[x])
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
                 # print("sum_prob final", sum_prob[x])
         # sort the prob and pick top n author
         for key, z in enumerate(sum_prob):
-            list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
+            list_check[z] = sorted(sorted(sum_prob[z].items(), key=operator.itemgetter(0)), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
             # print(list_check[z])
         # print(list_check)
