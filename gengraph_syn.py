@@ -210,6 +210,7 @@ class GenGraph:
         count_all = 0
         count = 0
         count_least_1 = 0
+        accuracy_list = []
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
@@ -221,11 +222,13 @@ class GenGraph:
                     count += 1
                     count_tmp += 1
                 # print(author_id, list_check[i])
+            accuracy_list.append(count_tmp)
             if count_tmp == len(frag_probs[i].keys()):
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
         print(count)
+        print(accuracy_list)
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
