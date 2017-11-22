@@ -192,6 +192,7 @@ class GenGraph:
         total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
         sum_prob = {}
+        top_prob = {}
         for x in papers:
             if frag_probs[x]:
                 # print("frag_probs", frag_probs[x])
@@ -204,6 +205,14 @@ class GenGraph:
                 # print("sum_prob loop", sum_prob[x])
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
+
+                temp_top = {k: sorted(v, key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
+                sum_top = {}
+                for k, v in temp_top:
+                    if not sum_top:
+                        sum_top = 0
+                    sum_top[v] += 1
+                top_prob[x] = sum_top
                 # print("sum_prob final", sum_prob[x])
         # sort the prob and pick top n author
         for key, z in enumerate(sum_prob):
