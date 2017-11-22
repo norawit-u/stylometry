@@ -391,7 +391,7 @@ if __name__ == "__main__":
     gengraph.sum_prob(papers, frag_probs)
     if arg.entropy:  # if use entropy
         # print(frag_probs)
-        if not arg.percent_entropy:
+        if arg.percent_entropy:
             gengraph.remove_high_entropy(frag_probs, papers, percent=arg.entropy)
         else:
             gengraph.remove_high_entropy(frag_probs, papers, num=arg.entropy)
