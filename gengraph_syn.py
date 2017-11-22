@@ -234,7 +234,7 @@ class GenGraph:
                 # print("k", k)
                 # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                 # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
-                if top_prob[i][k][0] in papers[i]['authors'][:self.num_authors]:
+                if top_prob[k][0] in papers[i]['authors'][:self.num_authors]:
                     count += 1
                     count_tmp += 1
                     # print(author_id, list_check[i])
