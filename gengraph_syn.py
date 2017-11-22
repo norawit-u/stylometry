@@ -339,14 +339,14 @@ class GenGraph:
             entropys = self.entropy(frag_probs, paper_id)
             entropys_len = len(entropys)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
-                if num != 0:    # remove by number of fragment
+                if num != 0:  # remove by number of fragment
                     if key >= entropys_len - num:
                         del frag_probs[paper_id][entropy[0]]
-                elif not per_dataset:   # remove by percent of fragment
+                elif not per_dataset:  # remove by percent of fragment
                     if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[
                         int(len(entropys.items()) * percent / 100)][1]:
                         del frag_probs[paper_id][entropy[0]]
-                else:   # remove by over all corpus
+                else:  # remove by over all corpus
                     if entropy[1] >= upper_bound:
                         # print(paper_id,entropy[0],entropy[1])
                         del frag_probs[paper_id][entropy[0]]
@@ -383,18 +383,18 @@ if __name__ == "__main__":
     # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1):   # recalculate the graph
+    for i in range(0, 1):  # recalculate the graph
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         # print(i)
 
     gengraph.sum_prob(papers, frag_probs)
-    if arg.entropy: # if use entropy
+    if arg.entropy:  # if use entropy
         # print(frag_probs)
         if not arg.percent_entropy:
-            gengraph.remove_high_entropy(frag_probs, papers, percent=arg.use_entropy)
+            gengraph.remove_high_entropy(frag_probs, papers, percent=arg.entropy)
         else:
-            gengraph.remove_high_entropy(frag_probs, papers, num=arg.use_entropy)
+            gengraph.remove_high_entropy(frag_probs, papers, num=arg.entropy)
         print("use entropy")
     # print(frag_probs)
     # check the accuracy
