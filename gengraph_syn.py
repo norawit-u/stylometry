@@ -230,11 +230,11 @@ class GenGraph:
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
-            for k in range(0, len(top_prob[i])):
+            for k, v in top_prob[i].items():
                 # print("k", k)
                 # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                 # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
-                if top_prob[k][0] in papers[i]['authors'][:self.num_authors]:
+                if k in papers[i]['authors'][:self.num_authors]:
                     count += 1
                     count_tmp += 1
                     # print(author_id, list_check[i])
