@@ -81,6 +81,7 @@ class Syntactic:
         cur.execute("SELECT author_id FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_authors_id_200 = []
+        # create a list of author
         for i in range(0, len(list_all)):
             list_authors_id_200.append(list_all[i][0])
         con.close()
@@ -117,8 +118,14 @@ class Syntactic:
         print(author_paper_dict)
 
     def get_authors(self, max_paper=15):
+        """
+        get list of author in each paper
+        :param max_paper: maximum number of paper
+        :return: list of list of author in the paper ([[1,2,3],[5,3,4]],[4,3,1])
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
+        # get author id sorted by number of paper that the author write
         cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
         list_all = cur.fetchall()
         list_top_200 = []
@@ -131,10 +138,13 @@ class Syntactic:
         dict_check = {k: 0 for k in list_top_200}
 
         j = 0
-        print([value for key, value in list_top_200_max.iteritems()])
+        # print([value for key, value in list_top_200_max.iteritems()])
+        # for each paper create a list of author in the paper
         while j < self.num_paper:
+            # append the author id in to the paper
             list_return.append(list(np.random.permutation(list_top_200)[0:self.num_authors_list]))
             list_temp = []
+            # check if the author is written more that he should or not
             for x in range(0, len(list_return[j][0:self.num_authors])):
                 dict_check[list_return[j][x]] += 1
                 if dict_check[list_return[j][x]] > list_top_200_max[list_return[j][x]]:
@@ -154,6 +164,11 @@ class Syntactic:
         return list_return
 
     def get_novel_list(self, author_id):
+        """
+        get list of document id
+        :param author_id:
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         list_return = []

@@ -97,7 +97,6 @@ class GenGraph:
         :return:
         """
         similar_fragments = []
-        tmp_fragment = []  # TODO: delete
         author_id = papers[paper_id]['fragments'][fragment_id]
         fname = self.fname + "%s" % fragment_id
         # print(paper_id, fragment_id)
@@ -110,7 +109,6 @@ class GenGraph:
             # print(fragment_id2, self.num_authors)
             paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1  # compute paper id
             similar_fragments.append((paper_id2, fragment_id2, author_id))
-            tmp_fragment.append((paper_id, fragment_id, author_id))  # TODO: delete
         # print("similar_fragments", similar_fragments)
         # print("tmp_fragment", tmp_fragment)
         return similar_fragments
@@ -136,7 +134,10 @@ class GenGraph:
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
             # print(p_id, f_id)
+            # create a new pmf by using a paper id and fragment id from the experiment out put
+            # to get a author id and pmf from the frag_prob
             pmf = frag_probs[p_id][f_id]
+            # get author id that is in the ground truth
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             # print(pmf, new_pmf, authors_of_interest, p_id, f_id, entry[2])
             if len(new_pmf) > 0 and sum(new_pmf.values()) != 0:
@@ -167,6 +168,7 @@ class GenGraph:
         :return:
         """
         new_frag_probs = {}
+        # update the pmf for each paper and fragment
         for paper_id, frag_pmfs in frag_probs.items():
             new_frag_pmfs = {}
             for frag_id in frag_pmfs.keys():
@@ -186,6 +188,7 @@ class GenGraph:
         :return:
         """
         # total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
+        # sum the probability in each fragment
         total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
         sum_prob = {}
@@ -202,11 +205,13 @@ class GenGraph:
                 sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
                 # print("sum_prob final", sum_prob[x])
+        # sort the prob and pick top n author
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
             # print(list_check[z])
         # print(list_check)
+        # count all the collect author in the paper
         count_all = 0
         count = 0
         count_least_1 = 0
@@ -221,7 +226,7 @@ class GenGraph:
                 if list_check[i][k][0] in papers[i]['authors'][:self.num_authors]:
                     count += 1
                     count_tmp += 1
-                # print(author_id, list_check[i])
+                    # print(author_id, list_check[i])
             accuracy_list.append(count_tmp)
             if count_tmp == len(frag_probs[i].keys()):
                 count_all += 1
@@ -233,33 +238,34 @@ class GenGraph:
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
 
-        count_all = 0
-        count = 0
-        count_least_1 = 0
-        for i in papers.keys():
-            # print('i', i)
-            count_tmp = 0
-            for fragment_id, author_id in sorted(papers[i]['fragments'].items(), key=operator.itemgetter(0)):
-                # print('j', j)
-                author_id = papers[i]['fragments'][fragment_id]
-                # print(frag_probs[i])
-                if fragment_id in frag_probs[i].keys():
-                    # print(sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),reverse=False), key=operator.itemgetter(1), reverse=True))
-                    # print(author_id,sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0), reverse=False), key = operator.itemgetter(1), reverse = True))
-                    experiment_author_id = sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),
-                                                         reverse=False), key=operator.itemgetter(1), reverse=True)[0][0]
-                    if author_id == experiment_author_id:
-                        count += 1
-                        count_tmp += 1
-            if count_tmp == len(papers[i]['fragments'].keys()):
-                count_all += 1
-            if count_tmp >= 1:
-                count_least_1 += 1
-        print(count)
-        print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
-        print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / total_fragment)))
 
+        # old code not use, will be move in the future
+        # count_all = 0
+        # count = 0
+        # count_least_1 = 0
+        # for i in papers.keys():
+        #     # print('i', i)
+        #     count_tmp = 0
+        #     for fragment_id, author_id in sorted(papers[i]['fragments'].items(), key=operator.itemgetter(0)):
+        #         # print('j', j)
+        #         author_id = papers[i]['fragments'][fragment_id]
+        #         # print(frag_probs[i])
+        #         if fragment_id in frag_probs[i].keys():
+        #             # print(sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),reverse=False), key=operator.itemgetter(1), reverse=True))
+        #             # print(author_id,sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0), reverse=False), key = operator.itemgetter(1), reverse = True))
+        #             experiment_author_id = sorted(sorted(frag_probs[i][fragment_id].items(), key=operator.itemgetter(0),
+        #                                                  reverse=False), key=operator.itemgetter(1), reverse=True)[0][0]
+        #             if author_id == experiment_author_id:
+        #                 count += 1
+        #                 count_tmp += 1
+        #     if count_tmp == len(papers[i]['fragments'].keys()):
+        #         count_all += 1
+        #     if count_tmp >= 1:
+        #         count_least_1 += 1
+        # print(count)
+        # print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
+        # print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
+        # print("Accuracy: %s" % (float(count * 100 / total_fragment)))
 
     def sum_prob(self, papers, frag_probs):
         """
@@ -333,14 +339,14 @@ class GenGraph:
             entropys = self.entropy(frag_probs, paper_id)
             entropys_len = len(entropys)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
-                if num != 0: # TODO: max entropy by number
+                if num != 0:    # remove by number of fragment
                     if key >= entropys_len - num:
                         del frag_probs[paper_id][entropy[0]]
-                elif not per_dataset:
+                elif not per_dataset:   # remove by percent of fragment
                     if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[
                         int(len(entropys.items()) * percent / 100)][1]:
                         del frag_probs[paper_id][entropy[0]]
-                else:
+                else:   # remove by over all corpus
                     if entropy[1] >= upper_bound:
                         # print(paper_id,entropy[0],entropy[1])
                         del frag_probs[paper_id][entropy[0]]
@@ -363,7 +369,7 @@ def parser_args():
                         help='database basename')
     parser.add_argument('--dir_path', type=str,
                         help='path to the directory')
-    parser.add_argument('--use_entropy', type=int,
+    parser.add_argument('--entropy', type=int,
                         help='if use entropy the program will remove high entropy fragment')
     return parser.parse_args()
 
@@ -375,17 +381,19 @@ if __name__ == "__main__":
     # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1):
+    for i in range(0, 1):   # recalculate the graph
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         # print(i)
+
     gengraph.sum_prob(papers, frag_probs)
-    if arg.use_entropy:
+    if arg.entropy: # if use entropy
         # print(frag_probs)
-        if 1 == 0: # TODO: add check for percent or for number of remove
+        if not arg.percent_entropy:
             gengraph.remove_high_entropy(frag_probs, papers, percent=arg.use_entropy)
         else:
             gengraph.remove_high_entropy(frag_probs, papers, num=arg.use_entropy)
         print("use entropy")
     # print(frag_probs)
+    # check the accuracy
     gengraph.checking_accuracy_fragments(papers, frag_probs)
