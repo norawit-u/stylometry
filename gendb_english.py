@@ -128,7 +128,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         # get author id sorted by number of paper that the author write
-        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
+        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC", self.min_paper_per_author)
         list_all = cur.fetchall()
         list_top_200 = []
         list_top_200_max = []
