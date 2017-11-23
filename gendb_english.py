@@ -16,7 +16,7 @@ from six.moves import xrange
 ###############################################
 # assume that novel id and paper id is equial
 class Syntactic:
-    def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper):
+    def __init__(self, chunk_size, token_size, num_authors, num_authors_list, sliding_window, num_paper, min_paper_per_author):
         """
         class used for create a synthetic data set
         :param chunk_size: size of a chunk
@@ -34,6 +34,7 @@ class Syntactic:
         self.db_name = "syn_eng_max_while_np%s_c%s_t%s_a%s_al%s_sw%s" % (
             num_paper, chunk_size, token_size, num_authors, num_authors_list, sliding_window)
         self.num_paper = num_paper
+        self.min_paper_per_author = min_paper_per_author
 
     def create_db_table(self):
         """
@@ -79,7 +80,7 @@ class Syntactic:
         """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT author_id FROM document_english GROUP BY author_id ORDER BY count(*) DESC")
+        cur.execute("SELECT author_id FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC",self.min_paper_per_author)
         list_all = cur.fetchall()
         list_authors_id_200 = []
         # create a list of author
@@ -290,6 +291,7 @@ def parse_args():
     parser.add_argument('--num_authors_list', type=int, help='number of authors including generated one')
     parser.add_argument('--sliding_window', type=int, help='size of the sliding window')
     parser.add_argument('--num_paper', type=int, help='number of a paper to create database')
+    parser.add_argument('--min_paper_per_author', type=int, help='minimum number of paper each author write')
     """
   parser.add_argument('--chunk_size', type=int, default=600,
              help='size of the chunk, number of token in the chunk')
@@ -313,7 +315,7 @@ if __name__ == "__main__":
     args = parse_args()
     syn_dataset = Syntactic(chunk_size=args.chunk_size, token_size=args.token_size,
                             num_authors=args.num_authors, num_authors_list=args.num_authors_list,
-                            sliding_window=args.sliding_window, num_paper=args.num_paper)
+                            sliding_window=args.sliding_window, num_paper=args.num_paper, min_paper_per_author=args.min_paper_per_author)
     syn_dataset.create_db_table()
 
     list_authors_id_200 = syn_dataset.get_authors_id_200()
