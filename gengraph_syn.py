@@ -131,12 +131,19 @@ class GenGraph:
         # print("fragment_id", fragment_id)
         # print("frag_probs", frag_probs)
         # print("==================================")
+        total = {}
         for entry in similar_fragments:
             p_id, f_id = entry[0], entry[1]
             # print(p_id, f_id)
             # create a new pmf by using a paper id and fragment id from the experiment out put
             # to get a author id and pmf from the frag_prob
             pmf = frag_probs[p_id][f_id]
+            id_of_author = papers[p_id]['fragments'][f_id]
+            if id_of_author == entry[2]:
+                if fragment_id not in total:
+                    total[fragment_id] = []
+                total[fragment_id].append((f_id, id_of_author))
+            # total[fragment_id] = {k:v for k,v in pmf.items() if  k== entry[2]}
             # get author id that is in the ground truth
             new_pmf = {k: v for k, v in pmf.items() if k in authors_of_interest}
             # print(pmf, new_pmf, authors_of_interest, p_id, f_id, entry[2])
