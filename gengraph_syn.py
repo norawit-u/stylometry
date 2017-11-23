@@ -193,6 +193,7 @@ class GenGraph:
         list_check = {}
         sum_prob = {}
         top_prob = {}
+        # print(frag_probs)
         for x in papers:
             if frag_probs[x]:
                 # print("frag_probs", frag_probs[x])
@@ -207,6 +208,7 @@ class GenGraph:
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
 
                 temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
+                print(temp_top)
                 sum_top = {}
                 for k, v in temp_top.items():
                     if v not in sum_top:

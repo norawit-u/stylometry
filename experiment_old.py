@@ -507,8 +507,8 @@ my_data = npLoad(arg.csv_path)  # input dataset
 print((time.time() - start, "used to read file"))
 # parameters
 D = 56  # dimensions
-L = 334  # the number of group hash
-K = 1  # the number of hash functions in each group hash
+L = 200  # the number of group hash
+K = 3  # the number of hash functions in each group hash
 # N=30000 # the size of dataset
 # N=4259934 # the size of dataset
 N = len(my_data)  # the size of dataset
@@ -517,8 +517,8 @@ NP = len(my_data)  # the size of data used for QP
 # NP = 30000 #the size of data used for QP
 NDocQ = 5
 R = 0.12 * math.sqrt(D)  # query range
-W = 1  # the width of bucket
-T = 112  # collision threshold
+W = 1.2  # the width of bucket
+T = 20  # collision threshold
 
 MHDRatio = 0.5  # the MHD precentage
 # M2LSHrange: from large to small based on mindist
