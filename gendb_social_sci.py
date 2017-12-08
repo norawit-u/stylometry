@@ -29,8 +29,8 @@ class Syntactic:
         self.token_size = token_size
         self.sliding_window = sliding_window
         self.copus_db_name = 'social_sci_paper_corpus'
-        self.db_name = "syn_social_c%s_t%s_a%s_al%s_sw%s" % (
-            chunk_size, token_size, 0, 0, sliding_window)
+        self.db_name = "syn_social_np%s_c%s_t%s_a%s_al%s_sw%s" % (
+            num_paper, chunk_size, token_size, 0, 0, sliding_window)
         self.num_paper = num_paper
 
     def create_db_table(self):
