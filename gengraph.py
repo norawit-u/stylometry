@@ -132,41 +132,104 @@ class Gengraph:
         return new_frag_probs
 
     def checking_accuracy_fragments(self, papers, frag_probs):
+        # total_fragment = sum([len(papers[i]['fragments'].keys()) for i in papers])
+        # sum the probability in each fragment
+        total_fragment = sum([len(frag_probs[i].keys()) for i in frag_probs.keys()])
         list_check = {}
         sum_prob = {}
+        top_prob = {}
+        # print(frag_probs)
         for x in papers:
-            # print(frag_probs)
-            # print(frag_probs[x])
-            sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
-            for y in frag_probs[x].keys():
-                sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
-            sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
-                           frag_probs[x][self.num_fragment * x]}
+            if frag_probs[x]:
+                # print("frag_probs", frag_probs[x])
+                sum_prob[x] = {k: 0 for k in frag_probs[x][sorted(list(frag_probs[x].keys()))[0]]}
+                # print(list(frag_probs[x].keys()))
+                # print(frag_probs[x][list(frag_probs[x].keys())[0]])
+                # print("sum_prob", sum_prob[x])
+                for y in list(frag_probs[x].keys()):
+                    sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
+                # print("sum_prob loop", sum_prob[x])
+                sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
+                               frag_probs[x][list(frag_probs[x].keys())[0]]}
+
+                temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
+                # print(temp_top)
+                sum_top = {}
+                for k, v in temp_top.items():
+                    if v not in sum_top:
+                        sum_top[v] = 0
+                    sum_top[v] += 1
+                # print(sum_top)
+                top_prob[x] = sum_top
+                # print("sum_prob final", sum_prob[x])
+        # sort the prob and pick top n author
+        # print(top_prob)
         for key, z in enumerate(sum_prob):
-            list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
-                                           0:len(papers[z]['authors'])]
+            list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
+                            0:self.num_authors]
+            # print(list_check[z])
+        # print(list_check)
+        # count all the collect author in the paper
         count_all = 0
         count = 0
         count_least_1 = 0
-        print(papers)
-        for i in list_check.keys():
+        accuracy_list = []
+        for i in papers.keys():
+            # print('i', i)
             count_tmp = 0
-            for j in papers[i]['fragments'].keys():
-                author_id = papers[i]['fragments'][j]
-                for k in range(0, len(list_check[i])):
-                    if author_id == list_check[i][k][0]:
-                        count += 1
-                        count_tmp += 1
-            if count_tmp == len(papers[i]['authors']):
+            for k, v in top_prob[i].items():
+                # print("k", k)
+                # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
+                # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
+                if k in papers[i]['authors'][:self.num_authors]:
+                    count += 1
+                    count_tmp += 1
+                    # print(author_id, list_check[i])
+            accuracy_list.append(count_tmp)
+            if count_tmp == len(papers[i]['authors'][:self.num_authors]):
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
         print(count)
-        print(count_least_1)
-        print(count_all)
-        print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
-        print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / (len(papers) * len(papers[i]['fragments'])))))
+        print(accuracy_list)
+        print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
+        print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
+        print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
+        # list_check = {}
+        # sum_prob = {}
+        # for x in papers:
+        #     # print(frag_probs)
+        #     # print(frag_probs[x])
+        #     sum_prob[x] = {k: 0 for k in frag_probs[x][self.num_fragment * x]}
+        #     for y in frag_probs[x].keys():
+        #         sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
+        #     sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
+        #                    frag_probs[x][self.num_fragment * x]}
+        # for key, z in enumerate(sum_prob):
+        #     list_check[self.papers[key]] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
+        #                                    0:len(papers[z]['authors'])]
+        # count_all = 0
+        # count = 0
+        # count_least_1 = 0
+        # print(papers)
+        # for i in list_check.keys():
+        #     count_tmp = 0
+        #     for j in papers[i]['fragments'].keys():
+        #         author_id = papers[i]['fragments'][j]
+        #         for k in range(0, len(list_check[i])):
+        #             if author_id == list_check[i][k][0]:
+        #                 count += 1
+        #                 count_tmp += 1
+        #     if count_tmp == len(papers[i]['authors']):
+        #         count_all += 1
+        #     if count_tmp >= 1:
+        #         count_least_1 += 1
+        # print(count)
+        # print(count_least_1)
+        # print(count_all)
+        # print("Accuracy alls true: %s" % (float(count_all * 100 / len(papers))))
+        # print("Accuracy ture at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
+        # print("Accuracy: %s" % (float(count * 100 / (len(papers) * len(papers[i]['fragments'])))))
 
     def sum_prob(self, papers, frag_probs):
         sum_prob = {}
