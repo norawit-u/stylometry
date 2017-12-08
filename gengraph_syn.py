@@ -92,8 +92,8 @@ class GenGraph:
         """
         get a similar fragments from the experiment
         :param papers: array contain fragment and author information
-        :param paper_id: id of a paper
-        :param fragment_id: id of a fragment
+        :param paper_id: id of the paper
+        :param fragment_id: id of the fragment
         :return:
         """
         similar_fragments = []

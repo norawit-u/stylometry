@@ -8,6 +8,15 @@ import argparse
 
 class Gengraph:
     def __init__(self, num_authors, num_authors_list, papers, db_name, fname, num_fragment):
+        """
+        init GenGraph
+        :param num_authors: number of author in the paper
+        :param num_authors_list:  number of all the author in the paper
+        :param papers: list of paper
+        :param db_name: name of the database
+        :param fname: directory path of the experiment out put
+        :param num_fragment:  number of fragment in a paper
+        """
         self.num_authors = num_authors
         self.num_authors_list = num_authors_list
         self.papers = papers
@@ -17,8 +26,8 @@ class Gengraph:
 
     def get_authors_list(self, paper_id):
         """
-        get a list of author id
-        :param paper_id: list of a paper id
+        get all the authors id who write a paper
+        :param paper_id: paper id
         :return: list of author id
         """
         con = psycopg2.connect("dbname ='%s' user='cpehk01' host=/tmp/" % (self.db_name.lower()))
@@ -36,9 +45,9 @@ class Gengraph:
     def fit_author_to_fragment(self, fragment_size, author_list):
         """
          Use round robin to circulate the author list
-        :param fragment_size: size of the fragment
-        :param author_list: list of the author
-        :return:
+        :param fragment_size:
+        :param author_list:
+        :return: list of author who write the fragment
         """
         fragment_author_list = []
         for i in range(fragment_size):
@@ -87,7 +96,7 @@ class Gengraph:
 
     def get_similar_fragments(self, papers, paper_id, fragment_id):
         """
-        get a similar fragments
+        get a similar fragments from the experiment
         :param papers: array contain fragment and author information
         :param paper_id: id of the paper
         :param fragment_id: id of the fragment
@@ -98,11 +107,11 @@ class Gengraph:
         fname = self.fname + "%s" % fragment_id
         with open(fname, 'r') as f:
             content = f.read().replace('\n', '')
-        x = ast.literal_eval(content)
+        x = ast.literal_eval(content)  # convert content in file to python object
         for i in range(1, len(x)):
-            fragment_id2 = int(x[i][1])
+            fragment_id2 = int(x[i][1])  # get fragment id
             # print(fragment_id2, self.num_authors)
-            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1
+            paper_id2 = int((fragment_id2 - 1) / self.num_fragment) + 1  # compute paper id
             similar_fragments.append((paper_id2, fragment_id2, author_id))
         return similar_fragments
 
