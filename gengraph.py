@@ -149,7 +149,7 @@ class Gengraph:
                 for y in list(frag_probs[x].keys()):
                     sum_prob[x] = {k: sum_prob[x][k] + v for k, v in frag_probs[x][y].items()}
                 # print("sum_prob loop", sum_prob[x])
-                sum_prob[x] = {k: sum_prob[x][k] / self.num_authors for k in
+                sum_prob[x] = {k: sum_prob[x][k] / len(papers[x]['authors']) for k in
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
 
                 temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
@@ -163,7 +163,7 @@ class Gengraph:
                 top_prob[x] = sum_top
                 # print("sum_prob final", sum_prob[x])
         # sort the prob and pick top n author
-        # print(top_prob)
+        print(top_prob)
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
@@ -181,12 +181,13 @@ class Gengraph:
                 # print("k", k)
                 # print("author_id", author_id, 'list_check[i][k][0]', list_check[i][k][0])
                 # print("author_id", author_id, 'list_check[%s][%s][%s]'%(i,k,0), list_check[i][k][0])
-                if k in papers[i]['authors'][:self.num_authors]:
-                    count += 1
+                if k in papers[i]['authors']:
+                    # count += 1
                     count_tmp += 1
                     # print(author_id, list_check[i])
             accuracy_list.append(count_tmp)
-            if count_tmp == len(papers[i]['authors'][:self.num_authors]):
+            count+=count_tmp/len(papers[i]['authors'])
+            if count_tmp == len(papers[i]['authors']):
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
@@ -194,7 +195,7 @@ class Gengraph:
         print(accuracy_list)
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
-        print("Accuracy: %s" % (float(count * 100 / (len(papers) * self.num_authors))))
+        print("Accuracy: %s" % (float(count * 100 / (len(papers)))))
         # list_check = {}
         # sum_prob = {}
         # for x in papers:
@@ -300,7 +301,7 @@ if __name__ == "__main__":
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 10):
+    for i in range(0, 1):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         # print(i)
