@@ -123,6 +123,12 @@ get the author paper in synthetic dataset
 ```sql
 select c, count(*) from (select author_id,count(*) as c from writes_hidden group by author_id) as f group by c order by c;
 ```
+
+get number of paper in english data
+
+```psql
+select count(distinct(doc_id)) from document_english where author_id in (SELECT author_id FROM document_english GROUP BY author_id HAVING COUNT(*) >= 15 ORDER BY count(*) DESC limit 10) ;
+```
 ## Note
 
  if accuracy < 90 then use entropy

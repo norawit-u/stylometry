@@ -195,14 +195,31 @@ class Syntactic:
         return raw_text
 
     def get_novel_id(self, author_id, index=0):
+        """
+        get paper id of the author
+        :param author_id: id of the paper
+        :param index: index of the paper of the author
+        :return: id of the paper
+        """
         novel_id = self.get_novel_list(author_id=author_id)[index]
         return novel_id
 
     def get_paragraphs(self, tokens):
+        """
+        get paragraph (paragraph is a group of token)
+        :param tokens: list of token of the paper
+        :return: list of a paragraph
+        """
         paragraphs = [tokens[x:x + self.chunk_size] for x in xrange(0, self.token_size, self.sliding_window)]
         return paragraphs
 
     def save_authors_to_db(self, list_authors_id, list_authors_name):
+        """
+        save all the authors to the database
+        :param list_authors_id: list of a author id
+        :param list_authors_name: list of the author name
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
@@ -212,6 +229,10 @@ class Syntactic:
         cur.close()
 
     def save_papers_to_db(self):
+        """
+        save a paper to database
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
@@ -222,6 +243,11 @@ class Syntactic:
         cur.close()
 
     def save_writes_hidden_to_db(self, list_authors_id):
+        """
+        save relationshop between author and paper to database
+        :param list_authors_id: list of the author in each of the paper
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
@@ -232,6 +258,12 @@ class Syntactic:
         cur.close()
 
     def save_section_features_to_db(self, list_authors, list_authors_id_200):
+        """
+        save feature of the paper to the database
+        :param list_authors: list of the author in each of the paper
+        :param list_authors_id_200: list of all the author?
+        :return:
+        """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 

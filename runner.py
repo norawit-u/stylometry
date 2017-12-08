@@ -16,6 +16,10 @@ class Runner:
         self.cur = self.con.cursor()
 
     def get_chunk_size(self):
+        """
+        get the number of chuck in the paper
+        :return: number of chunk in the paper
+        """
         return int(int(self.db_name.split('_')[-4].split('t')[-1]) / int(db_name.split('_')[-1].split('sw')[-1]))
 
     def get_paper_per_author(self):  # TODO: DELETE
@@ -38,7 +42,7 @@ class Runner:
         self.con.commit()
         return list_return
 
-    def distributed(self, fold): # TODO: DELETE
+    def distributed(self, fold):  # TODO: DELETE
         paper_ids = []
         out = []
         for f in range(fold):
@@ -54,6 +58,10 @@ class Runner:
         return out
 
     def get_writes_hidden(self):
+        """
+        get the information about the paper id and author id
+        :return: dictionary of paper id and author id
+        """
         self.cur.execute("select author_id, paper_id from writes_hidden ORDER  by author_id")
         get_list = self.cur.fetchall()
         out = {}
@@ -139,6 +147,7 @@ class Runner:
     def gen_fold(self, num_paper, n_fold, shuffle=False, append=False, train=False, distribute=True):
         """
         generate n fold id which slit the training set in to n subset ex: number of paper = 1000
+        :param distribute: distribute the paper id equally or not
         :param num_paper: number of paper
         :param n_fold: number of fold
         :param shuffle: want to shuffle the id or not

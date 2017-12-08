@@ -27,6 +27,10 @@ def get_input(path):
 
 
 def plot(x, name):
+    """
+    plot the histogram
+    :param x: data
+    :param name: output name
     fig, ax = plt.subplots()
     print(len(x))
     plt.hist(x, normed=0, range=(min(x), max(x)), bins=1000)
