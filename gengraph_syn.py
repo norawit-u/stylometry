@@ -215,17 +215,17 @@ class GenGraph:
                                frag_probs[x][list(frag_probs[x].keys())[0]]}
 
                 temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
-                print(temp_top)
+                # print(temp_top)
                 sum_top = {}
                 for k, v in temp_top.items():
                     if v not in sum_top:
                         sum_top[v] = 0
                     sum_top[v] += 1
-                print(sum_top)
+                # print(sum_top)
                 top_prob[x] = sum_top
                 # print("sum_prob final", sum_prob[x])
         # sort the prob and pick top n author
-        print(top_prob)
+        # print(top_prob)
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(),  key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
@@ -248,7 +248,7 @@ class GenGraph:
                     count_tmp += 1
                     # print(author_id, list_check[i])
             accuracy_list.append(count_tmp)
-            if count_tmp == len(frag_probs[i].keys()):
+            if count_tmp == len(papers[i]['authors'][:self.num_authors]):
                 count_all += 1
             if count_tmp >= 1:
                 count_least_1 += 1
@@ -356,11 +356,17 @@ class GenGraph:
         upper_bound = over_all_entropy[int(len(over_all_entropy) * percent / 100)]
         # print(upper_bound)
         for paper_id in papers:
+            #print("paper: "+str(paper_id))
             entropys = self.entropy(frag_probs, paper_id)
             entropys_len = len(entropys)
             for key, entropy in enumerate(sorted(entropys.items(), key=operator.itemgetter(1))):
+                #print(entropy)
                 if num != 0:  # remove by number of fragment
                     if key >= entropys_len - num:
+                        # print(key)
+                        del frag_probs[paper_id][entropy[0]]
+                elif percent:
+                    if key > entropys_len * (100-percent) / 100.0:
                         del frag_probs[paper_id][entropy[0]]
                 elif not per_dataset:  # remove by percent of fragment
                     if entropy[1] >= sorted(entropys.items(), key=operator.itemgetter(1))[
@@ -403,7 +409,7 @@ if __name__ == "__main__":
     # print(papers)
     frag_probs = gengraph.generate_frag_probs(papers)
 
-    for i in range(0, 1):  # recalculate the graph
+    for i in range(0, 10):  # recalculate the graph
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
         # print(i)

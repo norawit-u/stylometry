@@ -233,7 +233,7 @@ class Runner:
         folds = self.gen_fold(num_paper, n_fold, shuffle, append, distribute=distribute)
         print(folds)
         for key, fold in enumerate(folds):
-            # print(folds)
+             # print(folds)
             get_csv = self.command_get_csv(path + '/csv', fold, fragment_size, offset, '_n' + str(key))
             print(get_csv)
             self.execute(get_csv)

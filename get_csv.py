@@ -85,6 +85,7 @@ def save_to_csv(list_return, name, fieldnames):
             name: name of a csv file
             fieldnames: field names of the csv file (header)
     """
+    print(name)
     os.makedirs(os.path.dirname(name + '.csv'), exist_ok=True)
     with open(name + '.csv', 'w') as csvfile:
         csvfile.write(','.join(map(str, field_names)))

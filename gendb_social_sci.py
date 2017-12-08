@@ -169,20 +169,21 @@ class Syntactic:
                 raw_novel_text = self.get_raw_text(novel_id)
                 tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
                 tokens_sum += tokens[0:self.token_size / len(list_authors[i])]
-
+                print(len(tokens),len(tokens_sum))
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)",
                             [i + 1, num_section, raw_novel_text, novel_id, list_authors[i][j]])
                 num_section += 1
 
             paragraphs = self.get_paragraphs(tokens_sum)
-
             for x in range(0, len(paragraphs)):
                 para = Paragraph("paper_id", para=paragraphs[x])
                 stylo_list = []
                 try:
                     stylo_list = para.get_stylo_list()
+                    #print(stylo_list)
                 except:
-                    raise
+                    print('error')
+                    #raise
                 for y in range(0, 57):
                     feature_id = y + 1
                     try:
@@ -257,7 +258,10 @@ class Syntactic:
         cur = con.cursor()
         papers_id = []
         # TODO: remove number dependent from the query
-        cur.execute("select DISTINCT(paper_id) from author_paper where author_id in (select author_id from author_paper group by author_id order by count(*) DESC LIMIT 118)")
+        cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 5) as a) group by paper_id having count(*) > 1) and length(raw_text) > 12000")
+        # cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 8) as a)) and length(raw_text) > 15000")
+        #cur.execute("select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 7) as a)")
+        #cur.execute(" select paper_id from paper where paper_id in (select DISTINCT(paper_id) from author_paper where author_id in (select author_id from author_paper group by author_id order by count(*) DESC LIMIT 250)) order by length(raw_text) DESC LIMIT 1000")
         list_temp = cur.fetchall()
         for i in list_temp:
             papers_id.append(i[0])

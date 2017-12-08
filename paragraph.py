@@ -199,22 +199,38 @@ class Paragraph:
         return len(whitespace_list)
 
     def get_alpha_chars_ratio(self):
-        return float(self.get_total_no_of_alpha_character()) / float(self.get_total_no_of_character())
-
+        try:
+            return float(self.get_total_no_of_alpha_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
     def get_uppercase_chars_ratio(self):
-        return float(self.get_total_no_of_uppercase_character()) / float(self.get_total_no_of_character())
-
+        try:
+            return float(self.get_total_no_of_uppercase_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
     def get_lowercase_chars_ratio(self):
-        return float(self.get_total_no_of_lowercase_character()) / float(self.get_total_no_of_character())
+        try:
+            return float(self.get_total_no_of_lowercase_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
 
     def get_special_chars_ratio(self):
-        return float(self.get_total_no_of_special_character()) / float(self.get_total_no_of_character())
+        try:
+            return float(self.get_total_no_of_special_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
 
     def get_digital_chars_ratio(self):
-        return float(self.get_total_no_of_digital_character()) / float(self.get_total_no_of_character())
+        try:
+            return float(self.get_total_no_of_digital_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
 
     def get_whitespace_chars_ratio(self):
-        return float(self.get_total_no_of_whitespace_character()) / float(self.get_total_no_of_character())
+        try:
+            return float(self.get_total_no_of_whitespace_character()) / float(self.get_total_no_of_character())
+        except:
+            return 0
 
     def get_total_no_of_sentences(self):
         return len(self.sentences)

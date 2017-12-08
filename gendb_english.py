@@ -80,7 +80,7 @@ class Syntactic:
         """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT author_id FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC LIMIT 10",[self.min_paper_per_author])
+        cur.execute("SELECT author_id FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC",[self.min_paper_per_author])
         list_all = cur.fetchall()
         list_authors_id_200 = []
         # create a list of author
@@ -128,7 +128,7 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (getpass.getuser(), getpass.getuser()))
         cur = con.cursor()
         # get author id sorted by number of paper that the author write
-        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC LIMIT 10", [self.min_paper_per_author])
+        cur.execute("SELECT author_id, count(*) FROM document_english GROUP BY author_id HAVING COUNT(*) >= %s ORDER BY count(*) DESC", [self.min_paper_per_author])
         list_all = cur.fetchall()
         list_top_200 = []
         list_top_200_max = []
@@ -252,7 +252,7 @@ class Syntactic:
                 raw_novel_text = self.get_raw_text(novel_id)
                 tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
                 tokens_sum += tokens[0:self.token_size / self.num_authors]
-
+                print(len(tokens),len(tokens_sum))
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)", [i + 1, num_section,
                                                                            raw_novel_text, novel_id,
                                                                            int(list_authors[i][j])])

@@ -525,7 +525,7 @@ MHDRatio = 0.5  # the MHD precentage
 startp = 0.25
 endp = 0.5
 
-topknn = 21  # MHD TopN list length
+topknn = 11  # MHD TopN list length
 shdTopN = 21  # SHD TopN list length
 flagNum = 3  # MHD TopN flag for pruning method(after flag times, stop..)
 
