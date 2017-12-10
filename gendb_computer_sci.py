@@ -10,6 +10,8 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from collections import Counter
 
 from six.moves import xrange
+
+
 ###############################################
 #                 PYTHON 2                    #
 ###############################################
@@ -75,9 +77,9 @@ class Syntactic:
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id:
-            cur.execute("SELECT name,surname FROM author WHERE author_id = '%s'" % int(author))
+            cur.execute("SELECT author_name FROM author WHERE author_id = '%s'" % int(author))
             temp = cur.fetchall()
-            authors_names.append(str(temp[0]).decode('utf8').strip() + ' ' + str(temp[0]).decode('utf8').strip())
+            authors_names.append(str(temp[0]).decode('utf8').strip())
         con.close()
         cur.close()
         return authors_names
@@ -90,7 +92,7 @@ class Syntactic:
         """
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT raw_text FROM paper WHERE paper_id = '%s'" % int(paper_id))
+        cur.execute("SELECT raw_text FROM sample_paper WHERE paper_id = '%s'" % int(paper_id))
         raw_text = cur.fetchall()[0][0].strip()
         return raw_text
 
@@ -169,7 +171,7 @@ class Syntactic:
                 raw_novel_text = self.get_raw_text(novel_id)
                 tokens = nltk.word_tokenize(raw_novel_text.decode('utf-8'))
                 tokens_sum += tokens[0:self.token_size / len(list_authors[i])]
-                print(len(tokens),len(tokens_sum))
+                print(len(tokens), len(tokens_sum))
                 cur.execute("INSERT INTO section VALUES(%s,%s,%s,%s,%s)",
                             [i + 1, num_section, raw_novel_text, novel_id, list_authors[i][j]])
                 num_section += 1
@@ -180,10 +182,10 @@ class Syntactic:
                 stylo_list = []
                 try:
                     stylo_list = para.get_stylo_list()
-                    #print(stylo_list)
+                    # print(stylo_list)
                 except:
                     print('error')
-                    #raise
+                    # raise
                 for y in range(0, 57):
                     feature_id = y + 1
                     try:
@@ -209,7 +211,8 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
-        cur.execute("select paper_id, count(*) from author_paper group by paper_id having count(*) = %s" % self.num_authors)
+        cur.execute(
+            "select paper_id, count(*) from writing group by paper_id having count(*) = %s" % self.num_authors)
         list_temp = cur.fetchall()
         for i in list_temp:
             papers_id.append(i[0])
@@ -237,7 +240,8 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
-        cur.execute("select paper_id, count(*) from author_paper group by paper_id order by count(*) DESC LIMIT %s", self.num_paper)
+        cur.execute("select paper_id, count(*) from writing group by paper_id order by count(*) DESC LIMIT %s",
+                    self.num_paper)
         list_temp = cur.fetchall()
         for i in list_temp:
             papers_id.append(i[0])
@@ -258,11 +262,11 @@ class Syntactic:
         cur = con.cursor()
         papers_id = []
         # TODO: remove number dependent from the query
-        cur.execute("select disticpaper_id from raheem_author_paper")
+        cur.execute("select distinct(paper_id) from raheem_writing where author_id in ( select a.author_id from (select author_id, count(*)  from raheem_writing group by author_id order by count(*) DESC) as a);")
         # cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 5) as a) group by paper_id having count(*) > 1) and length(raw_text) > 12000")
         # cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 8) as a)) and length(raw_text) > 15000")
-        #cur.execute("select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 7) as a)")
-        #cur.execute(" select paper_id from paper where paper_id in (select DISTINCT(paper_id) from author_paper where author_id in (select author_id from author_paper group by author_id order by count(*) DESC LIMIT 250)) order by length(raw_text) DESC LIMIT 1000")
+        # cur.execute("select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 7) as a)")
+        # cur.execute(" select paper_id from paper where paper_id in (select DISTINCT(paper_id) from author_paper where author_id in (select author_id from author_paper group by author_id order by count(*) DESC LIMIT 250)) order by length(raw_text) DESC LIMIT 1000")
         list_temp = cur.fetchall()
         for i in list_temp:
             papers_id.append(i[0])
@@ -272,7 +276,6 @@ class Syntactic:
             papers_id = np.array(papers_id)
             np.random.shuffle(papers_id)
         return papers_id[:self.num_paper]
-
 
     def get_authors(self, paper_ids):
         """
@@ -293,7 +296,8 @@ class Syntactic:
         con.close()
         cur.close()
         return authors
-      
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a stylometry synthetic dataset.')
     parser.add_argument('--chunk_size', type=int, help='size of the chunk, number of token in the chunk')
@@ -319,6 +323,7 @@ def parse_args():
   """
 
     return parser.parse_args()
+
 
 if __name__ == "__main__":
     args = parse_args()
