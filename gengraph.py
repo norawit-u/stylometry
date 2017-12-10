@@ -186,7 +186,7 @@ class Gengraph:
                     # count += 1
                     count_tmp += 1
                     # print(author_id, list_check[i])
-            accuracy_list.append(count_tmp)
+            accuracy_list.append(count_tmp/len(papers[i]['authors']))
             count+=count_tmp/len(papers[i]['authors'])
             if count_tmp == len(papers[i]['authors']):
                 count_all += 1
