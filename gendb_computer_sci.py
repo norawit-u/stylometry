@@ -92,7 +92,7 @@ class Syntactic:
         """
         con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
-        cur.execute("SELECT raw_text FROM sample_paper WHERE paper_id = '%s'" % int(paper_id.replace('.','')))
+        cur.execute("SELECT raw_text FROM sample_paper WHERE paper_id = '%s'" % paper_id)
         raw_text = cur.fetchall()[0][0].strip()
         return raw_text
 
@@ -288,7 +288,7 @@ class Syntactic:
         cur = con.cursor()
         authors = []
         for paper_id in paper_ids:
-            cur.execute("select DISTINCT(author_id) from raheem_writing where paper_id = '%s'" % int(paper_id.replace('.','')))
+            cur.execute("select DISTINCT(author_id) from raheem_writing where paper_id = '%s'" % paper_id)
             list_temp = cur.fetchall()
             authors_id = []
             for i in list_temp:
