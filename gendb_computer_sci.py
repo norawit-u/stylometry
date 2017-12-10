@@ -40,14 +40,14 @@ class Syntactic:
         create a database and a table
         :return:
         """
-        con = psycopg2.connect("dbname ='postgres' user='%s' host=/tmp/" % (getpass.getuser()))
+        con = psycopg2.connect("dbname ='postgres' user='%s' " % (getpass.getuser()))
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
         cur.execute("DROP DATABASE IF EXISTS " + self.db_name)
         cur.execute("CREATE DATABASE " + self.db_name)
         con.close()
         cur.close()
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         cur.execute("DROP TABLE IF EXISTS author CASCADE")
@@ -73,7 +73,7 @@ class Syntactic:
         cur.close()
 
     def get_authors_name(self, list_authors_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors_names = []
         for author in list_authors_id:
@@ -90,7 +90,7 @@ class Syntactic:
         :param paper_id: id of the paper
         :return: raw text
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         cur.execute("SELECT raw_text FROM sample_paper WHERE paper_id = '%s'" % int(paper_id))
         raw_text = cur.fetchall()[0][0].strip()
@@ -112,7 +112,7 @@ class Syntactic:
         :param list_authors_name:  list of a author name
         :return:
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, len(list_authors_id)):
             cur.execute("INSERT INTO author VALUES(%s, %s)", [str(list_authors_id[i]), str(list_authors_name[i])])
@@ -125,7 +125,7 @@ class Syntactic:
         save a papers in to a database
         :return:
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             name = "paper_number_%s" % (i + 1)
@@ -135,7 +135,7 @@ class Syntactic:
         cur.close()
 
     def save_writes_hidden_to_db(self, list_authors_id):
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
         for i in range(0, self.num_paper):
             for j in range(0, len(list_authors_id[i])):
@@ -152,7 +152,7 @@ class Syntactic:
         :param list_authors_id_200: list of author in each paper
         :return:
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.db_name.lower(), getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.db_name.lower(), getpass.getuser()))
         cur = con.cursor()
 
         index = {}
@@ -208,7 +208,7 @@ class Syntactic:
         :return: list of a paper id
 
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
         cur.execute(
@@ -237,7 +237,7 @@ class Syntactic:
         :param shuffle: is shuffle or not
         :return: list of paper id
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
         cur.execute("select paper_id, count(*) from writing group by paper_id order by count(*) DESC LIMIT %s",
@@ -258,7 +258,7 @@ class Syntactic:
         :param shuffle: is shuffle or not
         :return: list of paper id
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
         # TODO: remove number dependent from the query
@@ -283,7 +283,7 @@ class Syntactic:
         :param paper_ids: list of paper id
         :return: list of author id
         """
-        con = psycopg2.connect("dbname ='%s' user='%s' host=/tmp/" % (self.copus_db_name, getpass.getuser()))
+        con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         authors = []
         for paper_id in paper_ids:
