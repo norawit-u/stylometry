@@ -30,8 +30,8 @@ class Syntactic:
         self.chunk_size = chunk_size
         self.token_size = token_size
         self.sliding_window = sliding_window
-        self.copus_db_name = 'social_sci_paper_corpus'
-        self.db_name = "syn_social_np%s_c%s_t%s_a%s_al%s_sw%s" % (
+        self.copus_db_name = 'cpedb'
+        self.db_name = "conputer_sci_np%s_c%s_t%s_a%s_al%s_sw%s" % (
             num_paper, chunk_size, token_size, 0, 0, sliding_window)
         self.num_paper = num_paper
 
