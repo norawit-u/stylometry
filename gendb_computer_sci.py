@@ -261,8 +261,9 @@ class Syntactic:
         con = psycopg2.connect("dbname ='%s' user='%s' " % (self.copus_db_name, getpass.getuser()))
         cur = con.cursor()
         papers_id = []
-        # TODO: remove number dependent from the query
-        cur.execute("select distinct(paper_id) from raheem_writing where author_id in ( select a.author_id from (select author_id, count(*)  from raheem_writing group by author_id order by count(*) DESC) as a);")
+        # TODO: remove number dependent from the
+        cur.execute("select distinct(paper_id) from raheem_writing")
+        # cur.execute("select distinct(paper_id) from raheem_writing where author_id in ( select a.author_id from (select author_id, count(*)  from raheem_writing group by author_id order by count(*) DESC) as a);")
         # cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 5) as a) group by paper_id having count(*) > 1) and length(raw_text) > 12000")
         # cur.execute("select paper_id from paper where paper_id in (select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 8) as a)) and length(raw_text) > 15000")
         # cur.execute("select distinct(paper_id) from author_paper where author_id in ( select a.author_id from (select author_id, count(*)  from author_paper group by author_id having count(*) > 7) as a)")
