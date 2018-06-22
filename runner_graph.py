@@ -130,7 +130,7 @@ class Runner:
                        num_author, num_author, ' '.join(map(str, papers)), self.db_name, num_fragment, dir_path)
         if entropy:
             return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
-               "--db_name %s --num_fragment %s --dir_path %s --entropy %s" % (
+               "--db_name %s --num_fragment %s --dir_path %s --entropy %s --percent_entropy True" % (
                    num_author, num_authors_list, ' '.join(map(str, papers)),
                    self.db_name, num_fragment, dir_path, entropy)
         return "python gengraph_syn.py --num_authors %s  --num_authors_list %s --papers %s " \
@@ -234,18 +234,18 @@ class Runner:
         """
         folds = self.gen_fold(num_paper, n_fold, shuffle, append, distribute=distribute)
         print(folds)
-        for key, fold in enumerate(folds):
-            # print(folds)
-            get_csv = self.command_get_csv(path + '/csv', fold, fragment_size, offset, '_n' + str(key))
-            print(get_csv)
-            self.execute(get_csv)
-        for root, _, files in os.walk(path + '/csv'):
-            for file in files:
-                if str(self.db_name) in str(file):
-                    file_path = root + '/' + file
-                    experiment = self.command_experiment(file_path, path + '/out')
-                    print(experiment)
-                    self.execute(experiment)
+        #for key, fold in enumerate(folds):
+             # print(folds)
+        #    get_csv = self.command_get_csv(path + '/csv', fold, fragment_size, offset, '_n' + str(key))
+        #    print(get_csv)
+        #    self.execute(get_csv)
+        #for root, _, files in os.walk(path + '/csv'):
+        #    for file in files:
+        #        if str(self.db_name) in str(file):
+        #            file_path = root + '/' + file
+        #            experiment = self.command_experiment(file_path, path + '/out')
+        #            print(experiment)
+        #            self.execute(experiment)
         for key, fold in enumerate(folds):
             dir_path = path + '/out/' + self.db_name + '_n' + str(key) + '/'
             gengraph = self.command_gen_graph(self.get_author_number(), self.get_author_list_number(),

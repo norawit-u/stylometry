@@ -217,7 +217,7 @@ class GenGraph:
                 temp_top = {k: sorted(v.items(), key=operator.itemgetter(1))[-1][0] for k, v in frag_probs[x].items()}
                 # print(temp_top)
                 sum_top = {}
-                for k, v in temp_top.items():
+                for k, v in sum_prob[x].items():
                     if v not in sum_top:
                         sum_top[v] = 0
                     sum_top[v] += 1

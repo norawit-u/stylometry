@@ -138,6 +138,7 @@ class Gengraph:
         list_check = {}
         sum_prob = {}
         top_prob = {}
+        # print(papers)
         # print(frag_probs)
         for x in papers:
             if frag_probs[x]:
@@ -164,7 +165,8 @@ class Gengraph:
                 # print("sum_prob final", sum_prob[x])
         # print(sum_prob)
         # sort the prob and pick top n author
-        # print(top_prob)
+        print(top_prob)
+        #print(papers)
         for key, z in enumerate(sum_prob):
             list_check[z] = sorted(sum_prob[z].items(), key=operator.itemgetter(1), reverse=True)[
                             0:self.num_authors]
@@ -175,6 +177,7 @@ class Gengraph:
         count = 0
         count_least_1 = 0
         accuracy_list = []
+        accuracy_over_top = []
         for i in papers.keys():
             # print('i', i)
             count_tmp = 0
@@ -187,6 +190,7 @@ class Gengraph:
                     count_tmp += 1
                     # print(author_id, list_check[i])
             accuracy_list.append(count_tmp/len(papers[i]['authors']))
+            accuracy_over_top.append(count_tmp/len(top_prob[i].items()))
             count+=count_tmp/len(papers[i]['authors'])
             if count_tmp == len(papers[i]['authors']):
                 count_all += 1
@@ -194,9 +198,11 @@ class Gengraph:
                 count_least_1 += 1
         print(count)
         print(accuracy_list)
+        print(accuracy_over_top)
         print("Accuracy all true: %s" % (float(count_all * 100 / len(papers))))
         print("Accuracy true at least 1 : %s" % (float(count_least_1 * 100 / len(papers))))
         print("Accuracy: %s" % (float(count * 100 / (len(papers)))))
+        print("Accuracy over top %s"% (sum(accuracy_over_top)/len(papers)))
         # list_check = {}
         # sum_prob = {}
         # for x in papers:
@@ -301,7 +307,7 @@ if __name__ == "__main__":
     gengraph = Gengraph(arg.num_authors, arg.num_authors_list, arg.papers, arg.db_name, arg.dir_path, arg.num_fragment)
     papers = gengraph.generate_paper()
     frag_probs = gengraph.generate_frag_probs(papers)
-
+    # print(frag_probs)
     for i in range(0, 1):
         new_frag_probs = gengraph.recalculate_frag_probs(papers, frag_probs)
         frag_probs = new_frag_probs
