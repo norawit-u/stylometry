@@ -110,7 +110,7 @@ class Runner:
         :param output_path: path where the experiment will be save
         :return: command for running experiment.py
         """
-        return "python experiment_old.py --csv_path %s --output_path %s " % (
+        return "python experiment.py --csv_path %s --output_path %s " % (
             csv_path, output_path)
 
     def command_gen_graph(self, num_author, num_authors_list, papers, num_fragment, dir_path, entropy=0):

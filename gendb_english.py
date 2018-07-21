@@ -2,6 +2,7 @@ import nltk
 import argparse
 import numpy as np
 import getpass
+import math
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -271,8 +272,12 @@ class Syntactic:
                     feature_id = y + 1
                     try:
                         value = stylo_list[y]
+                        if(math.isnan(value)):
+                            value=0
                     except:
                         value = 0
+                    
+                        
                     cur.execute("INSERT INTO features VALUES (%s, %s, %s, %s) " % (i + 1, chunk_id, feature_id, value))
                 chunk_id += 1
 
