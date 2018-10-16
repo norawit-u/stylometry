@@ -15,6 +15,7 @@ from numpy import loadtxt
 from scipy.spatial.distance import euclidean
 from collections import defaultdict
 
+
 parser = argparse.ArgumentParser(description='Runing the experiment')
 parser.add_argument('--csv_path', type=str, help='path of the csv')
 parser.add_argument('--output_path', type=str, help='output path after running experiment')
